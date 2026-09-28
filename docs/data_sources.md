@@ -32,6 +32,13 @@ assumptions.
 ## Frozen and current sources
 
 The accepted frozen snapshot is privately preserved and identified by file
-hashes. It is not included in Git. Official current-source URLs are mutable, so
-a newly downloaded file is a new evidence vintage rather than a reproduction of
-the frozen snapshot.
+hashes. Its snapshot identity is
+`cc1489ab008db4d5d1b2eddf798b51218e2324e97e88ab9c7d3853927bb54dbb`.
+It is not included in Git.
+
+`configs/sources.json` records every required filename, private relative path,
+retrieval time, byte count, SHA-256, publisher, official URL, analytical role,
+and use note. The snapshot identity is SHA-256 over the explicitly ordered
+UTF-8 lines `filename|bytes|sha256`; the order is itself stored and validated.
+Official current-source URLs are mutable, so a newly downloaded file is a new
+evidence vintage rather than a reproduction of the frozen snapshot.

@@ -12,9 +12,10 @@ investment return.
 ## Current status
 
 The decision contract, data feasibility audit, analytical method, and
-engineering design are complete. The repository is currently in documentation
-and reproducibility setup. No county-level criterion, portfolio, or final
-decision status has been calculated or published.
+engineering design are complete. Machine-readable source and method contracts,
+the deterministic 480-configuration manifest, and synthetic contract tests are
+implemented. No county-level criterion, portfolio, or final decision status has
+been calculated or published.
 
 ## Decision output
 
@@ -69,8 +70,9 @@ Real source data and generated runs remain outside Git under the private
 3. current-source refresh into a separate immutable snapshot.
 
 A refresh will never silently replace or impersonate the frozen analytical
-snapshot. Reproduction instructions will be expanded as implementation is
-added. See [reproducibility](docs/reproducibility.md).
+snapshot. The current executable surface validates contracts only; it does not
+read private source files or calculate county results. See
+[reproducibility](docs/reproducibility.md).
 
 ## Claim boundary
 

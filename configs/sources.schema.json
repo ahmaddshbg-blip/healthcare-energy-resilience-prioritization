@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ahmaddshbg-blip/healthcare-energy-resilience-prioritization/blob/main/configs/sources.schema.json",
+  "title": "Healthcare energy resilience frozen source contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "snapshot_id",
+    "snapshot_identity_algorithm",
+    "snapshot_identity_order",
+    "source_evidence_date",
+    "expected_file_count",
+    "redistribution_policy",
+    "source_files"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "snapshot_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "snapshot_identity_algorithm": {
+      "const": "SHA256_UTF8_ORDERED_FILENAME_BYTES_SHA256_LINES_V1"
+    },
+    "snapshot_identity_order": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9_]+$"
+      }
+    },
+    "source_evidence_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "expected_file_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "redistribution_policy": {
+      "const": "DO_NOT_REDISTRIBUTE_RAW"
+    },
+    "source_files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source_file"
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "filename",
+        "private_relative_path",
+        "retrieved_utc",
+        "bytes",
+        "sha256",
+        "publisher",
+        "source_url",
+        "media_type",
+        "role",
+        "mutable_endpoint",
+        "required_for_frozen_reproduction",
+        "attribution"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "filename": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^/\\\\]+$"
+        },
+        "private_relative_path": {
+          "type": "string",
+          "pattern": "^raw/[^/\\\\]+$"
+        },
+        "retrieved_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "publisher": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "enum": [
+            "PRIMARY_INPUT",
+            "CONTEXT_INPUT",
+            "METADATA"
+          ]
+        },
+        "mutable_endpoint": {
+          "type": "boolean"
+        },
+        "required_for_frozen_reproduction": {
+          "type": "boolean"
+        },
+        "expected_rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expected_columns": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "source_reported_vintage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "attribution": {
+          "type": "string",
+          "minLength": 1
+        },
+        "use_note": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

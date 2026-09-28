@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ahmaddshbg-blip/healthcare-energy-resilience-prioritization/blob/main/configs/configurations.schema.json",
+  "title": "Healthcare energy resilience configuration manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "method_contract_sha256",
+    "method_specification_sha256",
+    "configuration_count",
+    "primary_configuration_count",
+    "configurations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "method_contract_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "method_specification_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "configuration_count": {
+      "const": 480
+    },
+    "primary_configuration_count": {
+      "const": 20
+    },
+    "configurations": {
+      "type": "array",
+      "minItems": 480,
+      "maxItems": 480,
+      "items": {
+        "$ref": "#/$defs/configuration"
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "weights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "C_COUNT",
+        "C_RATE",
+        "C_HAZARD",
+        "C_HPSA"
+      ],
+      "properties": {
+        "C_COUNT": {
+          "type": "number"
+        },
+        "C_RATE": {
+          "type": "number"
+        },
+        "C_HAZARD": {
+          "type": "number"
+        },
+        "C_HPSA": {
+          "type": "number"
+        }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "configuration_id",
+        "configuration_sha256",
+        "family",
+        "variant",
+        "is_primary",
+        "profile",
+        "weights",
+        "mask_state",
+        "rate_state",
+        "capacity",
+        "medicare_threshold",
+        "hazard_context",
+        "hpsa_status_set",
+        "tie_rule"
+      ],
+      "properties": {
+        "configuration_id": {
+          "type": "string",
+          "pattern": "^[A-Z0-9_]+(__[A-Z0-9_]+)+$"
+        },
+        "configuration_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "family": {
+          "enum": [
+            "PRIMARY",
+            "CAPACITY",
+            "MEDICARE_THRESHOLD",
+            "HPSA_STATUS",
+            "HAZARD_SPECIFIC"
+          ]
+        },
+        "variant": {
+          "type": "string",
+          "minLength": 1
+        },
+        "is_primary": {
+          "type": "boolean"
+        },
+        "profile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "weights": {
+          "$ref": "#/$defs/weights"
+        },
+        "mask_state": {
+          "enum": [
+            "MASK_LOWER",
+            "MASK_UPPER"
+          ]
+        },
+        "rate_state": {
+          "enum": [
+            "RATE_LOWER",
+            "RATE_UPPER"
+          ]
+        },
+        "capacity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "medicare_threshold": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "hazard_context": {
+          "type": "string",
+          "pattern": "^(ALL_HAZARD|[A-Z]{4})$"
+        },
+        "hpsa_status_set": {
+          "enum": [
+            "DESIGNATED",
+            "DESIGNATED_PLUS_PROPOSED_FOR_WITHDRAWAL"
+          ]
+        },
+        "tie_rule": {
+          "const": "LEAVE_CROSSING_TIE_GROUP_UNSELECTED"
+        }
+      }
+    }
+  }
+}

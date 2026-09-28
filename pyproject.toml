@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "healthcare-energy-resilience-prioritization"
+version = "0.1.0"
+description = "Reproducible county assessment-prioritization contracts and pipeline"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = { file = "LICENSE" }
+authors = [{ name = "Ahmad" }]
+dependencies = [
+  "duckdb==1.5.5",
+  "jsonschema==4.26.0",
+  "numpy==2.5.3",
+  "openpyxl==3.1.5",
+  "pandas==3.0.6",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.4.2"]
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]

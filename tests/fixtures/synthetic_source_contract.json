@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "snapshot_id": "390de92777e46c59186a6ca6dd7142b92d5d141a8cf10296281f165228f39c78",
+  "snapshot_identity_algorithm": "SHA256_UTF8_ORDERED_FILENAME_BYTES_SHA256_LINES_V1",
+  "snapshot_identity_order": [
+    "alpha",
+    "beta"
+  ],
+  "source_evidence_date": "2026-01-01",
+  "expected_file_count": 2,
+  "redistribution_policy": "DO_NOT_REDISTRIBUTE_RAW",
+  "source_files": [
+    {
+      "id": "alpha",
+      "filename": "alpha.csv",
+      "private_relative_path": "raw/alpha.csv",
+      "retrieved_utc": "2026-01-01T00:00:00Z",
+      "bytes": 12,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "publisher": "Synthetic publisher",
+      "source_url": "https://example.invalid/alpha.csv",
+      "media_type": "text/csv",
+      "role": "PRIMARY_INPUT",
+      "mutable_endpoint": false,
+      "required_for_frozen_reproduction": true,
+      "attribution": "Synthetic test fixture only"
+    },
+    {
+      "id": "beta",
+      "filename": "beta.json",
+      "private_relative_path": "raw/beta.json",
+      "retrieved_utc": "2026-01-01T00:00:00Z",
+      "bytes": 34,
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "publisher": "Synthetic publisher",
+      "source_url": "https://example.invalid/beta.json",
+      "media_type": "application/json",
+      "role": "METADATA",
+      "mutable_endpoint": true,
+      "required_for_frozen_reproduction": true,
+      "attribution": "Synthetic test fixture only"
+    }
+  ]
+}

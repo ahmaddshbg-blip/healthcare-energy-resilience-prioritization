@@ -1,0 +1,231 @@
+{
+  "schema_version": "1.0.0",
+  "method_specification": {
+    "document_name": "HEALTHCARE_ENERGY_RESILIENCE_METHOD_SPECIFICATION.md",
+    "sha256": "3ab000d429a7d9bda38f0eab08caa38d54a4421fbffe7698213a1afa94d8ae16"
+  },
+  "universe": {
+    "unit": "county_or_county_equivalent",
+    "reference_count": 3144,
+    "eligible_count": 3133,
+    "exact_fips_replacements": [
+      {
+        "source_fips": "02270",
+        "current_fips": "02158",
+        "reason": "Wade Hampton Census Area renamed Kusilvak Census Area"
+      },
+      {
+        "source_fips": "46113",
+        "current_fips": "46102",
+        "reason": "Shannon County renamed Oglala Lakota County"
+      }
+    ],
+    "out_of_scope_fips": [
+      "02063",
+      "02066",
+      "09110",
+      "09120",
+      "09130",
+      "09140",
+      "09150",
+      "09160",
+      "09170",
+      "09180",
+      "09190"
+    ]
+  },
+  "criteria": [
+    {
+      "id": "C_COUNT",
+      "source": "HHS_EMPOWER_DME_COUNT",
+      "transformation": "AVERAGE_RANK_PERCENTILE",
+      "direction": "HIGHER_IS_GREATER_PRIORITY",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    {
+      "id": "C_RATE",
+      "source": "HHS_EMPOWER_DME_PER_1000_MEDICARE",
+      "transformation": "AVERAGE_RANK_PERCENTILE_WITH_SMALL_DENOMINATOR_BOUNDS",
+      "direction": "HIGHER_IS_GREATER_PRIORITY",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    {
+      "id": "C_HAZARD",
+      "source": "FEMA_NRI_RISK_SCORE",
+      "transformation": "DIVIDE_BY_100",
+      "direction": "HIGHER_IS_GREATER_PRIORITY",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    {
+      "id": "C_HPSA",
+      "source": "HRSA_PRIMARY_CARE_HPSA_MAX_SCORE",
+      "transformation": "DIVIDE_BY_25",
+      "direction": "HIGHER_IS_GREATER_PRIORITY",
+      "minimum": 0.0,
+      "maximum": 1.0
+    }
+  ],
+  "context_only_fields": [
+    "HRSA_HEALTH_CENTER_PERMANENT_SITE_PRESENCE",
+    "HRSA_HEALTH_CENTER_SEASONAL_SITE_PRESENCE",
+    "HRSA_HEALTH_CENTER_MOBILE_SITE_PRESENCE",
+    "HRSA_HEALTH_CENTER_MISSING_FIPS_COUNT"
+  ],
+  "preference_profiles": [
+    {
+      "name": "BALANCED",
+      "weights": {
+        "C_COUNT": 0.24,
+        "C_RATE": 0.16,
+        "C_HAZARD": 0.4,
+        "C_HPSA": 0.2
+      }
+    },
+    {
+      "name": "BURDEN_MAGNITUDE",
+      "weights": {
+        "C_COUNT": 0.4,
+        "C_RATE": 0.1,
+        "C_HAZARD": 0.3,
+        "C_HPSA": 0.2
+      }
+    },
+    {
+      "name": "BURDEN_PREVALENCE",
+      "weights": {
+        "C_COUNT": 0.1,
+        "C_RATE": 0.4,
+        "C_HAZARD": 0.3,
+        "C_HPSA": 0.2
+      }
+    },
+    {
+      "name": "HAZARD_EMPHASIS",
+      "weights": {
+        "C_COUNT": 0.18,
+        "C_RATE": 0.12,
+        "C_HAZARD": 0.5,
+        "C_HPSA": 0.2
+      }
+    },
+    {
+      "name": "SHORTAGE_EMPHASIS",
+      "weights": {
+        "C_COUNT": 0.18,
+        "C_RATE": 0.12,
+        "C_HAZARD": 0.3,
+        "C_HPSA": 0.4
+      }
+    }
+  ],
+  "uncertainty_axes": {
+    "mask_states": [
+      {
+        "id": "MASK_LOWER",
+        "masked_dme_value": 1
+      },
+      {
+        "id": "MASK_UPPER",
+        "masked_dme_value": 11
+      }
+    ],
+    "rate_states": [
+      {
+        "id": "RATE_LOWER",
+        "small_denominator_normalized_value": 0.0
+      },
+      {
+        "id": "RATE_UPPER",
+        "small_denominator_normalized_value": 1.0
+      }
+    ]
+  },
+  "hpsa": {
+    "eligible_designation_types": [
+      "Geographic HPSA",
+      "High Needs Geographic HPSA",
+      "HPSA Population"
+    ],
+    "primary_status_set": {
+      "id": "DESIGNATED",
+      "statuses": [
+        "Designated"
+      ]
+    },
+    "sensitivity_status_set": {
+      "id": "DESIGNATED_PLUS_PROPOSED_FOR_WITHDRAWAL",
+      "statuses": [
+        "Designated",
+        "Proposed For Withdrawal"
+      ]
+    },
+    "score_minimum": 0,
+    "score_maximum": 25,
+    "county_aggregation": "MAXIMUM_ELIGIBLE_SCORE"
+  },
+  "primary": {
+    "capacity": 25,
+    "medicare_threshold": 1000,
+    "hazard_context": "ALL_HAZARD",
+    "hpsa_status_set": "DESIGNATED",
+    "expected_configuration_count": 20
+  },
+  "sensitivities": {
+    "capacities": [
+      10,
+      50
+    ],
+    "medicare_thresholds": [
+      500,
+      2000
+    ],
+    "hpsa_status_sets": [
+      "DESIGNATED_PLUS_PROPOSED_FOR_WITHDRAWAL"
+    ],
+    "hazard_codes": [
+      "AVLN",
+      "CFLD",
+      "CWAV",
+      "DRGT",
+      "ERQK",
+      "HAIL",
+      "HWAV",
+      "HRCN",
+      "ISTM",
+      "LNDS",
+      "LTNG",
+      "IFLD",
+      "SWND",
+      "TRND",
+      "TSUN",
+      "VLCN",
+      "WFIR",
+      "WNTW"
+    ]
+  },
+  "configuration_counts": {
+    "primary": 20,
+    "capacity": 40,
+    "medicare_threshold": 40,
+    "hpsa_status": 20,
+    "hazard_specific": 360,
+    "total": 480
+  },
+  "selection": {
+    "numeric_type": "IEEE_754_FLOAT64",
+    "tie_absolute_tolerance": 1e-12,
+    "tie_relative_tolerance": 1e-12,
+    "boundary_tie_rule": "LEAVE_CROSSING_TIE_GROUP_UNSELECTED",
+    "identifier_tie_breaking": false,
+    "display_decimal_places": 6
+  },
+  "status_rule": {
+    "ADVANCE": "SELECTED_IN_ALL_20_PRIMARY_AND_NO_BOUNDARY_TIE",
+    "NOT_ADVANCED": "SELECTED_IN_ZERO_PRIMARY_AND_NO_BOUNDARY_TIE",
+    "ABSTAIN": "SELECTED_IN_1_TO_19_PRIMARY_OR_ANY_BOUNDARY_TIE",
+    "OUT_OF_SCOPE": "ACCEPTED_UNRESOLVED_GEOGRAPHY_ONLY"
+  }
+}
