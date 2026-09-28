@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ahmaddshbg-blip/healthcare-energy-resilience-prioritization/blob/main/configs/source_verification.schema.json",
+  "title": "Healthcare energy resilience frozen source verification report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "verification_type",
+    "status",
+    "source_snapshot_id",
+    "source_contract_sha256",
+    "expected_file_count",
+    "observed_file_count",
+    "verified_file_count",
+    "failure_count",
+    "files",
+    "failures"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "verification_type": {
+      "const": "FROZEN_SOURCE_SNAPSHOT"
+    },
+    "status": {
+      "enum": [
+        "VALID",
+        "INVALID"
+      ]
+    },
+    "source_snapshot_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_contract_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "expected_file_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "observed_file_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "verified_file_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "failure_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/file_result"
+      }
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/failure"
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "nullable_bytes": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "nullable_sha256": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "file_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "relative_path",
+        "expected_bytes",
+        "observed_bytes",
+        "expected_sha256",
+        "observed_sha256",
+        "status"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "relative_path": {
+          "type": "string",
+          "pattern": "^raw/[^/\\\\]+$"
+        },
+        "expected_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "observed_bytes": {
+          "$ref": "#/$defs/nullable_bytes"
+        },
+        "expected_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "observed_sha256": {
+          "$ref": "#/$defs/nullable_sha256"
+        },
+        "status": {
+          "enum": [
+            "VALID",
+            "MISSING",
+            "SIZE_MISMATCH",
+            "HASH_MISMATCH",
+            "SIZE_AND_HASH_MISMATCH",
+            "SYMLINK_NOT_ALLOWED"
+          ]
+        }
+      }
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "relative_path",
+        "detail"
+      ],
+      "properties": {
+        "code": {
+          "enum": [
+            "DATA_ROOT_MISSING",
+            "SNAPSHOT_DIRECTORY_MISSING",
+            "RAW_DIRECTORY_MISSING",
+            "MISSING_FILE",
+            "EXTRA_FILE",
+            "SYMLINK_NOT_ALLOWED",
+            "SIZE_MISMATCH",
+            "HASH_MISMATCH"
+          ]
+        },
+        "relative_path": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

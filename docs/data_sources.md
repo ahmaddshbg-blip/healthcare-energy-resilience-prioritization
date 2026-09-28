@@ -42,3 +42,10 @@ and use note. The snapshot identity is SHA-256 over the explicitly ordered
 UTF-8 lines `filename|bytes|sha256`; the order is itself stored and validated.
 Official current-source URLs are mutable, so a newly downloaded file is a new
 evidence vintage rather than a reproduction of the frozen snapshot.
+
+The hash-only verifier confirmed all 15 required private files on 2026-09-28:
+no required, extra, renamed, size-mismatched, or hash-mismatched file was found.
+The deterministic private verification report has SHA-256
+`a5b695bd311819cb1d64b3651981ca2f0b9caaae569abbb82065a49339b2e37a`.
+The report contains relative filenames and hashes, not source records or a
+personal absolute path.

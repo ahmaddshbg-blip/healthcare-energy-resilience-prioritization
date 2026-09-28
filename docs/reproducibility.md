@@ -4,8 +4,9 @@
 
 The repository contains public decision, source, method, and claim contracts.
 It also contains executable validation for the frozen source manifest, accepted
-method invariants, and deterministic 480-configuration expansion. This is an
-engineering-contract milestone, not a completed analytical pipeline. No county
+method invariants, deterministic 480-configuration expansion, and hash-only
+private snapshot verification. This is an engineering milestone, not a
+completed analytical pipeline. No source table has been parsed and no county
 result has been produced.
 
 ## Contract validation
@@ -30,6 +31,30 @@ python scripts/validate_contracts.py --write-configurations
 The validator checks JSON Schema, accepted semantic invariants, content hashes,
 unique identifiers, exact family counts, and byte-for-byte deterministic
 expansion. It does not access `HEALTHCARE_ENERGY_RESILIENCE_DATA_ROOT`.
+
+## Frozen snapshot verification
+
+The private root must contain this exact layout:
+
+```text
+<data-root>/
+  snapshots/
+    <accepted-snapshot-id>/
+      raw/
+```
+
+Set `HEALTHCARE_ENERGY_RESILIENCE_DATA_ROOT` or pass an explicit path:
+
+```bash
+python scripts/verify_snapshot.py --data-root /absolute/private/data/root
+```
+
+The command rejects missing, extra, renamed, symbolic-link, size-mismatched,
+or hash-mismatched files. It never opens a parser for CSV, JSON, XML, or Excel;
+it reads bytes only for SHA-256 verification. Its deterministic report is
+written outside the immutable snapshot under
+`verification/<snapshot-id>/source_verification.json`. The report contains no
+absolute data-root path. A failed verification returns a nonzero exit status.
 
 ## Data boundary
 

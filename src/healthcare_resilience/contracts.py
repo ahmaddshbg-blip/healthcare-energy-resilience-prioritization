@@ -116,6 +116,18 @@ def validate_source_contract(
         "source filenames are not unique",
     )
     _require(
+        len({item["private_relative_path"] for item in files}) == len(files),
+        "source private relative paths are not unique",
+    )
+    _require(
+        all(
+            Path(item["private_relative_path"]).parts
+            == ("raw", item["filename"])
+            for item in files
+        ),
+        "source private relative paths must be raw/<filename>",
+    )
+    _require(
         all(item["required_for_frozen_reproduction"] for item in files),
         "every frozen source entry must be required for reproduction",
     )
@@ -313,6 +325,9 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
     """Validate all public contracts and return their reproducible identities."""
 
     config_dir = root / "configs"
+    Draft202012Validator.check_schema(
+        load_json(config_dir / "source_verification.schema.json")
+    )
     sources = load_json(config_dir / "sources.json")
     method = load_json(config_dir / "method.json")
     configurations = load_json(config_dir / "configurations.json")

@@ -17,6 +17,8 @@ env/
 
 # Private source data and generated artifacts
 data/
+snapshots/
+verification/
 checkpoints/
 runs/
 artifacts/private/

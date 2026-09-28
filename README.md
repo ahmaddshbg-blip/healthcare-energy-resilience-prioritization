@@ -13,9 +13,12 @@ investment return.
 
 The decision contract, data feasibility audit, analytical method, and
 engineering design are complete. Machine-readable source and method contracts,
-the deterministic 480-configuration manifest, and synthetic contract tests are
-implemented. No county-level criterion, portfolio, or final decision status has
-been calculated or published.
+the deterministic 480-configuration manifest, synthetic contract tests, and a
+hash-only frozen-snapshot verifier are implemented. The accepted private
+snapshot passes exact-set, byte-size, and SHA-256 verification for all 15
+required files. No source record has entered the analytical pipeline, and no
+county-level criterion, portfolio, or final status has been calculated or
+published.
 
 ## Decision output
 
@@ -70,8 +73,8 @@ Real source data and generated runs remain outside Git under the private
 3. current-source refresh into a separate immutable snapshot.
 
 A refresh will never silently replace or impersonate the frozen analytical
-snapshot. The current executable surface validates contracts only; it does not
-read private source files or calculate county results. See
+snapshot. The current executable surface validates contracts and hashes frozen
+files without parsing their records or calculating county results. See
 [reproducibility](docs/reproducibility.md).
 
 ## Claim boundary
