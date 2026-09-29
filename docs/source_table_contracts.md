@@ -43,6 +43,10 @@ source. Publisher field metadata is used where available; otherwise the Gate 1
 structural profile is named explicitly. Identifier columns are strings so that
 leading zeroes are not lost.
 
+The FEMA contract requires both the 18 hazard-specific `*_RISKS` score fields
+and their `*_RISKR` applicability fields. The latter are necessary to preserve
+the accepted rule that `Not Applicable` means `OUT_OF_SCENARIO`, not zero risk.
+
 An ordered-header SHA-256 protects every complete header, including columns not
 listed individually as required. This combination keeps the public contract
 readable while still detecting any added, removed, renamed, or reordered

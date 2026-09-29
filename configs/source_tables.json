@@ -407,6 +407,132 @@
           "null_allowed": true,
           "type_evidence": "PUBLISHER_METADATA",
           "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "AVLN_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "CFLD_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "CWAV_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "DRGT_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "ERQK_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "HAIL_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "HWAV_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "HRCN_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "ISTM_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "LNDS_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "LTNG_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "IFLD_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "SWND_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "TRND_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "TSUN_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "VLCN_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "WFIR_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "WNTW_RISKR",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
         }
       ],
       "record_key": {
@@ -422,7 +548,7 @@
       },
       "exact_duplicate_rows_beyond_first": 0,
       "notes": [
-        "The 18 hazard-specific *_RISKS fields are required by the already accepted sensitivity design; no new hazard method is selected here."
+        "The 18 hazard-specific *_RISKS score fields and *_RISKR applicability fields are required by the already accepted sensitivity design; no new hazard method is selected here."
       ]
     },
     {
