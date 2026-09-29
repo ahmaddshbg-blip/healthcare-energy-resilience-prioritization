@@ -16,9 +16,10 @@ engineering design are complete. Machine-readable source and method contracts,
 eight source-table contracts, the deterministic 480-configuration manifest,
 synthetic contract tests, and a hash-only frozen-snapshot verifier are
 implemented. The accepted private snapshot passes exact-set, byte-size, and
-SHA-256 verification for all 15 required files. No source record has entered
-the analytical pipeline, and no county-level criterion, portfolio, or final
-status has been calculated or published.
+SHA-256 verification for all 15 required files. A structural profiler also
+validated all eight contracted tables twice with identical output. No source
+record has been normalized or joined, and no county-level criterion, portfolio,
+or final status has been calculated or published.
 
 ## Decision output
 
@@ -76,8 +77,9 @@ Real source data and generated runs remain outside Git under the private
 
 A refresh will never silently replace or impersonate the frozen analytical
 snapshot. The current executable surface validates file and table contracts,
-tests invented structural profiles, and hashes frozen files without running a
-real-data analytical parser or calculating county results. See
+tests invented CSV and XLSX files, verifies the frozen snapshot, and produces a
+value-free structural profile without running the analytical pipeline or
+calculating county results. See
 [reproducibility](docs/reproducibility.md).
 
 ## Claim boundary

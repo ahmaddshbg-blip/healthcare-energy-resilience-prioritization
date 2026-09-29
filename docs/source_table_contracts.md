@@ -72,9 +72,20 @@ not weaken or overwrite the frozen contract.
 
 ## Current executable boundary
 
-The repository validates the contract document and compares invented observed
-profiles with invented contracts. Synthetic tests cover encoding, row count,
-header, required type, table or sheet presence, key cardinality, and duplicate
-failure paths. No public command yet parses the real source tables, normalizes
-county identifiers, reconciles geography, or calculates criteria, scores,
-portfolios, or statuses.
+The repository validates the contract document and profiles invented CSV and
+XLSX files before touching private data. Synthetic tests cover encoding, row
+count, row width, header, required type, table or sheet presence, key
+cardinality, and duplicate failure paths.
+
+`scripts/profile_source_tables.py` first verifies all frozen files by name,
+size, and SHA-256. Only after that check succeeds does it read the five CSVs and
+three contracted workbook sheets. It validates required parser types and emits
+a compact private structural profile containing no source values or absolute
+paths. Reports are prohibited inside the immutable snapshot.
+
+Two complete runs against the accepted frozen snapshot produced the same
+profile SHA-256:
+`adfb58748598143eb32633f7db0dabec06aab25611961b6f9fea2d77104bfae1`.
+All eight tables matched their contracts. The command does not normalize county
+identifiers, reconcile geography, construct analytical evidence tables, or
+calculate criteria, scores, portfolios, or statuses.

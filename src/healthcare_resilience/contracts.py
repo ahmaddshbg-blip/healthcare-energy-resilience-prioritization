@@ -327,21 +327,46 @@ def validate_source_table_contract(
 
 
 def validate_observed_table_profile(
-    table_contract: dict[str, Any], observed_profile: dict[str, Any]
+    table_contract: dict[str, Any],
+    observed_profile: dict[str, Any],
+    *,
+    expected_source_contract_sha256: str | None = None,
+    expected_source_table_contract_sha256: str | None = None,
 ) -> None:
     """Compare an invented or future observed profile with declared structure."""
 
     _require(
-        observed_profile.get("profile_version") == "1.0.0",
+        observed_profile.get("schema_version") == "1.0.0",
         "observed table profile version is unsupported",
     )
     _require(
-        observed_profile.get("snapshot_id") == table_contract["snapshot_id"],
+        observed_profile.get("profile_type") == "SOURCE_TABLE_STRUCTURE"
+        and observed_profile.get("status") == "VALID",
+        "observed table profile type or status is invalid",
+    )
+    _require(
+        observed_profile.get("source_snapshot_id") == table_contract["snapshot_id"],
         "observed table profile references a different snapshot",
     )
+    if expected_source_contract_sha256 is not None:
+        _require(
+            observed_profile.get("source_contract_sha256")
+            == expected_source_contract_sha256,
+            "observed table profile references a different source contract",
+        )
+    if expected_source_table_contract_sha256 is not None:
+        _require(
+            observed_profile.get("source_table_contract_sha256")
+            == expected_source_table_contract_sha256,
+            "observed table profile references a different source-table contract",
+        )
     expected = {item["id"]: item for item in table_contract["table_contracts"]}
     observed_tables = observed_profile.get("tables")
     _require(isinstance(observed_tables, list), "observed table profile has no tables array")
+    _require(
+        observed_profile.get("table_count") == len(observed_tables),
+        "observed table profile table_count does not match tables",
+    )
     observed = {item.get("id"): item for item in observed_tables}
     _require(
         None not in observed and len(observed) == len(observed_tables),
@@ -568,6 +593,9 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
     config_dir = root / "configs"
     Draft202012Validator.check_schema(
         load_json(config_dir / "source_verification.schema.json")
+    )
+    Draft202012Validator.check_schema(
+        load_json(config_dir / "source_table_profile.schema.json")
     )
     sources = load_json(config_dir / "sources.json")
     source_tables = load_json(config_dir / "source_tables.json")

@@ -7,8 +7,9 @@ claim contracts. It also contains executable validation for the frozen source
 manifest, eight source-table declarations, accepted method invariants,
 deterministic 480-configuration expansion, synthetic structural profiles, and
 hash-only private snapshot verification. This is an engineering milestone, not
-a completed analytical pipeline. No source table has entered the analytical
-pipeline and no county result has been produced.
+a completed analytical pipeline. Real files have been read only by the
+structural profiler after hash verification; no normalized record, evidence
+table, or county result has been produced.
 
 ## Contract validation
 
@@ -39,6 +40,26 @@ exercise failures for encoding, row count, ordered header, required parser
 type, table or sheet presence, key cardinality, and exact duplicate count. The
 accepted contract also records the physical Windows-1252 Census file and the
 trailing empty header cells in both HRSA CSV files.
+
+## Source-table profiling
+
+After frozen snapshot verification succeeds, run:
+
+```bash
+python scripts/profile_source_tables.py --data-root /absolute/private/data/root
+```
+
+The command reads only the five contracted CSVs and three HHS workbook sheets.
+It validates strict encoding, BOM state, line endings, workbook sheet order,
+header fingerprints, row widths, required parser types, key cardinality, and
+exact-duplicate counts. It writes
+`verification/<snapshot-id>/source_table_profile.json`, never inside the
+immutable snapshot.
+
+The private profile contains structural evidence only. It has no source values,
+absolute paths, normalized identifiers, joins, criteria, scores, or portfolio
+results. Two complete runs produced the same profile SHA-256:
+`adfb58748598143eb32633f7db0dabec06aab25611961b6f9fea2d77104bfae1`.
 
 ## Frozen snapshot verification
 
@@ -73,7 +94,7 @@ read from an exact private frozen snapshot.
 
 ## Planned analytical execution modes
 
-1. **Synthetic test** validates transformations, failure paths, deterministic
+1. **Synthetic test** validates parser boundaries, failure paths, deterministic
    behavior, and output contracts without real county records.
 2. **Frozen reproduction** runs without network access and requires every file
    to match the accepted source manifest.

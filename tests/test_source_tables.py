@@ -9,6 +9,7 @@ from healthcare_resilience.contracts import (
     ContractError,
     load_json,
     validate_observed_table_profile,
+    validate_schema,
     validate_source_table_contract,
 )
 
@@ -35,12 +36,23 @@ def test_accepted_source_table_contract_is_valid() -> None:
 
 def test_synthetic_table_profile_matches_contract() -> None:
     contract = synthetic_contract()
+    profile = synthetic_profile()
     validate_source_table_contract(
         contract,
         load_json(CONFIG_DIR / "source_tables.schema.json"),
         enforce_accepted_tables=False,
     )
-    validate_observed_table_profile(contract, synthetic_profile())
+    validate_schema(
+        profile,
+        load_json(CONFIG_DIR / "source_table_profile.schema.json"),
+        "synthetic source-table profile",
+    )
+    validate_observed_table_profile(
+        contract,
+        profile,
+        expected_source_contract_sha256="2" * 64,
+        expected_source_table_contract_sha256="3" * 64,
+    )
 
 
 @pytest.mark.parametrize(
@@ -73,6 +85,7 @@ def test_profile_rejects_structural_drift(
 def test_profile_rejects_missing_sheet() -> None:
     profile = synthetic_profile()
     profile["tables"].pop()
+    profile["table_count"] = 1
     with pytest.raises(ContractError, match="missing or unexpected table"):
         validate_observed_table_profile(synthetic_contract(), profile)
 

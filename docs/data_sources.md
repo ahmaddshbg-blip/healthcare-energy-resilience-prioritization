@@ -53,9 +53,15 @@ hashes, required parser types, keys, and duplicate evidence. The eight table
 contracts and their stop conditions are explained in
 [Source Table Contracts](source_table_contracts.md).
 
-The hash-only verifier confirmed all 15 required private files on 2026-09-28:
+The hash-only verifier confirmed all 15 required private files on 2026-09-29:
 no required, extra, renamed, size-mismatched, or hash-mismatched file was found.
 The deterministic private verification report has SHA-256
-`a5b695bd311819cb1d64b3651981ca2f0b9caaae569abbb82065a49339b2e37a`.
+`a983c0c1d0750c1aa3821879b2de32441d94549ad0b46304718e61ce615aaf7e`.
 The report contains relative filenames and hashes, not source records or a
 personal absolute path.
+
+The subsequent structural profiler reverified the corrected source contract
+and then validated all eight contracted tables. Two runs produced identical
+profile SHA-256
+`adfb58748598143eb32633f7db0dabec06aab25611961b6f9fea2d77104bfae1`.
+The private profile contains no source values or absolute path.

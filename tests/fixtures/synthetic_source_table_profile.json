@@ -1,6 +1,11 @@
 {
-  "profile_version": "1.0.0",
-  "snapshot_id": "1111111111111111111111111111111111111111111111111111111111111111",
+  "schema_version": "1.0.0",
+  "profile_type": "SOURCE_TABLE_STRUCTURE",
+  "status": "VALID",
+  "source_snapshot_id": "1111111111111111111111111111111111111111111111111111111111111111",
+  "source_contract_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+  "source_table_contract_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+  "table_count": 2,
   "tables": [
     {
       "id": "synthetic_measurements",

@@ -27,7 +27,7 @@ from healthcare_resilience.hashing import sha256_file  # noqa: E402
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Validate immutable Project 04 engineering contracts."
+        description="Validate immutable Project 04 engineering contracts and schemas."
     )
     parser.add_argument(
         "--write-configurations",
