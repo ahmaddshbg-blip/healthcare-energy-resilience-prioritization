@@ -1,0 +1,950 @@
+{
+  "schema_version": "1.0.0",
+  "snapshot_id": "cc1489ab008db4d5d1b2eddf798b51218e2324e97e88ab9c7d3853927bb54dbb",
+  "header_fingerprint_algorithm": "SHA256_UTF8_COMPACT_JSON_ORDERED_HEADER_V1",
+  "expected_table_count": 8,
+  "schema_failure_conditions": [
+    "MISSING_OR_UNEXPECTED_TABLE_OR_SHEET",
+    "ENCODING_OR_BOM_MISMATCH",
+    "CSV_DIALECT_OR_LINE_ENDING_MISMATCH",
+    "ROW_COUNT_MISMATCH",
+    "COLUMN_COUNT_OR_ROW_WIDTH_MISMATCH",
+    "ORDERED_HEADER_MISMATCH",
+    "MISSING_REQUIRED_COLUMN",
+    "REQUIRED_COLUMN_TYPE_MISMATCH",
+    "KEY_NULLABILITY_OR_CARDINALITY_MISMATCH",
+    "EXACT_DUPLICATE_COUNT_MISMATCH"
+  ],
+  "table_contracts": [
+    {
+      "id": "hhs_empower_county",
+      "source_id": "hhs_empower_county",
+      "filename": "hhs_empower_county.csv",
+      "container": "CSV",
+      "table_name": "hhs_empower_county",
+      "sheet_name": null,
+      "role": "PRIMARY_INPUT",
+      "encoding": "UTF-8",
+      "byte_order_mark": "ABSENT",
+      "csv_dialect": {
+        "delimiter": ",",
+        "quote_character": "\"",
+        "line_ending": "CRLF"
+      },
+      "header_row": 1,
+      "data_row_count": 3233,
+      "header_cell_count": 18,
+      "named_column_count": 18,
+      "data_row_field_count": 18,
+      "unnamed_header_positions": [],
+      "header_sha256": "55627ea9043b8255a8589fec7544efb58c768d691b84640ebad5c73b55e4ff9e",
+      "required_columns": [
+        {
+          "name": "OBJECTID",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeOID"
+        },
+        {
+          "name": "FIPS_Code",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "County",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "State",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "Medicare_Benes",
+          "parser_type": "INTEGER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeInteger"
+        },
+        {
+          "name": "Power_Dependent_Devices_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeInteger"
+        },
+        {
+          "name": "Facility_ESRD_Dialysis_Any_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeInteger"
+        },
+        {
+          "name": "O2_Services_Any_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeInteger"
+        },
+        {
+          "name": "Home_Health_Services_Any_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeInteger"
+        },
+        {
+          "name": "AtHome_Hospice_Any_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeInteger"
+        },
+        {
+          "name": "Any_Healthcare_Srvc_Any_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeInteger"
+        }
+      ],
+      "record_key": {
+        "kind": "UNIQUE",
+        "columns": [
+          "OBJECTID"
+        ],
+        "scope": "ALL_ROWS",
+        "null_policy": "FORBID",
+        "expected_nonblank_rows": 3233,
+        "expected_distinct_count": 3233,
+        "expected_duplicate_rows_beyond_first": 0
+      },
+      "exact_duplicate_rows_beyond_first": 0,
+      "notes": [
+        "FIPS_Code is not the physical row key: five non-county rows have no valid county FIPS."
+      ]
+    },
+    {
+      "id": "fema_nri_counties",
+      "source_id": "fema_nri_counties",
+      "filename": "fema_nri_counties.csv",
+      "container": "CSV",
+      "table_name": "fema_nri_counties",
+      "sheet_name": null,
+      "role": "PRIMARY_INPUT",
+      "encoding": "UTF-8",
+      "byte_order_mark": "ABSENT",
+      "csv_dialect": {
+        "delimiter": ",",
+        "quote_character": "\"",
+        "line_ending": "CRLF"
+      },
+      "header_row": 1,
+      "data_row_count": 3232,
+      "header_cell_count": 467,
+      "named_column_count": 467,
+      "data_row_field_count": 467,
+      "unnamed_header_positions": [],
+      "header_sha256": "2061cc330290e214f3e9543a1392cd358b208dda90eae13ede418600e8fb4194",
+      "required_columns": [
+        {
+          "name": "OBJECTID",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeOID"
+        },
+        {
+          "name": "NRI_ID",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "STATEABBRV",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "STCOFIPS",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "POPULATION",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeInteger"
+        },
+        {
+          "name": "RISK_VALUE",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "RISK_SCORE",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "RISK_RATNG",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "EAL_SCORE",
+          "parser_type": "NUMBER",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "EAL_RATNG",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "EAL_VALT",
+          "parser_type": "NUMBER",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "SOVI_SCORE",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "SOVI_RATNG",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "RESL_SCORE",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "RESL_RATNG",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "RESL_VALUE",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "CRF_VALUE",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "NRI_VER",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "esriFieldTypeString"
+        },
+        {
+          "name": "AVLN_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "CFLD_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "CWAV_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "DRGT_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "ERQK_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "HAIL_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "HWAV_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "HRCN_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "ISTM_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "LNDS_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "LTNG_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "IFLD_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "SWND_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "TRND_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "TSUN_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "VLCN_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "WFIR_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        },
+        {
+          "name": "WNTW_RISKS",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA",
+          "source_declared_type": "esriFieldTypeDouble"
+        }
+      ],
+      "record_key": {
+        "kind": "UNIQUE",
+        "columns": [
+          "NRI_ID"
+        ],
+        "scope": "ALL_ROWS",
+        "null_policy": "FORBID",
+        "expected_nonblank_rows": 3232,
+        "expected_distinct_count": 3232,
+        "expected_duplicate_rows_beyond_first": 0
+      },
+      "exact_duplicate_rows_beyond_first": 0,
+      "notes": [
+        "The 18 hazard-specific *_RISKS fields are required by the already accepted sensitivity design; no new hazard method is selected here."
+      ]
+    },
+    {
+      "id": "hrsa_primary_care_hpsa",
+      "source_id": "hrsa_primary_care_hpsa",
+      "filename": "hrsa_primary_care_hpsa.csv",
+      "container": "CSV",
+      "table_name": "hrsa_primary_care_hpsa",
+      "sheet_name": null,
+      "role": "PRIMARY_INPUT",
+      "encoding": "UTF-8",
+      "byte_order_mark": "ABSENT",
+      "csv_dialect": {
+        "delimiter": ",",
+        "quote_character": "\"",
+        "line_ending": "CRLF"
+      },
+      "header_row": 1,
+      "data_row_count": 80199,
+      "header_cell_count": 66,
+      "named_column_count": 65,
+      "data_row_field_count": 65,
+      "unnamed_header_positions": [
+        66
+      ],
+      "header_sha256": "062f416e6f12d4febdc824592678c7f95333bccd83e8315a5675e03f3d75640c",
+      "required_columns": [
+        {
+          "name": "HPSA ID",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "varchar(12)"
+        },
+        {
+          "name": "HPSA Score",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "numeric(9,0)"
+        },
+        {
+          "name": "HPSA Status",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "varchar(50)"
+        },
+        {
+          "name": "Designation Type",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "varchar(50)"
+        },
+        {
+          "name": "HPSA Discipline Class",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "varchar(50)"
+        },
+        {
+          "name": "HPSA Designation Population",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "HPSA Estimated Underserved Population",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "State and County Federal Information Processing Standard Code",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "char(5)"
+        },
+        {
+          "name": "Common State County FIPS Code",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "Data Warehouse Record Create Date",
+          "parser_type": "DATETIME",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "smalldatetime"
+        }
+      ],
+      "record_key": {
+        "kind": "NON_UNIQUE_IDENTIFIER",
+        "columns": [
+          "HPSA ID"
+        ],
+        "scope": "ALL_COMPONENT_ROWS",
+        "null_policy": "FORBID",
+        "expected_nonblank_rows": 80199,
+        "expected_distinct_count": 17847,
+        "expected_duplicate_rows_beyond_first": 62352
+      },
+      "exact_duplicate_rows_beyond_first": 4,
+      "notes": [
+        "The CSV header contains a trailing empty cell at position 66 while every data row has 65 fields.",
+        "HPSA ID identifies a designation, not a unique component row; the contract deliberately does not invent a row key."
+      ]
+    },
+    {
+      "id": "hrsa_health_center_sites",
+      "source_id": "hrsa_health_center_sites",
+      "filename": "hrsa_health_center_sites.csv",
+      "container": "CSV",
+      "table_name": "hrsa_health_center_sites",
+      "sheet_name": null,
+      "role": "CONTEXT_INPUT",
+      "encoding": "UTF-8",
+      "byte_order_mark": "ABSENT",
+      "csv_dialect": {
+        "delimiter": ",",
+        "quote_character": "\"",
+        "line_ending": "CRLF"
+      },
+      "header_row": 1,
+      "data_row_count": 19283,
+      "header_cell_count": 56,
+      "named_column_count": 55,
+      "data_row_field_count": 55,
+      "unnamed_header_positions": [
+        56
+      ],
+      "header_sha256": "936b6d2bde3e01c9c192c84002e3e19b768d778fa5b34e921a9a2faa20f1dad9",
+      "required_columns": [
+        {
+          "name": "BPHC Assigned Number",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "varchar(50)"
+        },
+        {
+          "name": "Site Name",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "varchar(8000)"
+        },
+        {
+          "name": "Health Center Type",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "varchar(51)"
+        },
+        {
+          "name": "Operating Hours per Week",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "numeric(5,2)"
+        },
+        {
+          "name": "Site Status Description",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "varchar(100)"
+        },
+        {
+          "name": "Health Center Location Type Description",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "varchar(50)"
+        },
+        {
+          "name": "State and County Federal Information Processing Standard Code",
+          "parser_type": "STRING",
+          "null_allowed": true,
+          "type_evidence": "PUBLISHER_METADATA_AND_GATE_1_PROFILE",
+          "source_declared_type": "char(5)"
+        },
+        {
+          "name": "Data Warehouse Record Create Date",
+          "parser_type": "DATETIME",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE",
+          "source_declared_type": "varchar(30)"
+        }
+      ],
+      "record_key": {
+        "kind": "UNIQUE",
+        "columns": [
+          "BPHC Assigned Number"
+        ],
+        "scope": "ALL_ROWS",
+        "null_policy": "FORBID",
+        "expected_nonblank_rows": 19283,
+        "expected_distinct_count": 19283,
+        "expected_duplicate_rows_beyond_first": 0
+      },
+      "exact_duplicate_rows_beyond_first": 0,
+      "notes": [
+        "The CSV header contains a trailing empty cell at position 56 while every data row has 55 fields."
+      ]
+    },
+    {
+      "id": "census_county_population_2025",
+      "source_id": "census_county_population_2025",
+      "filename": "census_county_population_2025.csv",
+      "container": "CSV",
+      "table_name": "census_county_population_2025",
+      "sheet_name": null,
+      "role": "PRIMARY_INPUT",
+      "encoding": "WINDOWS-1252",
+      "byte_order_mark": "ABSENT",
+      "csv_dialect": {
+        "delimiter": ",",
+        "quote_character": "\"",
+        "line_ending": "LF"
+      },
+      "header_row": 1,
+      "data_row_count": 3195,
+      "header_cell_count": 99,
+      "named_column_count": 99,
+      "data_row_field_count": 99,
+      "unnamed_header_positions": [],
+      "header_sha256": "54488ec3d0963400ad3db4b208af3ef2ba5e01c849e42c208d5c7ce4e7de374a",
+      "required_columns": [
+        {
+          "name": "SUMLEV",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "STATE",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "COUNTY",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "STNAME",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "CTYNAME",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "POPESTIMATE2025",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        }
+      ],
+      "record_key": {
+        "kind": "UNIQUE",
+        "columns": [
+          "SUMLEV",
+          "STATE",
+          "COUNTY"
+        ],
+        "scope": "ALL_RAW_ROWS",
+        "null_policy": "FORBID",
+        "expected_nonblank_rows": 3195,
+        "expected_distinct_count": 3195,
+        "expected_duplicate_rows_beyond_first": 0
+      },
+      "exact_duplicate_rows_beyond_first": 0,
+      "notes": [
+        "The raw file contains 3,195 rows: 3,144 SUMLEV 050 county rows plus 51 state-summary rows.",
+        "The file is valid Windows-1252 and is not valid UTF-8; replacement-character decoding is prohibited."
+      ]
+    },
+    {
+      "id": "hhs_empower_history_state",
+      "source_id": "hhs_empower_2026_historical",
+      "filename": "hhs_empower_2026_historical.xlsx",
+      "container": "XLSX",
+      "table_name": "hhs_empower_history_state",
+      "sheet_name": "State",
+      "role": "CONTEXT_INPUT",
+      "encoding": "NOT_APPLICABLE_BINARY",
+      "byte_order_mark": "NOT_APPLICABLE",
+      "csv_dialect": null,
+      "header_row": 1,
+      "data_row_count": 56,
+      "header_cell_count": 65,
+      "named_column_count": 65,
+      "data_row_field_count": 65,
+      "unnamed_header_positions": [],
+      "header_sha256": "e135a20dec3613047d87ee4878746b65205e57e380126d97b52c92c74e950fe1",
+      "required_columns": [
+        {
+          "name": "State_FIPS_Code",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "State",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "Sep_2026_Medicare_Benes",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "Sep_2026_Power_Dependent_Devices_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        }
+      ],
+      "record_key": {
+        "kind": "UNIQUE",
+        "columns": [
+          "State_FIPS_Code"
+        ],
+        "scope": "ALL_ROWS",
+        "null_policy": "FORBID",
+        "expected_nonblank_rows": 56,
+        "expected_distinct_count": 56,
+        "expected_duplicate_rows_beyond_first": 0
+      },
+      "exact_duplicate_rows_beyond_first": 0
+    },
+    {
+      "id": "hhs_empower_history_county",
+      "source_id": "hhs_empower_2026_historical",
+      "filename": "hhs_empower_2026_historical.xlsx",
+      "container": "XLSX",
+      "table_name": "hhs_empower_history_county",
+      "sheet_name": "County",
+      "role": "CONTEXT_INPUT",
+      "encoding": "NOT_APPLICABLE_BINARY",
+      "byte_order_mark": "NOT_APPLICABLE",
+      "csv_dialect": null,
+      "header_row": 1,
+      "data_row_count": 3228,
+      "header_cell_count": 68,
+      "named_column_count": 68,
+      "data_row_field_count": 68,
+      "unnamed_header_positions": [],
+      "header_sha256": "2823e6d47bc035e6dd5faa1869ab69e976d74664ec06f4ecb4715883c367e558",
+      "required_columns": [
+        {
+          "name": "FIPS_Code",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "County_FIPS_Code",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "County",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "State_FIPS_Code",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "State",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "Sep_2026_Medicare_Benes",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "Sep_2026_Power_Dependent_Devices_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "Sep_2026_Facility_ESRD_Dialysis_Any_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "Sep_2026_O2_Services_Any_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "Sep_2026_Home_Health_Services_Any_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "Sep_2026_AtHome_Hospice_Any_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "Sep_2026_Healthcare_Srvc_Any_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        }
+      ],
+      "record_key": {
+        "kind": "UNIQUE",
+        "columns": [
+          "FIPS_Code"
+        ],
+        "scope": "ALL_ROWS",
+        "null_policy": "FORBID",
+        "expected_nonblank_rows": 3228,
+        "expected_distinct_count": 3228,
+        "expected_duplicate_rows_beyond_first": 0
+      },
+      "exact_duplicate_rows_beyond_first": 0
+    },
+    {
+      "id": "hhs_empower_history_zip_code",
+      "source_id": "hhs_empower_2026_historical",
+      "filename": "hhs_empower_2026_historical.xlsx",
+      "container": "XLSX",
+      "table_name": "hhs_empower_history_zip_code",
+      "sheet_name": "Zip Code",
+      "role": "CONTEXT_INPUT",
+      "encoding": "NOT_APPLICABLE_BINARY",
+      "byte_order_mark": "NOT_APPLICABLE",
+      "csv_dialect": null,
+      "header_row": 1,
+      "data_row_count": 31919,
+      "header_cell_count": 69,
+      "named_column_count": 69,
+      "data_row_field_count": 69,
+      "unnamed_header_positions": [],
+      "header_sha256": "9978fa500eac88f28b5ebd1eda76210ae1e9b9525124072c99df3c64c4860c32",
+      "required_columns": [
+        {
+          "name": "Zip_Code",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "FIPS_Code",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "County",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "State",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "Sep_2026_Medicare_Benes",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "Sep_2026_Power_Dependent_Devices_DME",
+          "parser_type": "INTEGER",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        }
+      ],
+      "record_key": {
+        "kind": "UNIQUE",
+        "columns": [
+          "Zip_Code"
+        ],
+        "scope": "ALL_ROWS",
+        "null_policy": "FORBID",
+        "expected_nonblank_rows": 31919,
+        "expected_distinct_count": 31919,
+        "expected_duplicate_rows_beyond_first": 0
+      },
+      "exact_duplicate_rows_beyond_first": 0,
+      "notes": [
+        "The sheet is contracted for source integrity only; ZIP Code is not an alternative decision unit in the accepted design."
+      ]
+    }
+  ]
+}

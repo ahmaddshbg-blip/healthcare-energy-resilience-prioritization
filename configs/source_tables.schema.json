@@ -1,0 +1,314 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ahmaddshbg-blip/healthcare-energy-resilience-prioritization/blob/main/configs/source_tables.schema.json",
+  "title": "Healthcare energy resilience source-table contracts",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "snapshot_id",
+    "header_fingerprint_algorithm",
+    "expected_table_count",
+    "schema_failure_conditions",
+    "table_contracts"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "snapshot_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "header_fingerprint_algorithm": {
+      "const": "SHA256_UTF8_COMPACT_JSON_ORDERED_HEADER_V1"
+    },
+    "expected_table_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "schema_failure_conditions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "MISSING_OR_UNEXPECTED_TABLE_OR_SHEET",
+          "ENCODING_OR_BOM_MISMATCH",
+          "CSV_DIALECT_OR_LINE_ENDING_MISMATCH",
+          "ROW_COUNT_MISMATCH",
+          "COLUMN_COUNT_OR_ROW_WIDTH_MISMATCH",
+          "ORDERED_HEADER_MISMATCH",
+          "MISSING_REQUIRED_COLUMN",
+          "REQUIRED_COLUMN_TYPE_MISMATCH",
+          "KEY_NULLABILITY_OR_CARDINALITY_MISMATCH",
+          "EXACT_DUPLICATE_COUNT_MISMATCH"
+        ]
+      }
+    },
+    "table_contracts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/table_contract"
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "csv_dialect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "delimiter",
+        "quote_character",
+        "line_ending"
+      ],
+      "properties": {
+        "delimiter": {
+          "const": ","
+        },
+        "quote_character": {
+          "const": "\""
+        },
+        "line_ending": {
+          "enum": [
+            "LF",
+            "CRLF"
+          ]
+        }
+      }
+    },
+    "required_column": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "parser_type",
+        "null_allowed",
+        "type_evidence"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parser_type": {
+          "enum": [
+            "STRING",
+            "INTEGER",
+            "NUMBER",
+            "DATETIME"
+          ]
+        },
+        "null_allowed": {
+          "type": "boolean"
+        },
+        "type_evidence": {
+          "enum": [
+            "PUBLISHER_METADATA",
+            "GATE_1_PROFILE",
+            "PUBLISHER_METADATA_AND_GATE_1_PROFILE"
+          ]
+        },
+        "source_declared_type": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "record_key": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "columns",
+        "scope",
+        "null_policy",
+        "expected_nonblank_rows",
+        "expected_distinct_count",
+        "expected_duplicate_rows_beyond_first"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "UNIQUE",
+            "NON_UNIQUE_IDENTIFIER"
+          ]
+        },
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "null_policy": {
+          "enum": [
+            "FORBID",
+            "ALLOW"
+          ]
+        },
+        "expected_nonblank_rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expected_distinct_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expected_duplicate_rows_beyond_first": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "table_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_id",
+        "filename",
+        "container",
+        "table_name",
+        "sheet_name",
+        "role",
+        "encoding",
+        "byte_order_mark",
+        "csv_dialect",
+        "header_row",
+        "data_row_count",
+        "header_cell_count",
+        "named_column_count",
+        "data_row_field_count",
+        "unnamed_header_positions",
+        "header_sha256",
+        "required_columns",
+        "record_key",
+        "exact_duplicate_rows_beyond_first"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "filename": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^/\\\\]+$"
+        },
+        "container": {
+          "enum": [
+            "CSV",
+            "XLSX"
+          ]
+        },
+        "table_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sheet_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "role": {
+          "enum": [
+            "PRIMARY_INPUT",
+            "CONTEXT_INPUT"
+          ]
+        },
+        "encoding": {
+          "enum": [
+            "UTF-8",
+            "WINDOWS-1252",
+            "NOT_APPLICABLE_BINARY"
+          ]
+        },
+        "byte_order_mark": {
+          "enum": [
+            "ABSENT",
+            "PRESENT",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "csv_dialect": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/csv_dialect"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "header_row": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "data_row_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "header_cell_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "named_column_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "data_row_field_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "unnamed_header_positions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "header_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "required_columns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/required_column"
+          }
+        },
+        "record_key": {
+          "$ref": "#/$defs/record_key"
+        },
+        "exact_duplicate_rows_beyond_first": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -36,7 +36,7 @@
       "role": "PRIMARY_INPUT",
       "mutable_endpoint": false,
       "required_for_frozen_reproduction": true,
-      "expected_rows": 3144,
+      "expected_rows": 3195,
       "expected_columns": 99,
       "attribution": "U.S. Census Bureau Vintage 2025 county population estimates"
     },

@@ -20,6 +20,10 @@ rows in the HHS historical workbook. No sampling is required. The size is
 appropriate for local SQL and Python processing and does not justify a
 distributed-computing claim.
 
+The raw Census file has 3,195 physical data rows: 3,144 county rows and 51
+state-summary rows. The physical count is used by the source-table schema; the
+3,144-row subset is used only when describing the county reference universe.
+
 ## Geography
 
 The Census Vintage 2025 file defines 3,144 county-equivalents across the 50
@@ -42,6 +46,12 @@ and use note. The snapshot identity is SHA-256 over the explicitly ordered
 UTF-8 lines `filename|bytes|sha256`; the order is itself stored and validated.
 Official current-source URLs are mutable, so a newly downloaded file is a new
 evidence vintage rather than a reproduction of the frozen snapshot.
+
+`configs/source_tables.json` separately freezes analytical table and workbook-
+sheet structure: encoding, CSV dialect, row and column counts, ordered-header
+hashes, required parser types, keys, and duplicate evidence. The eight table
+contracts and their stop conditions are explained in
+[Source Table Contracts](source_table_contracts.md).
 
 The hash-only verifier confirmed all 15 required private files on 2026-09-28:
 no required, extra, renamed, size-mismatched, or hash-mismatched file was found.

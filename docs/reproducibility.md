@@ -2,12 +2,13 @@
 
 ## Current state
 
-The repository contains public decision, source, method, and claim contracts.
-It also contains executable validation for the frozen source manifest, accepted
-method invariants, deterministic 480-configuration expansion, and hash-only
-private snapshot verification. This is an engineering milestone, not a
-completed analytical pipeline. No source table has been parsed and no county
-result has been produced.
+The repository contains public decision, source-file, source-table, method, and
+claim contracts. It also contains executable validation for the frozen source
+manifest, eight source-table declarations, accepted method invariants,
+deterministic 480-configuration expansion, synthetic structural profiles, and
+hash-only private snapshot verification. This is an engineering milestone, not
+a completed analytical pipeline. No source table has entered the analytical
+pipeline and no county result has been produced.
 
 ## Contract validation
 
@@ -28,9 +29,16 @@ environment is recorded in `requirements-lock.txt`.
 python scripts/validate_contracts.py --write-configurations
 ```
 
-The validator checks JSON Schema, accepted semantic invariants, content hashes,
-unique identifiers, exact family counts, and byte-for-byte deterministic
-expansion. It does not access `HEALTHCARE_ENERGY_RESILIENCE_DATA_ROOT`.
+The validator checks JSON Schema, accepted semantic invariants, source-table
+shape, content hashes, unique identifiers, exact family counts, and byte-for-
+byte deterministic expansion. It does not access
+`HEALTHCARE_ENERGY_RESILIENCE_DATA_ROOT`.
+
+The source-table tests use only invented contracts and observed profiles. They
+exercise failures for encoding, row count, ordered header, required parser
+type, table or sheet presence, key cardinality, and exact duplicate count. The
+accepted contract also records the physical Windows-1252 Census file and the
+trailing empty header cells in both HRSA CSV files.
 
 ## Frozen snapshot verification
 

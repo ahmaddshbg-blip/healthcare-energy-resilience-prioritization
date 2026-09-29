@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0.0",
+  "snapshot_id": "1111111111111111111111111111111111111111111111111111111111111111",
+  "header_fingerprint_algorithm": "SHA256_UTF8_COMPACT_JSON_ORDERED_HEADER_V1",
+  "expected_table_count": 2,
+  "schema_failure_conditions": [
+    "MISSING_OR_UNEXPECTED_TABLE_OR_SHEET",
+    "ENCODING_OR_BOM_MISMATCH",
+    "CSV_DIALECT_OR_LINE_ENDING_MISMATCH",
+    "ROW_COUNT_MISMATCH",
+    "COLUMN_COUNT_OR_ROW_WIDTH_MISMATCH",
+    "ORDERED_HEADER_MISMATCH",
+    "MISSING_REQUIRED_COLUMN",
+    "REQUIRED_COLUMN_TYPE_MISMATCH",
+    "KEY_NULLABILITY_OR_CARDINALITY_MISMATCH",
+    "EXACT_DUPLICATE_COUNT_MISMATCH"
+  ],
+  "table_contracts": [
+    {
+      "id": "synthetic_measurements",
+      "source_id": "synthetic_csv_source",
+      "filename": "synthetic_measurements.csv",
+      "container": "CSV",
+      "table_name": "synthetic_measurements",
+      "sheet_name": null,
+      "role": "PRIMARY_INPUT",
+      "encoding": "UTF-8",
+      "byte_order_mark": "ABSENT",
+      "csv_dialect": {
+        "delimiter": ",",
+        "quote_character": "\"",
+        "line_ending": "LF"
+      },
+      "header_row": 1,
+      "data_row_count": 3,
+      "header_cell_count": 2,
+      "named_column_count": 2,
+      "data_row_field_count": 2,
+      "unnamed_header_positions": [],
+      "header_sha256": "36c0e1a23a92660953ff70673fa32b6b015966f8d5ffb780a2fae1cfe60feeed",
+      "required_columns": [
+        {
+          "name": "unit_id",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "amount",
+          "parser_type": "NUMBER",
+          "null_allowed": true,
+          "type_evidence": "GATE_1_PROFILE"
+        }
+      ],
+      "record_key": {
+        "kind": "UNIQUE",
+        "columns": [
+          "unit_id"
+        ],
+        "scope": "ALL_ROWS",
+        "null_policy": "FORBID",
+        "expected_nonblank_rows": 3,
+        "expected_distinct_count": 3,
+        "expected_duplicate_rows_beyond_first": 0
+      },
+      "exact_duplicate_rows_beyond_first": 0
+    },
+    {
+      "id": "synthetic_regions",
+      "source_id": "synthetic_workbook_source",
+      "filename": "synthetic_regions.xlsx",
+      "container": "XLSX",
+      "table_name": "synthetic_regions",
+      "sheet_name": "Regions",
+      "role": "CONTEXT_INPUT",
+      "encoding": "NOT_APPLICABLE_BINARY",
+      "byte_order_mark": "NOT_APPLICABLE",
+      "csv_dialect": null,
+      "header_row": 1,
+      "data_row_count": 2,
+      "header_cell_count": 2,
+      "named_column_count": 2,
+      "data_row_field_count": 2,
+      "unnamed_header_positions": [],
+      "header_sha256": "10a52cd419cfbf08f73efc53cbc46601d7af51cff8eca367b2e6089a8ce6d85d",
+      "required_columns": [
+        {
+          "name": "region_id",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        },
+        {
+          "name": "label",
+          "parser_type": "STRING",
+          "null_allowed": false,
+          "type_evidence": "GATE_1_PROFILE"
+        }
+      ],
+      "record_key": {
+        "kind": "NON_UNIQUE_IDENTIFIER",
+        "columns": [
+          "region_id"
+        ],
+        "scope": "ALL_ROWS",
+        "null_policy": "FORBID",
+        "expected_nonblank_rows": 2,
+        "expected_distinct_count": 1,
+        "expected_duplicate_rows_beyond_first": 1
+      },
+      "exact_duplicate_rows_beyond_first": 0
+    }
+  ]
+}

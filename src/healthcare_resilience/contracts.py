@@ -66,6 +66,28 @@ EXPECTED_SOURCE_IDENTITY_ORDER = (
     "hrsa_primary_care_hpsa_metadata",
     "hrsa_primary_care_hpsa",
 )
+EXPECTED_SOURCE_TABLE_IDS = (
+    "hhs_empower_county",
+    "fema_nri_counties",
+    "hrsa_primary_care_hpsa",
+    "hrsa_health_center_sites",
+    "census_county_population_2025",
+    "hhs_empower_history_state",
+    "hhs_empower_history_county",
+    "hhs_empower_history_zip_code",
+)
+EXPECTED_TABLE_FAILURE_CONDITIONS = (
+    "MISSING_OR_UNEXPECTED_TABLE_OR_SHEET",
+    "ENCODING_OR_BOM_MISMATCH",
+    "CSV_DIALECT_OR_LINE_ENDING_MISMATCH",
+    "ROW_COUNT_MISMATCH",
+    "COLUMN_COUNT_OR_ROW_WIDTH_MISMATCH",
+    "ORDERED_HEADER_MISMATCH",
+    "MISSING_REQUIRED_COLUMN",
+    "REQUIRED_COLUMN_TYPE_MISMATCH",
+    "KEY_NULLABILITY_OR_CARDINALITY_MISMATCH",
+    "EXACT_DUPLICATE_COUNT_MISMATCH",
+)
 
 
 class ContractError(ValueError):
@@ -157,6 +179,225 @@ def validate_source_contract(
         _require(
             source_contract["snapshot_id"] == ACCEPTED_SOURCE_SNAPSHOT_ID,
             "source contract is not the accepted frozen snapshot",
+        )
+
+
+def validate_source_table_contract(
+    table_contract: dict[str, Any],
+    table_schema: dict[str, Any],
+    source_contract: dict[str, Any] | None = None,
+    *,
+    enforce_accepted_tables: bool = True,
+) -> None:
+    """Validate structural table declarations without opening source data."""
+
+    validate_schema(table_contract, table_schema, "source-table contract")
+    tables = table_contract["table_contracts"]
+    _require(
+        table_contract["expected_table_count"] == len(tables),
+        "source-table expected_table_count does not match table_contracts",
+    )
+    identifiers = [item["id"] for item in tables]
+    _require(len(set(identifiers)) == len(identifiers), "source-table ids are not unique")
+    _require(
+        tuple(table_contract["schema_failure_conditions"])
+        == EXPECTED_TABLE_FAILURE_CONDITIONS,
+        "source-table failure conditions changed or are incomplete",
+    )
+
+    if source_contract is not None:
+        _require(
+            table_contract["snapshot_id"] == source_contract["snapshot_id"],
+            "source-table contract references a different snapshot",
+        )
+        sources_by_id = {
+            item["id"]: item for item in source_contract["source_files"]
+        }
+    else:
+        sources_by_id = None
+
+    source_locations: set[tuple[str, str | None]] = set()
+    for item in tables:
+        location = (item["source_id"], item["sheet_name"])
+        _require(location not in source_locations, f"duplicate table location for {item['id']}")
+        source_locations.add(location)
+
+        if sources_by_id is not None:
+            _require(
+                item["source_id"] in sources_by_id,
+                f"unknown source_id for {item['id']}",
+            )
+            source = sources_by_id[item["source_id"]]
+            _require(
+                item["filename"] == source["filename"],
+                f"filename differs from source manifest for {item['id']}",
+            )
+            _require(
+                item["role"] == source["role"],
+                f"role differs from source manifest for {item['id']}",
+            )
+
+        if item["container"] == "CSV":
+            _require(item["sheet_name"] is None, f"CSV sheet_name must be null for {item['id']}")
+            _require(item["csv_dialect"] is not None, f"CSV dialect is missing for {item['id']}")
+            _require(
+                item["encoding"] != "NOT_APPLICABLE_BINARY",
+                f"CSV encoding is not declared for {item['id']}",
+            )
+            _require(
+                item["byte_order_mark"] != "NOT_APPLICABLE",
+                f"CSV byte-order-mark state is not declared for {item['id']}",
+            )
+        else:
+            _require(bool(item["sheet_name"]), f"XLSX sheet_name is missing for {item['id']}")
+            _require(item["csv_dialect"] is None, f"XLSX cannot declare a CSV dialect for {item['id']}")
+            _require(
+                item["encoding"] == "NOT_APPLICABLE_BINARY"
+                and item["byte_order_mark"] == "NOT_APPLICABLE",
+                f"XLSX text encoding must be not applicable for {item['id']}",
+            )
+
+        unnamed_positions = item["unnamed_header_positions"]
+        _require(
+            all(position <= item["header_cell_count"] for position in unnamed_positions),
+            f"unnamed header position is outside the header for {item['id']}",
+        )
+        _require(
+            item["header_cell_count"]
+            == item["named_column_count"] + len(unnamed_positions),
+            f"header counts are inconsistent for {item['id']}",
+        )
+        _require(
+            item["data_row_field_count"] == item["named_column_count"],
+            f"data-row width differs from the named-column count for {item['id']}",
+        )
+
+        columns = item["required_columns"]
+        column_names = [column["name"] for column in columns]
+        _require(
+            len(set(column_names)) == len(column_names),
+            f"required columns are not unique for {item['id']}",
+        )
+        _require(
+            len(columns) <= item["named_column_count"],
+            f"required columns exceed named-column count for {item['id']}",
+        )
+        key = item["record_key"]
+        _require(
+            set(key["columns"]).issubset(column_names),
+            f"record-key columns are not all required for {item['id']}",
+        )
+        _require(
+            key["expected_nonblank_rows"] <= item["data_row_count"],
+            f"record-key nonblank count exceeds rows for {item['id']}",
+        )
+        _require(
+            key["expected_distinct_count"] <= key["expected_nonblank_rows"],
+            f"record-key distinct count exceeds nonblank rows for {item['id']}",
+        )
+        _require(
+            key["expected_duplicate_rows_beyond_first"]
+            == key["expected_nonblank_rows"] - key["expected_distinct_count"],
+            f"record-key duplicate count is inconsistent for {item['id']}",
+        )
+        if key["null_policy"] == "FORBID":
+            _require(
+                key["expected_nonblank_rows"] == item["data_row_count"],
+                f"record-key null policy conflicts with evidence for {item['id']}",
+            )
+        if key["kind"] == "UNIQUE":
+            _require(
+                key["expected_duplicate_rows_beyond_first"] == 0,
+                f"unique key has duplicates for {item['id']}",
+            )
+        _require(
+            item["exact_duplicate_rows_beyond_first"] <= item["data_row_count"],
+            f"exact-duplicate count exceeds rows for {item['id']}",
+        )
+
+    if enforce_accepted_tables:
+        _require(
+            tuple(identifiers) == EXPECTED_SOURCE_TABLE_IDS,
+            "source-table set or order differs from the accepted Gate 1 evidence",
+        )
+        _require(
+            table_contract["snapshot_id"] == ACCEPTED_SOURCE_SNAPSHOT_ID,
+            "source-table contract is not tied to the accepted frozen snapshot",
+        )
+
+
+def validate_observed_table_profile(
+    table_contract: dict[str, Any], observed_profile: dict[str, Any]
+) -> None:
+    """Compare an invented or future observed profile with declared structure."""
+
+    _require(
+        observed_profile.get("profile_version") == "1.0.0",
+        "observed table profile version is unsupported",
+    )
+    _require(
+        observed_profile.get("snapshot_id") == table_contract["snapshot_id"],
+        "observed table profile references a different snapshot",
+    )
+    expected = {item["id"]: item for item in table_contract["table_contracts"]}
+    observed_tables = observed_profile.get("tables")
+    _require(isinstance(observed_tables, list), "observed table profile has no tables array")
+    observed = {item.get("id"): item for item in observed_tables}
+    _require(
+        None not in observed and len(observed) == len(observed_tables),
+        "observed table profile has missing or duplicate ids",
+    )
+    _require(
+        set(observed) == set(expected),
+        "observed table profile has a missing or unexpected table or sheet",
+    )
+
+    structural_fields = (
+        "source_id",
+        "filename",
+        "container",
+        "sheet_name",
+        "encoding",
+        "byte_order_mark",
+        "csv_dialect",
+        "header_row",
+        "data_row_count",
+        "header_cell_count",
+        "named_column_count",
+        "data_row_field_count",
+        "unnamed_header_positions",
+        "header_sha256",
+        "exact_duplicate_rows_beyond_first",
+    )
+    for table_id, declared in expected.items():
+        actual = observed[table_id]
+        for field in structural_fields:
+            _require(field in actual, f"observed field {field} is missing for {table_id}")
+            _require(
+                actual[field] == declared[field],
+                f"observed {field} differs for {table_id}",
+            )
+
+        expected_types = {
+            column["name"]: column["parser_type"]
+            for column in declared["required_columns"]
+        }
+        _require(
+            actual.get("required_column_types") == expected_types,
+            f"required column names or types differ for {table_id}",
+        )
+        key = declared["record_key"]
+        expected_key_evidence = {
+            "columns": key["columns"],
+            "nonblank_rows": key["expected_nonblank_rows"],
+            "distinct_count": key["expected_distinct_count"],
+            "duplicate_rows_beyond_first": key[
+                "expected_duplicate_rows_beyond_first"
+            ],
+        }
+        _require(
+            actual.get("record_key_evidence") == expected_key_evidence,
+            f"record-key evidence differs for {table_id}",
         )
 
 
@@ -329,9 +570,15 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
         load_json(config_dir / "source_verification.schema.json")
     )
     sources = load_json(config_dir / "sources.json")
+    source_tables = load_json(config_dir / "source_tables.json")
     method = load_json(config_dir / "method.json")
     configurations = load_json(config_dir / "configurations.json")
     validate_source_contract(sources, load_json(config_dir / "sources.schema.json"))
+    validate_source_table_contract(
+        source_tables,
+        load_json(config_dir / "source_tables.schema.json"),
+        sources,
+    )
     validate_method_contract(method, load_json(config_dir / "method.schema.json"))
     method_hash = sha256_file(config_dir / "method.json")
     validate_configuration_manifest(
@@ -343,6 +590,10 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
     return {
         "source_snapshot_id": sources["snapshot_id"],
         "source_contract_sha256": sha256_file(config_dir / "sources.json"),
+        "source_table_contract_sha256": sha256_file(
+            config_dir / "source_tables.json"
+        ),
+        "source_table_count": source_tables["expected_table_count"],
         "method_contract_sha256": method_hash,
         "configuration_manifest_sha256": sha256_file(
             config_dir / "configurations.json"
