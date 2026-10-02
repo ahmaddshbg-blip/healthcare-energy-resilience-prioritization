@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.0.0",
+  "contract_type": "SOURCE_PRESERVING_STAGING",
+  "source_snapshot_id": "cc1489ab008db4d5d1b2eddf798b51218e2324e97e88ab9c7d3853927bb54dbb",
+  "source_table_contract_sha256": "73cfe3d256abf4cc0ac00d7aa41b3ee17262b9a9ef630b4a0d46108005e2341c",
+  "expected_staging_table_count": 6,
+  "global_policies": {
+    "row_selection": "ALL_SOURCE_DATA_ROWS",
+    "row_order": "SOURCE_ORDER",
+    "column_selection": "SOURCE_TABLE_REQUIRED_COLUMNS_IN_DECLARED_ORDER",
+    "column_names": "UNCHANGED",
+    "output_types": "SOURCE_PARSER_TYPES",
+    "null_handling": "EMPTY_CELL_TO_NULL_ONLY_WHEN_ALLOWED",
+    "lineage_column": "source_row_number",
+    "lineage_rule": "ONE_BASED_SOURCE_DATA_ROW_ORDINAL",
+    "duplicate_handling": "PRESERVE",
+    "filtering": "PROHIBITED",
+    "geography_handling": "PRESERVE_SOURCE_VALUES"
+  },
+  "failure_conditions": [
+    "SOURCE_TABLE_CONTRACT_HASH_MISMATCH",
+    "MISSING_OR_UNEXPECTED_STAGING_TABLE",
+    "MISSING_RETAINED_SOURCE_COLUMN",
+    "NULLABILITY_VIOLATION",
+    "OUTPUT_TYPE_PARSE_FAILURE",
+    "SOURCE_TO_STAGING_ROW_COUNT_MISMATCH",
+    "SOURCE_ROW_ORDER_OR_IDENTITY_CHANGE",
+    "VALUE_OR_SEMANTIC_TRANSFORMATION_DETECTED",
+    "FILTER_DEDUPLICATION_OR_AGGREGATION_DETECTED"
+  ],
+  "staging_tables": [
+    {
+      "id": "stg_hhs_empower_county",
+      "source_table_id": "hhs_empower_county",
+      "output_table_name": "stg_hhs_empower_county",
+      "expected_source_row_count": 3233,
+      "expected_staging_row_count": 3233,
+      "semantic_key": {
+        "columns": [
+          "OBJECTID"
+        ],
+        "kind": "UNIQUE"
+      },
+      "preservation_notes": [
+        "Preserve all county and noncounty rows without filtering.",
+        "Preserve publisher FIPS, county, and state values without normalization.",
+        "Preserve displayed HHS counts, including masked values displayed as 11, without reinterpretation."
+      ]
+    },
+    {
+      "id": "stg_fema_nri_counties",
+      "source_table_id": "fema_nri_counties",
+      "output_table_name": "stg_fema_nri_counties",
+      "expected_source_row_count": 3232,
+      "expected_staging_row_count": 3232,
+      "semantic_key": {
+        "columns": [
+          "NRI_ID"
+        ],
+        "kind": "UNIQUE"
+      },
+      "preservation_notes": [
+        "Preserve all source rows and publisher geography values.",
+        "Preserve hazard applicability ratings such as Not Applicable as text, never as zero.",
+        "Do not combine the composite risk fields with hazard-specific fields in staging."
+      ]
+    },
+    {
+      "id": "stg_hrsa_primary_care_hpsa",
+      "source_table_id": "hrsa_primary_care_hpsa",
+      "output_table_name": "stg_hrsa_primary_care_hpsa",
+      "expected_source_row_count": 80199,
+      "expected_staging_row_count": 80199,
+      "semantic_key": {
+        "columns": [
+          "HPSA ID"
+        ],
+        "kind": "NON_UNIQUE_IDENTIFIER"
+      },
+      "preservation_notes": [
+        "Preserve geographic component rows; HPSA ID is not treated as a unique row key.",
+        "Preserve repeated identifiers and all four exact duplicate rows beyond the first copies.",
+        "Do not aggregate designation populations or shortage evidence in staging."
+      ]
+    },
+    {
+      "id": "stg_hrsa_health_center_sites",
+      "source_table_id": "hrsa_health_center_sites",
+      "output_table_name": "stg_hrsa_health_center_sites",
+      "expected_source_row_count": 19283,
+      "expected_staging_row_count": 19283,
+      "semantic_key": {
+        "columns": [
+          "BPHC Assigned Number"
+        ],
+        "kind": "UNIQUE"
+      },
+      "preservation_notes": [
+        "Preserve every site row and source status value without applying an active-site filter.",
+        "Preserve missing geography identifiers as null when allowed.",
+        "Do not infer facility capacity or backup-power readiness."
+      ]
+    },
+    {
+      "id": "stg_census_county_population_2025",
+      "source_table_id": "census_county_population_2025",
+      "output_table_name": "stg_census_county_population_2025",
+      "expected_source_row_count": 3195,
+      "expected_staging_row_count": 3195,
+      "semantic_key": {
+        "columns": [
+          "SUMLEV",
+          "STATE",
+          "COUNTY"
+        ],
+        "kind": "UNIQUE"
+      },
+      "preservation_notes": [
+        "Preserve all 3144 county rows and 51 state-summary rows.",
+        "Preserve SUMLEV, STATE, and COUNTY as source strings with leading zeroes.",
+        "Do not apply a SUMLEV filter or construct county FIPS in staging."
+      ]
+    },
+    {
+      "id": "stg_hhs_empower_history_county",
+      "source_table_id": "hhs_empower_history_county",
+      "output_table_name": "stg_hhs_empower_history_county",
+      "expected_source_row_count": 3228,
+      "expected_staging_row_count": 3228,
+      "semantic_key": {
+        "columns": [
+          "FIPS_Code"
+        ],
+        "kind": "UNIQUE"
+      },
+      "preservation_notes": [
+        "Preserve every county-history row and the contracted September fields without geography replacement.",
+        "Preserve displayed HHS counts, including masked values displayed as 11, without reinterpretation.",
+        "Historical evidence remains descriptive context and is not a forecast or scoring criterion."
+      ]
+    }
+  ],
+  "validation_only_tables": [
+    {
+      "source_table_id": "hhs_empower_history_state",
+      "reason": "The state sheet is structurally verified but is not a county-level staging input for the accepted decision."
+    },
+    {
+      "source_table_id": "hhs_empower_history_zip_code",
+      "reason": "The ZIP Code sheet is structurally verified but ZIP Code is not an accepted decision unit and no county allocation is permitted at staging."
+    }
+  ]
+}

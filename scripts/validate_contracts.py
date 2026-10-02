@@ -21,6 +21,7 @@ from healthcare_resilience.contracts import (  # noqa: E402
     validate_repository_contracts,
     validate_source_contract,
     validate_source_table_contract,
+    validate_staging_contract,
 )
 from healthcare_resilience.hashing import sha256_file  # noqa: E402
 
@@ -44,6 +45,8 @@ def main() -> int:
     source_schema = load_json(config_dir / "sources.schema.json")
     source_tables = load_json(config_dir / "source_tables.json")
     source_table_schema = load_json(config_dir / "source_tables.schema.json")
+    staging_tables = load_json(config_dir / "staging_tables.json")
+    staging_table_schema = load_json(config_dir / "staging_tables.schema.json")
     method = load_json(config_dir / "method.json")
     method_schema = load_json(config_dir / "method.schema.json")
     configuration_schema = load_json(config_dir / "configurations.schema.json")
@@ -51,6 +54,12 @@ def main() -> int:
     validate_source_contract(sources, source_schema)
     validate_source_table_contract(
         source_tables, source_table_schema, sources
+    )
+    validate_staging_contract(
+        staging_tables,
+        staging_table_schema,
+        source_tables,
+        sha256_file(config_dir / "source_tables.json"),
     )
     validate_method_contract(method, method_schema)
     method_hash = sha256_file(config_dir / "method.json")

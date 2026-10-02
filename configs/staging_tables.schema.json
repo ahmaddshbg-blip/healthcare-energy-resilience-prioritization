@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ahmaddshbg-blip/healthcare-energy-resilience-prioritization/blob/main/configs/staging_tables.schema.json",
+  "title": "Healthcare energy resilience source-preserving staging tables",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_type",
+    "source_snapshot_id",
+    "source_table_contract_sha256",
+    "expected_staging_table_count",
+    "global_policies",
+    "failure_conditions",
+    "staging_tables",
+    "validation_only_tables"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "contract_type": {
+      "const": "SOURCE_PRESERVING_STAGING"
+    },
+    "source_snapshot_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_table_contract_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "expected_staging_table_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "global_policies": {
+      "$ref": "#/$defs/global_policies"
+    },
+    "failure_conditions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "SOURCE_TABLE_CONTRACT_HASH_MISMATCH",
+          "MISSING_OR_UNEXPECTED_STAGING_TABLE",
+          "MISSING_RETAINED_SOURCE_COLUMN",
+          "NULLABILITY_VIOLATION",
+          "OUTPUT_TYPE_PARSE_FAILURE",
+          "SOURCE_TO_STAGING_ROW_COUNT_MISMATCH",
+          "SOURCE_ROW_ORDER_OR_IDENTITY_CHANGE",
+          "VALUE_OR_SEMANTIC_TRANSFORMATION_DETECTED",
+          "FILTER_DEDUPLICATION_OR_AGGREGATION_DETECTED"
+        ]
+      }
+    },
+    "staging_tables": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/staging_table"
+      }
+    },
+    "validation_only_tables": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/validation_only_table"
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "global_policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "row_selection",
+        "row_order",
+        "column_selection",
+        "column_names",
+        "output_types",
+        "null_handling",
+        "lineage_column",
+        "lineage_rule",
+        "duplicate_handling",
+        "filtering",
+        "geography_handling"
+      ],
+      "properties": {
+        "row_selection": {
+          "const": "ALL_SOURCE_DATA_ROWS"
+        },
+        "row_order": {
+          "const": "SOURCE_ORDER"
+        },
+        "column_selection": {
+          "const": "SOURCE_TABLE_REQUIRED_COLUMNS_IN_DECLARED_ORDER"
+        },
+        "column_names": {
+          "const": "UNCHANGED"
+        },
+        "output_types": {
+          "const": "SOURCE_PARSER_TYPES"
+        },
+        "null_handling": {
+          "const": "EMPTY_CELL_TO_NULL_ONLY_WHEN_ALLOWED"
+        },
+        "lineage_column": {
+          "const": "source_row_number"
+        },
+        "lineage_rule": {
+          "const": "ONE_BASED_SOURCE_DATA_ROW_ORDINAL"
+        },
+        "duplicate_handling": {
+          "const": "PRESERVE"
+        },
+        "filtering": {
+          "const": "PROHIBITED"
+        },
+        "geography_handling": {
+          "const": "PRESERVE_SOURCE_VALUES"
+        }
+      }
+    },
+    "semantic_key": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "columns",
+        "kind"
+      ],
+      "properties": {
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "kind": {
+          "enum": [
+            "UNIQUE",
+            "NON_UNIQUE_IDENTIFIER"
+          ]
+        }
+      }
+    },
+    "staging_table": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_table_id",
+        "output_table_name",
+        "expected_source_row_count",
+        "expected_staging_row_count",
+        "semantic_key",
+        "preservation_notes"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source_table_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "output_table_name": {
+          "$ref": "#/$defs/identifier"
+        },
+        "expected_source_row_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expected_staging_row_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "semantic_key": {
+          "$ref": "#/$defs/semantic_key"
+        },
+        "preservation_notes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "validation_only_table": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_table_id",
+        "reason"
+      ],
+      "properties": {
+        "source_table_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

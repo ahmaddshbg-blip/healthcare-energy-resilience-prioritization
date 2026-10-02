@@ -20,6 +20,7 @@ CONFIG_DIR = ROOT / "configs"
 def test_repository_contracts_are_valid() -> None:
     summary = validate_repository_contracts(ROOT)
     assert summary["source_table_count"] == 8
+    assert summary["staging_table_count"] == 6
     assert summary["configuration_count"] == 480
     assert summary["primary_configuration_count"] == 20
 

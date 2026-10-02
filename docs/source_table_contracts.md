@@ -89,3 +89,7 @@ profile SHA-256:
 All eight tables matched their contracts. The command does not normalize county
 identifiers, reconcile geography, construct analytical evidence tables, or
 calculate criteria, scores, portfolios, or statuses.
+
+The next executable boundary is separately governed by
+[source-preserving staging-table contracts](staging_tables.md). Those contracts
+do not weaken or replace this structural evidence.

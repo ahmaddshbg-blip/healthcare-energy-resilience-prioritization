@@ -76,6 +76,18 @@ EXPECTED_SOURCE_TABLE_IDS = (
     "hhs_empower_history_county",
     "hhs_empower_history_zip_code",
 )
+EXPECTED_STAGING_TABLE_IDS = (
+    "stg_hhs_empower_county",
+    "stg_fema_nri_counties",
+    "stg_hrsa_primary_care_hpsa",
+    "stg_hrsa_health_center_sites",
+    "stg_census_county_population_2025",
+    "stg_hhs_empower_history_county",
+)
+EXPECTED_VALIDATION_ONLY_TABLE_IDS = (
+    "hhs_empower_history_state",
+    "hhs_empower_history_zip_code",
+)
 EXPECTED_TABLE_FAILURE_CONDITIONS = (
     "MISSING_OR_UNEXPECTED_TABLE_OR_SHEET",
     "ENCODING_OR_BOM_MISMATCH",
@@ -87,6 +99,17 @@ EXPECTED_TABLE_FAILURE_CONDITIONS = (
     "REQUIRED_COLUMN_TYPE_MISMATCH",
     "KEY_NULLABILITY_OR_CARDINALITY_MISMATCH",
     "EXACT_DUPLICATE_COUNT_MISMATCH",
+)
+EXPECTED_STAGING_FAILURE_CONDITIONS = (
+    "SOURCE_TABLE_CONTRACT_HASH_MISMATCH",
+    "MISSING_OR_UNEXPECTED_STAGING_TABLE",
+    "MISSING_RETAINED_SOURCE_COLUMN",
+    "NULLABILITY_VIOLATION",
+    "OUTPUT_TYPE_PARSE_FAILURE",
+    "SOURCE_TO_STAGING_ROW_COUNT_MISMATCH",
+    "SOURCE_ROW_ORDER_OR_IDENTITY_CHANGE",
+    "VALUE_OR_SEMANTIC_TRANSFORMATION_DETECTED",
+    "FILTER_DEDUPLICATION_OR_AGGREGATION_DETECTED",
 )
 
 
@@ -323,6 +346,108 @@ def validate_source_table_contract(
         _require(
             table_contract["snapshot_id"] == ACCEPTED_SOURCE_SNAPSHOT_ID,
             "source-table contract is not tied to the accepted frozen snapshot",
+        )
+
+
+def validate_staging_contract(
+    staging_contract: dict[str, Any],
+    staging_schema: dict[str, Any],
+    source_table_contract: dict[str, Any],
+    expected_source_table_contract_sha256: str,
+    *,
+    enforce_accepted_tables: bool = True,
+) -> None:
+    """Validate source-preserving staging declarations without reading data."""
+
+    validate_schema(staging_contract, staging_schema, "staging-table contract")
+    _require(
+        staging_contract["source_snapshot_id"]
+        == source_table_contract["snapshot_id"],
+        "staging contract references a different source snapshot",
+    )
+    _require(
+        staging_contract["source_table_contract_sha256"]
+        == expected_source_table_contract_sha256,
+        "staging contract references a different source-table contract hash",
+    )
+    _require(
+        tuple(staging_contract["failure_conditions"])
+        == EXPECTED_STAGING_FAILURE_CONDITIONS,
+        "staging failure conditions changed or are incomplete",
+    )
+
+    staging_tables = staging_contract["staging_tables"]
+    validation_only = staging_contract["validation_only_tables"]
+    _require(
+        staging_contract["expected_staging_table_count"] == len(staging_tables),
+        "staging expected_staging_table_count does not match staging_tables",
+    )
+
+    staging_ids = [item["id"] for item in staging_tables]
+    source_ids = [item["source_table_id"] for item in staging_tables]
+    output_names = [item["output_table_name"] for item in staging_tables]
+    validation_only_ids = [item["source_table_id"] for item in validation_only]
+    _require(len(staging_ids) == len(set(staging_ids)), "staging ids are not unique")
+    _require(
+        len(source_ids) == len(set(source_ids)),
+        "staging source-table references are not unique",
+    )
+    _require(
+        len(output_names) == len(set(output_names)),
+        "staging output table names are not unique",
+    )
+    _require(
+        len(validation_only_ids) == len(set(validation_only_ids)),
+        "validation-only source-table references are not unique",
+    )
+    _require(
+        not set(source_ids).intersection(validation_only_ids),
+        "a source table cannot be both staged and validation-only",
+    )
+
+    source_tables_by_id = {
+        item["id"]: item for item in source_table_contract["table_contracts"]
+    }
+    _require(
+        set(source_ids).union(validation_only_ids) == set(source_tables_by_id),
+        "staged and validation-only tables do not partition the source-table contract",
+    )
+
+    for item in staging_tables:
+        source_id = item["source_table_id"]
+        _require(source_id in source_tables_by_id, f"unknown source table {source_id}")
+        source = source_tables_by_id[source_id]
+        _require(
+            item["id"] == f"stg_{source_id}"
+            and item["output_table_name"] == item["id"],
+            f"staging identity is not content-based for {source_id}",
+        )
+        _require(
+            item["expected_source_row_count"] == source["data_row_count"],
+            f"source row count differs for {item['id']}",
+        )
+        _require(
+            item["expected_staging_row_count"] == source["data_row_count"],
+            f"staging row count must preserve every row for {item['id']}",
+        )
+        _require(
+            item["semantic_key"]["columns"] == source["record_key"]["columns"]
+            and item["semantic_key"]["kind"] == source["record_key"]["kind"],
+            f"semantic key differs from the source-table contract for {item['id']}",
+        )
+
+    if enforce_accepted_tables:
+        _require(
+            tuple(staging_ids) == EXPECTED_STAGING_TABLE_IDS,
+            "staging table set or order differs from the accepted design",
+        )
+        _require(
+            tuple(validation_only_ids) == EXPECTED_VALIDATION_ONLY_TABLE_IDS,
+            "validation-only table set or order differs from the accepted design",
+        )
+        _require(
+            staging_contract["source_snapshot_id"] == ACCEPTED_SOURCE_SNAPSHOT_ID,
+            "staging contract is not tied to the accepted frozen snapshot",
         )
 
 
@@ -599,6 +724,7 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
     )
     sources = load_json(config_dir / "sources.json")
     source_tables = load_json(config_dir / "source_tables.json")
+    staging_tables = load_json(config_dir / "staging_tables.json")
     method = load_json(config_dir / "method.json")
     configurations = load_json(config_dir / "configurations.json")
     validate_source_contract(sources, load_json(config_dir / "sources.schema.json"))
@@ -606,6 +732,13 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
         source_tables,
         load_json(config_dir / "source_tables.schema.json"),
         sources,
+    )
+    source_table_hash = sha256_file(config_dir / "source_tables.json")
+    validate_staging_contract(
+        staging_tables,
+        load_json(config_dir / "staging_tables.schema.json"),
+        source_tables,
+        source_table_hash,
     )
     validate_method_contract(method, load_json(config_dir / "method.schema.json"))
     method_hash = sha256_file(config_dir / "method.json")
@@ -618,10 +751,12 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
     return {
         "source_snapshot_id": sources["snapshot_id"],
         "source_contract_sha256": sha256_file(config_dir / "sources.json"),
-        "source_table_contract_sha256": sha256_file(
-            config_dir / "source_tables.json"
-        ),
+        "source_table_contract_sha256": source_table_hash,
         "source_table_count": source_tables["expected_table_count"],
+        "staging_table_contract_sha256": sha256_file(
+            config_dir / "staging_tables.json"
+        ),
+        "staging_table_count": staging_tables["expected_staging_table_count"],
         "method_contract_sha256": method_hash,
         "configuration_manifest_sha256": sha256_file(
             config_dir / "configurations.json"

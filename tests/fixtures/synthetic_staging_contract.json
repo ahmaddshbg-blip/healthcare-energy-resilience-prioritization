@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "contract_type": "SOURCE_PRESERVING_STAGING",
+  "source_snapshot_id": "1111111111111111111111111111111111111111111111111111111111111111",
+  "source_table_contract_sha256": "e6bdb56944facce5bfc157e79a3ddbfdf0aa3f63eadfdccf7d21a6519c2b2158",
+  "expected_staging_table_count": 2,
+  "global_policies": {
+    "row_selection": "ALL_SOURCE_DATA_ROWS",
+    "row_order": "SOURCE_ORDER",
+    "column_selection": "SOURCE_TABLE_REQUIRED_COLUMNS_IN_DECLARED_ORDER",
+    "column_names": "UNCHANGED",
+    "output_types": "SOURCE_PARSER_TYPES",
+    "null_handling": "EMPTY_CELL_TO_NULL_ONLY_WHEN_ALLOWED",
+    "lineage_column": "source_row_number",
+    "lineage_rule": "ONE_BASED_SOURCE_DATA_ROW_ORDINAL",
+    "duplicate_handling": "PRESERVE",
+    "filtering": "PROHIBITED",
+    "geography_handling": "PRESERVE_SOURCE_VALUES"
+  },
+  "failure_conditions": [
+    "SOURCE_TABLE_CONTRACT_HASH_MISMATCH",
+    "MISSING_OR_UNEXPECTED_STAGING_TABLE",
+    "MISSING_RETAINED_SOURCE_COLUMN",
+    "NULLABILITY_VIOLATION",
+    "OUTPUT_TYPE_PARSE_FAILURE",
+    "SOURCE_TO_STAGING_ROW_COUNT_MISMATCH",
+    "SOURCE_ROW_ORDER_OR_IDENTITY_CHANGE",
+    "VALUE_OR_SEMANTIC_TRANSFORMATION_DETECTED",
+    "FILTER_DEDUPLICATION_OR_AGGREGATION_DETECTED"
+  ],
+  "staging_tables": [
+    {
+      "id": "stg_synthetic_measurements",
+      "source_table_id": "synthetic_measurements",
+      "output_table_name": "stg_synthetic_measurements",
+      "expected_source_row_count": 3,
+      "expected_staging_row_count": 3,
+      "semantic_key": {
+        "columns": [
+          "unit_id"
+        ],
+        "kind": "UNIQUE"
+      },
+      "preservation_notes": [
+        "Invented rows are retained in source order."
+      ]
+    },
+    {
+      "id": "stg_synthetic_regions",
+      "source_table_id": "synthetic_regions",
+      "output_table_name": "stg_synthetic_regions",
+      "expected_source_row_count": 2,
+      "expected_staging_row_count": 2,
+      "semantic_key": {
+        "columns": [
+          "region_id"
+        ],
+        "kind": "NON_UNIQUE_IDENTIFIER"
+      },
+      "preservation_notes": [
+        "Repeated invented identifiers are retained without deduplication."
+      ]
+    }
+  ],
+  "validation_only_tables": []
+}

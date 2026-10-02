@@ -3,13 +3,14 @@
 ## Current state
 
 The repository contains public decision, source-file, source-table, method, and
-claim contracts. It also contains executable validation for the frozen source
-manifest, eight source-table declarations, accepted method invariants,
-deterministic 480-configuration expansion, synthetic structural profiles, and
-hash-only private snapshot verification. This is an engineering milestone, not
-a completed analytical pipeline. Real files have been read only by the
-structural profiler after hash verification; no normalized record, evidence
-table, or county result has been produced.
+claim contracts, plus six source-preserving staging-table contracts. It also
+contains executable validation for the frozen source manifest, eight
+source-table declarations, accepted method invariants, deterministic
+480-configuration expansion, synthetic structural profiles and staging
+extraction, and hash-only private snapshot verification. This is an engineering
+milestone, not a completed analytical pipeline. Real files have been read only
+by the structural profiler after hash verification; no real record has been
+staged, normalized, joined, or scored.
 
 ## Contract validation
 
@@ -31,15 +32,31 @@ python scripts/validate_contracts.py --write-configurations
 ```
 
 The validator checks JSON Schema, accepted semantic invariants, source-table
-shape, content hashes, unique identifiers, exact family counts, and byte-for-
-byte deterministic expansion. It does not access
-`HEALTHCARE_ENERGY_RESILIENCE_DATA_ROOT`.
+shape, staging row-preservation rules, content hashes, unique identifiers,
+exact family counts, and byte-for-byte deterministic expansion. It does not
+access `HEALTHCARE_ENERGY_RESILIENCE_DATA_ROOT`.
 
 The source-table tests use only invented contracts and observed profiles. They
 exercise failures for encoding, row count, ordered header, required parser
 type, table or sheet presence, key cardinality, and exact duplicate count. The
 accepted contract also records the physical Windows-1252 Census file and the
 trailing empty header cells in both HRSA CSV files.
+
+## Synthetic staging extraction
+
+`configs/staging_tables.json` is tied to the exact source-table contract hash.
+It stages six county-relevant tables and explicitly leaves the historical
+state and ZIP Code sheets as validation-only. Every staged source row must
+produce one output row in source order, with a one-based `source_row_number`.
+Only declared required columns are retained; names, parser types, and null
+policies are inherited from `configs/source_tables.json`.
+
+`src/healthcare_resilience/staging.py` has no private-data reader and no output
+writer. Tests pass invented mappings directly to the extraction function and
+cover preserved strings, displayed HHS-like value 11, `Not Applicable` text,
+repeated rows, nulls, parser failures, missing columns, row-count drift, and
+contract-hash drift. See [staging tables](staging_tables.md) for the complete
+boundary.
 
 ## Source-table profiling
 
