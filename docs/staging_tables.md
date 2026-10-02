@@ -82,12 +82,14 @@ returns in-memory staging rows. Contract-driven retained-column file adapters,
 an atomic private checkpoint writer, an independent Parquet verifier, and a
 fail-closed frozen-build command are implemented in separate modules so
 parsing, projection, persistence, and orchestration remain independently
-testable. Current tests use invented records and files only and verify row
-order, lineage, text and masking preservation, null handling, numeric parsing,
-duplicate preservation, missing-column failure, schema drift, deterministic
-hashes, and atomic-write failure paths. See
+testable. Tests use invented records and files and verify row order, lineage,
+text and masking preservation, null handling, numeric parsing, duplicate
+preservation, missing-column failure, schema drift, deterministic hashes, and
+atomic-write failure paths. The accepted snapshot was then staged once through
+the same contract-bound production entry point, producing all 112,370 expected
+rows across six private artifacts. See
 [staging checkpoints](staging_checkpoints.md).
 
-No real source record has been extracted by this increment. Geography
-reconciliation, joined county evidence, criteria, scores, portfolios, and
-county statuses remain outside the implemented boundary.
+The verified build remains source-preserving only. Geography reconciliation,
+joined county evidence, criteria, scores, portfolios, and county statuses remain
+outside the implemented boundary.

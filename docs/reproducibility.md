@@ -10,8 +10,9 @@ source-table declarations, accepted method invariants, deterministic
 staging extraction and checkpoints, independent Parquet verification,
 fail-closed frozen-build orchestration, and hash-only private snapshot
 verification. This is an engineering milestone, not a completed analytical
-pipeline. Real files have been read only by the structural profiler after hash
-verification; no real record has been staged, normalized, joined, or scored.
+pipeline. One authorized frozen build staged the accepted rows after hash and
+structural verification. No real record has been normalized, geographically
+reconciled, joined into county evidence, or scored.
 
 ## Contract validation
 
@@ -96,9 +97,17 @@ The private output is:
 ```
 
 The command refuses dirty repositories and existing output. A failure removes
-its temporary build and cannot claim `COMPLETE`. Although this command is now
-implemented and tested with invented files, it has not been authorized or run
-against the accepted private snapshot.
+its temporary build and cannot claim `COMPLETE`.
+
+One authorized Windows build completed at code commit
+`177f6d372ed6c200dc94137fb8050e10abc1bded`. Its build identity is
+`238da712ad4a9d08b602e89ae8eaa2446871de1e6d84f2dc162ac8a69c5f3b0d`.
+Independent read-only verification confirmed 15 of 15 source files with zero
+failures, all eight source-table structures, six Parquet artifacts containing
+112,370 total rows, and exact eight-file build membership. The artifacts and
+manifests remain private outside Git. This verifies source-preserving staging in
+the recorded Windows environment only; it does not verify geography or any
+analytical result.
 
 ## Source-table profiling
 
@@ -117,8 +126,9 @@ immutable snapshot.
 
 The private profile contains structural evidence only. It has no source values,
 absolute paths, normalized identifiers, joins, criteria, scores, or portfolio
-results. Two complete runs produced the same profile SHA-256:
-`adfb58748598143eb32633f7db0dabec06aab25611961b6f9fea2d77104bfae1`.
+results. The profile regenerated during post-build verification covered all
+eight tables and had canonical SHA-256
+`78ca5c8460628894f15cf6fe21e0760cacb0950f1b57a9dbd5c6f429c8bc64eb`.
 
 ## Frozen snapshot verification
 
@@ -162,11 +172,12 @@ read from an exact private frozen snapshot.
 
 ## Verification target
 
-The first accepted result must complete twice from fresh output directories:
-once in clean Windows and once in clean Linux or Google Colab. Canonical sorted
-analytical hashes must match. Binary Parquet file hashes may differ across
-library builds and will be reported separately rather than falsely promised as
-cross-platform identical.
+The clean Windows staging build is complete. A later clean Linux or Google
+Colab reproduction remains required before cross-platform equality is claimed.
+Canonical typed-row hashes must match. Binary Parquet file hashes may differ
+across library builds and will be reported separately rather than falsely
+promised as cross-platform identical. Analytical reproduction remains a later
+requirement because no analytical result exists yet.
 
 ## Publication boundary
 

@@ -20,12 +20,15 @@ deterministic 480-configuration manifest, synthetic contract and extraction
 tests, and a hash-only frozen-snapshot verifier are implemented. The
 accepted private snapshot passes exact-set, byte-size, and SHA-256 verification
 for all 15 required files. A structural profiler also validated all eight
-contracted tables twice with identical output. File adapters and checkpoint
-writing, independent Parquet verification, and complete build orchestration
-have been tested only with invented records and files. No real staging build
-has been authorized or run; no real source record has been staged, normalized,
-or joined, and no county-level criterion, portfolio, or final status has been
-calculated or published.
+contracted tables. After synthetic controls passed, one authorized frozen build
+at code commit `177f6d372ed6c200dc94137fb8050e10abc1bded` staged all 112,370
+contracted rows into six private Parquet artifacts. A separate read-only check
+reverified the 15-file snapshot, all eight source-table structures, exact build
+membership, schemas, lineage, canonical content, byte counts, and file hashes.
+The build identity is
+`238da712ad4a9d08b602e89ae8eaa2446871de1e6d84f2dc162ac8a69c5f3b0d`.
+No source record has been normalized or joined, and no county-level criterion,
+portfolio, or final status has been calculated or published.
 
 ## Decision output
 
@@ -89,8 +92,9 @@ snapshot. The current executable surface validates file, source-table,
 staging, checkpoint, and build contracts; tests invented CSV, XLSX, staging
 rows, private checkpoint behavior, repository state, and source mutation;
 verifies the frozen snapshot; and produces a value-free structural profile
-without calculating county results. The frozen staging command is implemented
-but has not been run against accepted private rows. See
+without calculating county results. The frozen staging command completed once
+against the accepted private snapshot; its manifests and artifacts remain
+outside Git and passed independent verification. See
 [reproducibility](docs/reproducibility.md).
 
 ## Claim boundary

@@ -91,12 +91,12 @@ checkpoint, and publishes a terminal `COMPLETE` build manifest last.
 The build identity is derived from the snapshot, three contract hashes, clean
 commit, dependency lock, Python and platform identity, and direct dependency
 versions. Existing content-addressed output is never overwritten. A successful
-staging build would prove typed source-preserving conversion only; it would not
-prove geography comparability or produce an analytical decision.
+staging build proves typed source-preserving conversion only; it does not prove
+geography comparability or produce an analytical decision.
 
 ## Current evidence
 
-Tests use invented LF-terminated CSV and XLSX inputs only. They cover both
+Tests use invented LF-terminated CSV and XLSX inputs. They cover both
 adapter families, retained-column streaming from wide rows, source order, blank
 and repeated values, strict logical types and nullability, header and line-
 ending drift, unexpected workbook sheets, row-count drift, logical and physical
@@ -104,7 +104,25 @@ schema identities, independent Parquet content verification, deterministic
 manifests, atomic failure cleanup, overwrite refusal, dirty repositories,
 mid-build source mutation, commit mutation, and artifact or manifest tampering.
 
-No accepted private source file has been opened by this implementation
-increment and no private checkpoint has been produced. The command must not be
-run against the accepted snapshot until the recorded readiness review passes
-and explicit real-data authorization is given.
+After the readiness review and explicit authorization, the command ran exactly
+once against the accepted snapshot at code commit
+`177f6d372ed6c200dc94137fb8050e10abc1bded`. The resulting private build has
+identity
+`238da712ad4a9d08b602e89ae8eaa2446871de1e6d84f2dc162ac8a69c5f3b0d`.
+Independent verification reopened all six Parquet artifacts and confirmed
+112,370 rows, 1,654,006 artifact bytes, exact eight-file build membership,
+logical and physical schemas, consecutive source-row lineage, canonical typed
+content, and local file hashes. Snapshot verification remained 15 of 15 with
+zero failures, and all eight source-table structures remained valid.
+
+The build and checkpoint manifests are private because they describe generated
+artifacts under the private data root. Their public evidence fingerprints are:
+
+- build-manifest file SHA-256:
+  `88a9f1ccdfed0cc56993afa7e054c7d81fbe49261dc5a49655a1fc74d3c1b6d6`;
+  and
+- checkpoint-manifest file SHA-256:
+  `e2f7818b159120eb0a81cf16f6db66ec574f9a6a7d1f914efcf91688ce89c43f`.
+
+No private path or source value is published. Geography reconciliation and all
+analytical calculations remain unimplemented and unauthorized.
