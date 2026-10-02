@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import io
+from collections.abc import Iterable, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -61,20 +62,21 @@ def _validate_header(header: list[str], contract: dict[str, Any]) -> None:
 
 
 def _rows_to_mappings(
-    rows: list[list[Any]], header: list[str], contract: dict[str, Any]
+    rows: Iterable[Sequence[Any]], header: list[str], contract: dict[str, Any]
 ) -> list[dict[str, Any]]:
     table_id = contract["id"]
+    column_indexes = {name: index for index, name in enumerate(header) if name}
+    retained_names = [column["name"] for column in contract["required_columns"]]
+    missing = sorted(set(retained_names) - set(column_indexes))
+    _require(not missing, f"{table_id}: missing required columns {missing}")
+    retained_indexes = [(name, column_indexes[name]) for name in retained_names]
     mappings: list[dict[str, Any]] = []
     for row_number, row in enumerate(rows, start=2):
         _require(
             len(row) == contract["data_row_field_count"],
             f"{table_id}: row {row_number} width differs from contract",
         )
-        mapping = {
-            name: row[index]
-            for index, name in enumerate(header)
-            if name and index < len(row)
-        }
+        mapping = {name: row[index] for name, index in retained_indexes}
         mappings.append(mapping)
     _require(
         len(mappings) == contract["data_row_count"],
@@ -118,13 +120,17 @@ def _read_csv_rows(path: Path, contract: dict[str, Any]) -> list[dict[str, Any]]
     )
     try:
         header = next(reader)
-        rows = [row for row in reader]
     except (StopIteration, csv.Error) as error:
         raise SourceAdapterError(
             f"{contract['id']}: CSV cannot be read"
         ) from error
     _validate_header(header, contract)
-    return _rows_to_mappings(rows, header, contract)
+    try:
+        return _rows_to_mappings(reader, header, contract)
+    except csv.Error as error:
+        raise SourceAdapterError(
+            f"{contract['id']}: CSV cannot be read"
+        ) from error
 
 
 def _read_xlsx_rows(path: Path, contract: dict[str, Any]) -> list[dict[str, Any]]:
@@ -145,8 +151,7 @@ def _read_xlsx_rows(path: Path, contract: dict[str, Any]) -> list[dict[str, Any]
             ) from error
         header = ["" if value is None else str(value) for value in raw_header]
         _validate_header(header, contract)
-        materialized_rows = [list(row) for row in rows]
-        return _rows_to_mappings(materialized_rows, header, contract)
+        return _rows_to_mappings(rows, header, contract)
     finally:
         workbook.close()
 
@@ -154,7 +159,12 @@ def _read_xlsx_rows(path: Path, contract: dict[str, Any]) -> list[dict[str, Any]
 def read_source_rows(
     path: Path, source_table_contract: dict[str, Any]
 ) -> list[dict[str, Any]]:
-    """Read one contracted table without filtering or changing source order."""
+    """Read retained columns without filtering or changing source order.
+
+    Every physical row is still checked against the complete contracted width.
+    Columns outside ``required_columns`` are validated structurally but are not
+    retained in memory.
+    """
 
     table_id = source_table_contract["id"]
     _require(path.is_file(), f"{table_id}: source file is missing")

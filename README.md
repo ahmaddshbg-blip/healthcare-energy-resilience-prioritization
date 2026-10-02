@@ -14,15 +14,18 @@ investment return.
 The decision contract, data feasibility audit, analytical method, and
 engineering design are complete. Machine-readable source and method contracts,
 eight source-table contracts, six source-preserving staging-table contracts,
-contract-driven CSV/XLSX adapters, an atomic private Parquet checkpoint writer,
-the deterministic 480-configuration manifest, synthetic contract and
-extraction tests, and a hash-only frozen-snapshot verifier are implemented. The
+streaming retained-column CSV/XLSX adapters, an atomic private Parquet
+checkpoint writer, an independently verified frozen-build orchestration, the
+deterministic 480-configuration manifest, synthetic contract and extraction
+tests, and a hash-only frozen-snapshot verifier are implemented. The
 accepted private snapshot passes exact-set, byte-size, and SHA-256 verification
 for all 15 required files. A structural profiler also validated all eight
 contracted tables twice with identical output. File adapters and checkpoint
-writing have been tested only with invented records and files; no real source
-record has been staged, normalized, or joined, and no county-level criterion,
-portfolio, or final status has been calculated or published.
+writing, independent Parquet verification, and complete build orchestration
+have been tested only with invented records and files. No real staging build
+has been authorized or run; no real source record has been staged, normalized,
+or joined, and no county-level criterion, portfolio, or final status has been
+calculated or published.
 
 ## Decision output
 
@@ -74,18 +77,20 @@ assessment slots unused. The complete public explanation is in
 ## Reproducibility boundary
 
 Real source data and generated runs remain outside Git under the private
-`HEALTHCARE_ENERGY_RESILIENCE_DATA_ROOT`. The future pipeline will support:
+`HEALTHCARE_ENERGY_RESILIENCE_DATA_ROOT`. The pipeline is governed by three
+execution contexts:
 
 1. synthetic tests with no real source data;
 2. frozen reproduction from an exact hash-verified snapshot; and
 3. current-source refresh into a separate immutable snapshot.
 
 A refresh will never silently replace or impersonate the frozen analytical
-snapshot. The current executable surface validates file, source-table, and
-staging contracts; tests invented CSV, XLSX, staging rows, and private
-checkpoint behavior; verifies the frozen snapshot; and produces a value-free
-structural profile without running the analytical pipeline or calculating
-county results. See
+snapshot. The current executable surface validates file, source-table,
+staging, checkpoint, and build contracts; tests invented CSV, XLSX, staging
+rows, private checkpoint behavior, repository state, and source mutation;
+verifies the frozen snapshot; and produces a value-free structural profile
+without calculating county results. The frozen staging command is implemented
+but has not been run against accepted private rows. See
 [reproducibility](docs/reproducibility.md).
 
 ## Claim boundary

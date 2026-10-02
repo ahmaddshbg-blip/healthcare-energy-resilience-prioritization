@@ -22,7 +22,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "1.0.0"
+      "const": "1.1.0"
     },
     "manifest_type": {
       "const": "SOURCE_PRESERVING_STAGING_CHECKPOINT"
@@ -46,7 +46,7 @@
       "const": "SHA256_CANONICAL_TYPED_ROWS_V1"
     },
     "schema_hash_algorithm": {
-      "const": "SHA256_CANONICAL_COLUMN_SCHEMA_V1"
+      "const": "SHA256_CANONICAL_LOGICAL_AND_PHYSICAL_SCHEMA_V1"
     },
     "artifact_hash_algorithm": {
       "const": "SHA256_FILE_BYTES"
@@ -101,6 +101,24 @@
         }
       }
     },
+    "physical_column": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "duckdb_type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "duckdb_type": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
     "table": {
       "type": "object",
       "additionalProperties": false,
@@ -111,6 +129,9 @@
         "row_count",
         "column_count",
         "columns",
+        "logical_schema_sha256",
+        "physical_columns",
+        "physical_schema_sha256",
         "schema_sha256",
         "canonical_content_sha256",
         "artifact_sha256",
@@ -143,6 +164,19 @@
           "items": {
             "$ref": "#/$defs/column"
           }
+        },
+        "logical_schema_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "physical_columns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/physical_column"
+          }
+        },
+        "physical_schema_sha256": {
+          "$ref": "#/$defs/sha256"
         },
         "schema_sha256": {
           "$ref": "#/$defs/sha256"

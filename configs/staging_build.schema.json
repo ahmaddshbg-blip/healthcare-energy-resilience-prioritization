@@ -1,0 +1,280 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ahmaddshbg-blip/healthcare-energy-resilience-prioritization/blob/main/configs/staging_build.schema.json",
+  "title": "Healthcare energy resilience frozen staging build manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_type",
+    "status",
+    "build_identity_algorithm",
+    "build_identity",
+    "build_identity_inputs",
+    "snapshot_verification",
+    "source_table_profile",
+    "checkpoint",
+    "independent_verification"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "manifest_type": {
+      "const": "FROZEN_SOURCE_PRESERVING_STAGING_BUILD"
+    },
+    "status": {
+      "const": "COMPLETE"
+    },
+    "build_identity_algorithm": {
+      "const": "SHA256_CANONICAL_BUILD_INPUTS_V1"
+    },
+    "build_identity": {
+      "$ref": "#/$defs/sha256"
+    },
+    "build_identity_inputs": {
+      "$ref": "#/$defs/build_identity_inputs"
+    },
+    "snapshot_verification": {
+      "$ref": "#/$defs/snapshot_verification"
+    },
+    "source_table_profile": {
+      "$ref": "#/$defs/source_table_profile"
+    },
+    "checkpoint": {
+      "$ref": "#/$defs/checkpoint"
+    },
+    "independent_verification": {
+      "const": true
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "duckdb",
+        "jsonschema",
+        "numpy",
+        "openpyxl",
+        "pandas"
+      ],
+      "properties": {
+        "duckdb": {
+          "type": "string",
+          "minLength": 1
+        },
+        "jsonschema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "numpy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "openpyxl": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pandas": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "python_version",
+        "python_implementation",
+        "platform_system",
+        "platform_machine",
+        "dependencies"
+      ],
+      "properties": {
+        "python_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "python_implementation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "platform_system": {
+          "type": "string",
+          "minLength": 1
+        },
+        "platform_machine": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dependencies": {
+          "$ref": "#/$defs/dependencies"
+        }
+      }
+    },
+    "build_identity_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "source_snapshot_id",
+        "source_contract_sha256",
+        "source_table_contract_sha256",
+        "staging_table_contract_sha256",
+        "code_commit",
+        "repository_clean",
+        "requirements_lock_sha256",
+        "environment"
+      ],
+      "properties": {
+        "execution_mode": {
+          "const": "FROZEN_SOURCE_PRESERVING_STAGING"
+        },
+        "source_snapshot_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "source_contract_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "source_table_contract_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "staging_table_contract_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "code_commit": {
+          "$ref": "#/$defs/commit"
+        },
+        "repository_clean": {
+          "const": true
+        },
+        "requirements_lock_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "environment": {
+          "$ref": "#/$defs/environment"
+        }
+      }
+    },
+    "snapshot_verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pre_build_report_sha256",
+        "post_build_report_sha256",
+        "reports_identical",
+        "expected_file_count",
+        "verified_file_count"
+      ],
+      "properties": {
+        "pre_build_report_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "post_build_report_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "reports_identical": {
+          "const": true
+        },
+        "expected_file_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "verified_file_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "source_table_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_sha256",
+        "table_count"
+      ],
+      "properties": {
+        "canonical_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "table_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "checkpoint_table": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "staging_table_id",
+        "canonical_content_sha256",
+        "schema_sha256",
+        "artifact_sha256"
+      ],
+      "properties": {
+        "staging_table_id": {
+          "type": "string",
+          "pattern": "^stg_[a-z0-9_]+$"
+        },
+        "canonical_content_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "schema_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "artifact_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relative_path",
+        "manifest_canonical_sha256",
+        "manifest_file_sha256",
+        "table_count",
+        "total_row_count",
+        "tables"
+      ],
+      "properties": {
+        "relative_path": {
+          "const": "checkpoint"
+        },
+        "manifest_canonical_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "manifest_file_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "table_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total_row_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tables": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/checkpoint_table"
+          }
+        }
+      }
+    }
+  }
+}

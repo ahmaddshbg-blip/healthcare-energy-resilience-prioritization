@@ -7,7 +7,8 @@ claim contracts, plus six source-preserving staging-table contracts. It also
 contains executable validation for the frozen source manifest, eight
 source-table declarations, accepted method invariants, deterministic
 480-configuration expansion, synthetic structural profiles, source adapters,
-staging extraction and checkpoints, and hash-only private snapshot
+staging extraction and checkpoints, independent Parquet verification,
+fail-closed frozen-build orchestration, and hash-only private snapshot
 verification. This is an engineering milestone, not a completed analytical
 pipeline. Real files have been read only by the structural profiler after hash
 verification; no real record has been staged, normalized, joined, or scored.
@@ -52,24 +53,52 @@ Only declared required columns are retained; names, parser types, and null
 policies are inherited from `configs/source_tables.json`.
 
 `src/healthcare_resilience/staging.py` transforms already-opened mappings.
-`src/healthcare_resilience/source_adapters.py` validates and reads contracted
-CSV/XLSX structures, and `src/healthcare_resilience/staging_checkpoint.py`
-writes private Parquet tables plus a deterministic manifest through an atomic
-directory rename. Tests cover preserved strings, displayed HHS-like value 11,
-`Not Applicable` text, repeated rows, nulls, parser and schema drift, Parquet
-read-back, deterministic hashes, failed-write cleanup, and tampering. Every
-file used by these tests is invented.
+`src/healthcare_resilience/source_adapters.py` validates contracted CSV/XLSX
+structures while retaining only required columns, and
+`src/healthcare_resilience/staging_checkpoint.py` writes private Parquet tables
+plus a deterministic manifest through an atomic directory rename. Tests cover
+preserved strings, displayed HHS-like value 11, `Not Applicable` text,
+repeated rows, nulls, strict logical types, physical schema drift, independent
+Parquet read-back, deterministic hashes, failed-write cleanup, and tampering.
+Every file used by these tests is invented.
 
 The checkpoint manifest binds the snapshot and source, source-table, and
-staging contract hashes. It records schema and canonical typed-row hashes plus
-local Parquet byte hashes, but deliberately omits timestamps and absolute
-paths. Binary Parquet identity is local evidence; canonical content identity is
-the cross-environment target. See [staging tables](staging_tables.md) and
+staging contract hashes. It records logical, physical, combined-schema, and
+canonical typed-row hashes plus local Parquet byte hashes, but deliberately
+omits timestamps and absolute paths. Binary Parquet identity is local evidence;
+canonical content identity is the cross-environment target. See
+[staging tables](staging_tables.md) and
 [staging checkpoints](staging_checkpoints.md) for the complete boundary.
 
-There is no real-data staging CLI yet. A later reviewed command must run frozen
-snapshot verification and complete structural validation before these adapters,
-and must add commit and environment identity through the build-manifest layer.
+## Frozen staging build
+
+The implemented command is:
+
+```bash
+python scripts/build_staging_checkpoint.py --data-root /absolute/private/data/root
+```
+
+It must be run without network access from a clean committed checkout. It
+accepts only the public accepted contracts: there is no CLI flag to bypass the
+15-file snapshot or eight-table requirements. It records the commit,
+`requirements-lock.txt` hash, Python/platform identity, and direct dependency
+versions. It verifies the snapshot before and after extraction, then publishes
+one content-addressed build only after independent Parquet verification.
+
+The private output is:
+
+```text
+<data-root>/checkpoints/<snapshot-id>/source_preserving_staging/<build-id>/
+  staging_build_manifest.json
+  checkpoint/
+    staging_checkpoint_manifest.json
+    tables/
+```
+
+The command refuses dirty repositories and existing output. A failure removes
+its temporary build and cannot claim `COMPLETE`. Although this command is now
+implemented and tested with invented files, it has not been authorized or run
+against the accepted private snapshot.
 
 ## Source-table profiling
 

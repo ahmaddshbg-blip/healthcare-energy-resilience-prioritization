@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from decimal import Decimal
 from pathlib import Path
 
@@ -12,6 +13,7 @@ from healthcare_resilience.source_adapters import (
     extract_staging_tables_from_files,
     read_source_rows,
 )
+from healthcare_resilience.source_profiling import ordered_header_sha256
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_DIR = ROOT / "tests" / "fixtures"
@@ -75,6 +77,33 @@ def test_xlsx_adapter_preserves_repeated_rows(synthetic_raw_root: Path) -> None:
     ]
 
 
+def test_csv_adapter_validates_wide_rows_but_retains_required_columns_only(
+    synthetic_raw_root: Path,
+) -> None:
+    path = synthetic_raw_root / "synthetic_measurements.csv"
+    path.write_bytes(
+        b"unit_id,unused_payload,amount\n"
+        b"01001,discard-a,11\n"
+        b"02020,discard-b,\n"
+        b"03030,discard-c,4.50\n"
+    )
+    contract = deepcopy(_source_table("synthetic_measurements"))
+    header = ["unit_id", "unused_payload", "amount"]
+    contract["header_cell_count"] = 3
+    contract["named_column_count"] = 3
+    contract["data_row_field_count"] = 3
+    contract["header_sha256"] = ordered_header_sha256(header)
+
+    rows = read_source_rows(path, contract)
+
+    assert rows == [
+        {"unit_id": "01001", "amount": "11"},
+        {"unit_id": "02020", "amount": ""},
+        {"unit_id": "03030", "amount": "4.50"},
+    ]
+    assert all("unused_payload" not in row for row in rows)
+
+
 def test_file_adapters_feed_source_preserving_extraction(
     synthetic_raw_root: Path,
 ) -> None:
@@ -112,6 +141,13 @@ def test_adapter_rejects_line_ending_drift(synthetic_raw_root: Path) -> None:
     path = synthetic_raw_root / "synthetic_measurements.csv"
     path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
     with pytest.raises(SourceAdapterError, match="line ending differs"):
+        read_source_rows(path, _source_table("synthetic_measurements"))
+
+
+def test_adapter_rejects_data_row_width_drift(synthetic_raw_root: Path) -> None:
+    path = synthetic_raw_root / "synthetic_measurements.csv"
+    path.write_bytes(b"unit_id,amount\n01001,11\n02020\n03030,4.50\n")
+    with pytest.raises(SourceAdapterError, match="row 3 width differs"):
         read_source_rows(path, _source_table("synthetic_measurements"))
 
 

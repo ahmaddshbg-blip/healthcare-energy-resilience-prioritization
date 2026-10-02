@@ -725,6 +725,9 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
     Draft202012Validator.check_schema(
         load_json(config_dir / "staging_checkpoint.schema.json")
     )
+    Draft202012Validator.check_schema(
+        load_json(config_dir / "staging_build.schema.json")
+    )
     sources = load_json(config_dir / "sources.json")
     source_tables = load_json(config_dir / "source_tables.json")
     staging_tables = load_json(config_dir / "staging_tables.json")
@@ -758,6 +761,12 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
         "source_table_count": source_tables["expected_table_count"],
         "staging_table_contract_sha256": sha256_file(
             config_dir / "staging_tables.json"
+        ),
+        "staging_checkpoint_schema_sha256": sha256_file(
+            config_dir / "staging_checkpoint.schema.json"
+        ),
+        "staging_build_schema_sha256": sha256_file(
+            config_dir / "staging_build.schema.json"
         ),
         "staging_table_count": staging_tables["expected_staging_table_count"],
         "method_contract_sha256": method_hash,
