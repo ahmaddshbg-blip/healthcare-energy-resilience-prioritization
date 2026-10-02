@@ -722,6 +722,9 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
     Draft202012Validator.check_schema(
         load_json(config_dir / "source_table_profile.schema.json")
     )
+    Draft202012Validator.check_schema(
+        load_json(config_dir / "staging_checkpoint.schema.json")
+    )
     sources = load_json(config_dir / "sources.json")
     source_tables = load_json(config_dir / "source_tables.json")
     staging_tables = load_json(config_dir / "staging_tables.json")

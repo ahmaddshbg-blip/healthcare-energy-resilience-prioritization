@@ -14,14 +14,15 @@ investment return.
 The decision contract, data feasibility audit, analytical method, and
 engineering design are complete. Machine-readable source and method contracts,
 eight source-table contracts, six source-preserving staging-table contracts,
+contract-driven CSV/XLSX adapters, an atomic private Parquet checkpoint writer,
 the deterministic 480-configuration manifest, synthetic contract and
 extraction tests, and a hash-only frozen-snapshot verifier are implemented. The
 accepted private snapshot passes exact-set, byte-size, and SHA-256 verification
 for all 15 required files. A structural profiler also validated all eight
-contracted tables twice with identical output. Staging extraction has been
-tested only with invented records; no real source record has been staged,
-normalized, or joined, and no county-level criterion, portfolio, or final
-status has been calculated or published.
+contracted tables twice with identical output. File adapters and checkpoint
+writing have been tested only with invented records and files; no real source
+record has been staged, normalized, or joined, and no county-level criterion,
+portfolio, or final status has been calculated or published.
 
 ## Decision output
 
@@ -54,7 +55,8 @@ local Python and DuckDB workflow; it does not justify Spark or distributed
 processing. Raw source files are not redistributed in this repository. See
 [data sources](docs/data_sources.md),
 [source table contracts](docs/source_table_contracts.md),
-[staging table contracts](docs/staging_tables.md), and
+[staging table contracts](docs/staging_tables.md),
+[staging checkpoints](docs/staging_checkpoints.md), and
 [data attribution](DATA_ATTRIBUTION.md).
 
 ## Method summary
@@ -80,9 +82,10 @@ Real source data and generated runs remain outside Git under the private
 
 A refresh will never silently replace or impersonate the frozen analytical
 snapshot. The current executable surface validates file, source-table, and
-staging contracts; tests invented CSV, XLSX, and staging rows; verifies the
-frozen snapshot; and produces a value-free structural profile without running
-the analytical pipeline or calculating county results. See
+staging contracts; tests invented CSV, XLSX, staging rows, and private
+checkpoint behavior; verifies the frozen snapshot; and produces a value-free
+structural profile without running the analytical pipeline or calculating
+county results. See
 [reproducibility](docs/reproducibility.md).
 
 ## Claim boundary

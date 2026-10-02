@@ -6,11 +6,11 @@ The repository contains public decision, source-file, source-table, method, and
 claim contracts, plus six source-preserving staging-table contracts. It also
 contains executable validation for the frozen source manifest, eight
 source-table declarations, accepted method invariants, deterministic
-480-configuration expansion, synthetic structural profiles and staging
-extraction, and hash-only private snapshot verification. This is an engineering
-milestone, not a completed analytical pipeline. Real files have been read only
-by the structural profiler after hash verification; no real record has been
-staged, normalized, joined, or scored.
+480-configuration expansion, synthetic structural profiles, source adapters,
+staging extraction and checkpoints, and hash-only private snapshot
+verification. This is an engineering milestone, not a completed analytical
+pipeline. Real files have been read only by the structural profiler after hash
+verification; no real record has been staged, normalized, joined, or scored.
 
 ## Contract validation
 
@@ -51,12 +51,25 @@ produce one output row in source order, with a one-based `source_row_number`.
 Only declared required columns are retained; names, parser types, and null
 policies are inherited from `configs/source_tables.json`.
 
-`src/healthcare_resilience/staging.py` has no private-data reader and no output
-writer. Tests pass invented mappings directly to the extraction function and
-cover preserved strings, displayed HHS-like value 11, `Not Applicable` text,
-repeated rows, nulls, parser failures, missing columns, row-count drift, and
-contract-hash drift. See [staging tables](staging_tables.md) for the complete
-boundary.
+`src/healthcare_resilience/staging.py` transforms already-opened mappings.
+`src/healthcare_resilience/source_adapters.py` validates and reads contracted
+CSV/XLSX structures, and `src/healthcare_resilience/staging_checkpoint.py`
+writes private Parquet tables plus a deterministic manifest through an atomic
+directory rename. Tests cover preserved strings, displayed HHS-like value 11,
+`Not Applicable` text, repeated rows, nulls, parser and schema drift, Parquet
+read-back, deterministic hashes, failed-write cleanup, and tampering. Every
+file used by these tests is invented.
+
+The checkpoint manifest binds the snapshot and source, source-table, and
+staging contract hashes. It records schema and canonical typed-row hashes plus
+local Parquet byte hashes, but deliberately omits timestamps and absolute
+paths. Binary Parquet identity is local evidence; canonical content identity is
+the cross-environment target. See [staging tables](staging_tables.md) and
+[staging checkpoints](staging_checkpoints.md) for the complete boundary.
+
+There is no real-data staging CLI yet. A later reviewed command must run frozen
+snapshot verification and complete structural validation before these adapters,
+and must add commit and environment identity through the build-manifest layer.
 
 ## Source-table profiling
 

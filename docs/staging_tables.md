@@ -78,11 +78,13 @@ source categories. Consequently:
 ## Executable boundary
 
 `src/healthcare_resilience/staging.py` accepts already-opened row mappings and
-returns in-memory staging rows. It contains no CSV or workbook opener, no
-private path, and no checkpoint writer. Current tests use invented records only
-and verify row order, lineage, text and masking preservation, null handling,
-numeric parsing, duplicate preservation, missing-column failure, type failure,
-row-count failure, and contract-hash failure.
+returns in-memory staging rows. Contract-driven file adapters and an atomic
+private checkpoint writer are implemented in separate modules so parsing,
+projection, and persistence remain independently testable. Current tests use
+invented records and files only and verify row order, lineage, text and masking
+preservation, null handling, numeric parsing, duplicate preservation,
+missing-column failure, schema drift, deterministic hashes, and atomic-write
+failure paths. See [staging checkpoints](staging_checkpoints.md).
 
 No real source record has been extracted by this increment. Geography
 reconciliation, joined county evidence, criteria, scores, portfolios, and
