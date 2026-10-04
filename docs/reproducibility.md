@@ -12,9 +12,9 @@ fail-closed frozen-build orchestration, hash-only private snapshot verification,
 and synthetic county-geography reconciliation with an independently verified
 content-addressed checkpoint. This is an engineering milestone, not a completed
 analytical pipeline. One authorized frozen build staged the accepted rows after
-hash and structural verification. Geography tests use invented rows only. No
-real record has been normalized, geographically reconciled, joined into county
-evidence, or scored.
+hash and structural verification, and one separately authorized amended
+geography build produced a verified six-artifact private checkpoint. No source
+measure has been joined into county evidence or scored.
 
 ## Contract validation
 

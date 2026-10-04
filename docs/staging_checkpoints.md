@@ -125,9 +125,11 @@ artifacts under the private data root. Their public evidence fingerprints are:
   `e2f7818b159120eb0a81cf16f6db66ec574f9a6a7d1f914efcf91688ce89c43f`.
 
 No private path or source value is published. One separately authorized
-geography attempt later failed closed on the contracted
-`DIRECT_REFERENCE` count for `stg_hhs_empower_history_county`. A read-only
-audit found all 3,228 historical FIPS representations carry trailing
-whitespace in both the staging artifact and the raw workbook; no geography
-checkpoint was published. County evidence and all analytical calculations
-remain unimplemented.
+geography attempt failed closed on the contracted `DIRECT_REFERENCE` count for
+`stg_hhs_empower_history_county`; a read-only audit found all 3,228 historical
+FIPS representations carry trailing whitespace in both the staging artifact
+and the raw workbook. A later amended geography build completed under a new
+explicit authorization and produced a `VALID` six-artifact private checkpoint
+with 112,286 rows, independently verified as documented in [geography build
+evidence](geography_build_evidence.md). County evidence and all analytical
+calculations remain unimplemented.
