@@ -179,7 +179,7 @@ def validate_geography_contract(
     )
     _require(
         contract["specification"]["accepted_review_sha256"]
-        == "8cb0c28375a71304316844c86298ad5dda5621cd5dce4272fcd9c4e35d667a62",
+        == "a6dd22b06b0ec27761b85f12ad13b154317f99a0f7a518df46a3c02a6d910a9e",
         "geography specification review identity differs from acceptance",
     )
     _require(

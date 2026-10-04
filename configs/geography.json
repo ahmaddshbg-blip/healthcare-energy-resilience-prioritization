@@ -3,7 +3,7 @@
   "contract_type": "COUNTY_GEOGRAPHY_RECONCILIATION",
   "specification": {
     "document": "docs/geography_reconciliation.md",
-    "accepted_review_sha256": "8cb0c28375a71304316844c86298ad5dda5621cd5dce4272fcd9c4e35d667a62"
+    "accepted_review_sha256": "a6dd22b06b0ec27761b85f12ad13b154317f99a0f7a518df46a3c02a6d910a9e"
   },
   "source_snapshot_id": "cc1489ab008db4d5d1b2eddf798b51218e2324e97e88ab9c7d3853927bb54dbb",
   "input_staging_build_identity": "238da712ad4a9d08b602e89ae8eaa2446871de1e6d84f2dc162ac8a69c5f3b0d",

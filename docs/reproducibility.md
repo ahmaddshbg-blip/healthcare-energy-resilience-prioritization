@@ -141,9 +141,10 @@ parameter. The second readiness review supported one explicitly authorized
 production attempt. Input verification passed, but reconciliation failed
 closed on the historical HHS FIPS representation. The accepted amendment now
 keeps that six-table staging input source-preserved while excluding the
-history table from geography maps; the amended contract and six-artifact
-checkpoint have only been exercised with invented fixtures. See [geography
-readiness](geography_readiness.md). No geography CLI exists.
+history table from geography maps. One explicitly authorized frozen build has
+now produced a six-artifact checkpoint that passed independent read-only
+verification. See [geography readiness](geography_readiness.md) and [geography
+build evidence](geography_build_evidence.md). No geography CLI exists.
 
 ## Source-table profiling
 

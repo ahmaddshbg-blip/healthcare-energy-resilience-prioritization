@@ -2,8 +2,8 @@
 
 ## Decision
 
-**AMENDMENT SYNTHETIC READINESS: PASS FOR ONE CONTROLLED REAL GEOGRAPHY BUILD;
-EXPLICIT AUTHORIZATION REQUIRED.**
+**AMENDMENT READINESS PASSED; CONTROLLED GEOGRAPHY BUILD VERIFIED; ANALYTICS
+NOT AUTHORIZED.**
 
 The first review accepted the synthetic rules but rejected real execution
 because staging identity still depended on a caller assertion. That blocker is
@@ -17,7 +17,8 @@ The input boundary accepted the staging build and all six Parquet artifacts,
 but reconciliation failed closed because all 3,228 historical HHS FIPS values
 carry trailing whitespace. The amendment now keeps that table in staging as
 context-only evidence and removes it from mandatory geography mapping. No raw
-value is trimmed or repaired, and no real geography checkpoint was published.
+value is trimmed or repaired, and the first amended execution attempt published
+no geography checkpoint.
 
 The amendment readiness review is now complete. The five mapped source rules,
 one context-only staging rule, six-artifact checkpoint definition, exact input
@@ -25,6 +26,12 @@ membership, and fail-closed controls agree across the machine-readable
 contracts, implementation, schemas, and invented fixtures. The full suite and
 contract validator pass. This is a readiness decision only; it does not reopen
 the private snapshot or authorize a second real geography execution.
+
+The user then granted a new explicit authorization for exactly one controlled
+frozen geography build. That build completed under the amended scope and its
+six-artifact checkpoint passed independent read-only verification. The evidence
+is recorded in [geography build evidence](geography_build_evidence.md). This
+does not authorize county evidence construction or analytical calculation.
 
 ## Evidence reviewed
 
@@ -66,9 +73,9 @@ set.
 ## Contract identities
 
 - accepted specification amendment review basis:
-  `8cb0c28375a71304316844c86298ad5dda5621cd5dce4272fcd9c4e35d667a62`;
+  `a6dd22b06b0ec27761b85f12ad13b154317f99a0f7a518df46a3c02a6d910a9e`;
 - geography contract:
-  `6f815c44fc4f74351d78dfc69a7b42d2fae397776efe5864f9d7fac8ec562e1e`;
+  `5f61e313523aec2a0d13848f1e01c97a64b1cf048d403d32592a8cfce69a287c`;
 - geography contract schema:
   `4e870a0ddc7192cc30c0c259d1656f430923fc045b20d39018a429da1d74df95`;
   and
@@ -133,19 +140,18 @@ amendment was limited to the input boundary.
 
 ## Scope boundary
 
-The private staging Parquet was opened only during the one explicitly
-authorized production attempt and its post-attempt verification. No geography
-checkpoint was published, no source measure was joined, normalized,
-deduplicated, filtered, or aggregated, and no county evidence exists. HPSA and
-site records remain unaggregated, and no criterion, score, portfolio, or county
-status exists. The prior authorized run failed closed before publication; the
-amended contract has only been exercised with invented fixtures.
+The private staging Parquet was opened during the explicitly authorized build
+and its independent post-build verification. The amended geography checkpoint
+was published with six verified artifacts. No source measure was joined,
+normalized, deduplicated, filtered, or aggregated, and no county evidence
+exists. HPSA and site records remain unaggregated, and no criterion, score,
+portfolio, or county status exists. The prior failed-closed attempt remains
+part of the history; the amended build is verified only for its stated
+geography scope.
 
 ## Exact next action
 
-Do not run real geography again yet. The amendment synthetic readiness review
-has passed, so obtain a new explicit authorization before exactly one controlled
-real build. If authorized, independently verify its six output artifacts and
-stop before constructing joined county evidence, aggregating HPSA or site
-records, calculating criteria, scores, portfolios, or county statuses, or
-claiming cross-platform equality.
+Do not proceed to county evidence or analytics in this execution. The amended
+geography checkpoint and its six artifacts have been independently verified.
+Any next analytical step requires a separate acceptance decision and must not
+modify the verified private checkpoint or claim cross-platform equality.

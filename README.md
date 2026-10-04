@@ -38,8 +38,11 @@ all 3,228 historical HHS FIPS representations carry trailing whitespace in
 the raw workbook and the strict specification forbids trimming or repair. The
 accepted amendment keeps that table source-preserved as context-only and maps
 the other five geography inputs. The amended contract has passed synthetic
-tests, but no real geography checkpoint has been accepted and no county-level
-criterion, portfolio, or final status has been calculated or published.
+tests, and exactly one newly authorized amended geography build completed with
+a `VALID` six-artifact checkpoint and passed independent manifest and artifact
+verification. No county-level criterion, portfolio, or final status has been
+calculated or published. See [geography build evidence](docs/geography_build_evidence.md)
+for value-free evidence.
 
 ## Decision output
 

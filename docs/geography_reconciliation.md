@@ -375,18 +375,24 @@ the geography checkpoint contains six artifacts, consisting of one reference
 and five mapped-source outputs. The machine-readable contract, schemas,
 deterministic reconciliation logic, checkpoint controls, trusted staging-input
 boundary, and all 30 named acceptance tests remain implemented. The full
-repository suite passes 117 tests. No real geography checkpoint has been
+repository suite passes 117 tests. The amended geography checkpoint has since
+been produced by exactly one newly authorized controlled build and
+independently verified for manifest, schema, lineage, row-count, mapping-count,
+hash, and exact-file claims. No analytical county evidence or result has been
 accepted. See the separate [geography readiness review](geography_readiness.md)
-for the amendment review and remaining authorization boundary.
+and [build evidence](geography_build_evidence.md) for the execution record and
+remaining analytical boundary.
 
-Acceptance authorized only:
+The initial synthetic acceptance authorized only:
 
 1. a machine-readable geography contract and JSON Schema;
 2. implementation using invented fixtures;
 3. the positive and negative tests above; and
 4. a readiness review after the complete synthetic suite passes.
 
-It did not authorize a second real geography execution, creating accepted real
-geography maps, constructing county evidence, aggregating HPSA or site records,
-or calculating analytical criteria. The prior single authorized attempt
-failed closed before publication.
+It did not authorize the later real geography execution or any analytical
+calculation. A subsequent explicit authorization permitted exactly one
+controlled amended geography build. That build produced six verified private
+geography artifacts, but did not construct county evidence, aggregate HPSA or
+site records, or calculate analytical criteria. The first authorized attempt
+failed closed before publication; the amended attempt completed successfully.
