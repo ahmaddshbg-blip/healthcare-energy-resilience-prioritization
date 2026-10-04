@@ -27,8 +27,10 @@ reverified the 15-file snapshot, all eight source-table structures, exact build
 membership, schemas, lineage, canonical content, byte counts, and file hashes.
 The build identity is
 `238da712ad4a9d08b602e89ae8eaa2446871de1e6d84f2dc162ac8a69c5f3b0d`.
-No source record has been normalized or joined, and no county-level criterion,
-portfolio, or final status has been calculated or published.
+A proposed FIPS-only geography-reconciliation specification and 30 acceptance
+tests are documented but have not been accepted or implemented. No source
+record has been normalized or joined, and no county-level criterion, portfolio,
+or final status has been calculated or published.
 
 ## Decision output
 
@@ -62,7 +64,8 @@ processing. Raw source files are not redistributed in this repository. See
 [data sources](docs/data_sources.md),
 [source table contracts](docs/source_table_contracts.md),
 [staging table contracts](docs/staging_tables.md),
-[staging checkpoints](docs/staging_checkpoints.md), and
+[staging checkpoints](docs/staging_checkpoints.md),
+[geography reconciliation](docs/geography_reconciliation.md), and
 [data attribution](DATA_ATTRIBUTION.md).
 
 ## Method summary
