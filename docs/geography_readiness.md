@@ -2,8 +2,8 @@
 
 ## Decision
 
-**AMENDMENT ACCEPTED FOR SYNTHETIC IMPLEMENTATION; REAL EXECUTION NOT
-AUTHORIZED.**
+**AMENDMENT SYNTHETIC READINESS: PASS FOR ONE CONTROLLED REAL GEOGRAPHY BUILD;
+EXPLICIT AUTHORIZATION REQUIRED.**
 
 The first review accepted the synthetic rules but rejected real execution
 because staging identity still depended on a caller assertion. That blocker is
@@ -18,6 +18,13 @@ but reconciliation failed closed because all 3,228 historical HHS FIPS values
 carry trailing whitespace. The amendment now keeps that table in staging as
 context-only evidence and removes it from mandatory geography mapping. No raw
 value is trimmed or repaired, and no real geography checkpoint was published.
+
+The amendment readiness review is now complete. The five mapped source rules,
+one context-only staging rule, six-artifact checkpoint definition, exact input
+membership, and fail-closed controls agree across the machine-readable
+contracts, implementation, schemas, and invented fixtures. The full suite and
+contract validator pass. This is a readiness decision only; it does not reopen
+the private snapshot or authorize a second real geography execution.
 
 ## Evidence reviewed
 
@@ -136,8 +143,9 @@ amended contract has only been exercised with invented fixtures.
 
 ## Exact next action
 
-Do not run real geography again yet. The amendment must pass its synthetic
-readiness review first. If that review passes, obtain a new explicit
-authorization before any controlled real build. Do not construct joined county
-evidence, aggregate HPSA or site records, calculate criteria, scores,
-portfolios, or county statuses, or claim cross-platform equality.
+Do not run real geography again yet. The amendment synthetic readiness review
+has passed, so obtain a new explicit authorization before exactly one controlled
+real build. If authorized, independently verify its six output artifacts and
+stop before constructing joined county evidence, aggregating HPSA or site
+records, calculating criteria, scores, portfolios, or county statuses, or
+claiming cross-platform equality.
