@@ -134,11 +134,12 @@ status exists.
 
 ## Exact next action
 
-Do not rerun. First decide whether to retain this accepted raw snapshot and
-formally amend the geography specification, or create a new accepted snapshot
-whose source representation satisfies the existing strict contract. Trimming
-the existing private artifact is not permitted. Document the decision and
-obtain new explicit authorization before any subsequent controlled build. Do
-not construct joined county evidence, aggregate HPSA or site records,
-calculate criteria, scores, portfolios, or county statuses, or claim
-cross-platform equality.
+Do not rerun. The raw HHS workbook itself has the same trailing-whitespace
+representation, so rebuilding a snapshot from that identical file would not
+solve the mismatch. Decide whether to retain the raw snapshot and formally
+amend the geography specification, or obtain a corrected upstream source file
+and create a new accepted snapshot. Trimming the existing private artifact is
+not permitted. Document the decision and obtain new explicit authorization
+before any subsequent controlled build. Do not construct joined county
+evidence, aggregate HPSA or site records, calculate criteria, scores,
+portfolios, or county statuses, or claim cross-platform equality.

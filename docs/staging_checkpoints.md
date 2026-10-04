@@ -128,5 +128,6 @@ No private path or source value is published. One separately authorized
 geography attempt later failed closed on the contracted
 `DIRECT_REFERENCE` count for `stg_hhs_empower_history_county`. A read-only
 audit found all 3,228 historical FIPS representations carry trailing
-whitespace; no geography checkpoint was published. County evidence and all
-analytical calculations remain unimplemented.
+whitespace in both the staging artifact and the raw workbook; no geography
+checkpoint was published. County evidence and all analytical calculations
+remain unimplemented.

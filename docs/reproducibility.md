@@ -143,9 +143,11 @@ failed closed on the contracted `DIRECT_REFERENCE` count for
 `stg_hhs_empower_history_county`. A read-only audit found all 3,228 FIPS
 representations in that historical table carry trailing whitespace, which the
 strict geography specification forbids trimming or repairing; no geography
-checkpoint was published. See [geography readiness](geography_readiness.md).
-Do not rerun until the snapshot-versus-specification decision is resolved. No
-geography CLI exists.
+checkpoint was published. The raw workbook has the same representation, so a
+new snapshot from that identical file would not solve it. See [geography
+readiness](geography_readiness.md). Do not rerun until the specification
+amendment versus corrected-upstream-source decision is resolved. No geography
+CLI exists.
 
 ## Source-table profiling
 
