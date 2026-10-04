@@ -16,7 +16,10 @@ Readiness was sufficient for the user's explicit authorization, and exactly one
 production attempt was made. The input boundary accepted the staging build and
 all six Parquet artifacts, but geography reconciliation failed closed while
 checking the contracted `DIRECT_REFERENCE` count for
-`stg_hhs_empower_history_county`. No geography checkpoint was published.
+`stg_hhs_empower_history_county`. Read-only shape auditing found that all
+3,228 `FIPS_Code` values in that table are five digits followed by trailing
+whitespace, so none satisfies the strict five-character contract. No geography
+checkpoint was published.
 
 ## Evidence reviewed
 
@@ -96,6 +99,10 @@ document identity the user accepted.
   attributes.
 - Mutation after a completed temporary geography checkpoint is detected before
   atomic publication.
+- The controlled run exposed a source-quality mismatch: the historical HHS
+  `FIPS_Code` field has 3,228 trailing-whitespace representations, while the
+  accepted geography contract permits only exact five-digit text and forbids
+  trimming or repair.
 
 ## Closed amendment
 
@@ -127,9 +134,11 @@ status exists.
 
 ## Exact next action
 
-Do not rerun. First resolve whether the frozen geography contract or the
-accepted staging snapshot is authoritative for the failed mapping-count
-invariant, document the decision, and obtain a new explicit authorization
-before any subsequent controlled build. Do not construct joined county
-evidence, aggregate HPSA or site records, calculate criteria, scores,
-portfolios, or county statuses, or claim cross-platform equality.
+Do not rerun. First decide whether to retain this accepted raw snapshot and
+formally amend the geography specification, or create a new accepted snapshot
+whose source representation satisfies the existing strict contract. Trimming
+the existing private artifact is not permitted. Document the decision and
+obtain new explicit authorization before any subsequent controlled build. Do
+not construct joined county evidence, aggregate HPSA or site records,
+calculate criteria, scores, portfolios, or county statuses, or claim
+cross-platform equality.

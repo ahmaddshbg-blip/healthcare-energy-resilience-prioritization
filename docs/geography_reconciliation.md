@@ -368,10 +368,13 @@ checkpoint controls, trusted staging-input boundary, and all 30 named
 acceptance tests are implemented. The full repository suite passes 117 tests.
 One explicitly authorized production attempt accepted the staging evidence but
 failed closed on the contracted `DIRECT_REFERENCE` count for
-`stg_hhs_empower_history_county`; no geography checkpoint was published. See
-the separate [geography readiness review](geography_readiness.md). Do not
-rerun until the contract-versus-snapshot authority question is resolved and a
-new explicit authorization is given.
+`stg_hhs_empower_history_county`. A read-only representation audit found all
+3,228 `FIPS_Code` values in that table carry trailing whitespace, while this
+specification requires exact five-digit text and forbids trimming or repair.
+No geography checkpoint was published. See the separate
+[geography readiness review](geography_readiness.md). Do not rerun until the
+snapshot-versus-specification decision is resolved and a new explicit
+authorization is given.
 
 Acceptance authorized only:
 

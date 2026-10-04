@@ -140,10 +140,12 @@ production entrypoint constructs the verifier internally and has no bypass
 parameter. The second readiness review passed and one explicitly authorized
 production attempt was made. Input verification passed, but reconciliation
 failed closed on the contracted `DIRECT_REFERENCE` count for
-`stg_hhs_empower_history_county`; no geography checkpoint was published. See
-[geography readiness](geography_readiness.md). Do not rerun until the
-contract-versus-snapshot authority question is resolved. No geography CLI
-exists.
+`stg_hhs_empower_history_county`. A read-only audit found all 3,228 FIPS
+representations in that historical table carry trailing whitespace, which the
+strict geography specification forbids trimming or repairing; no geography
+checkpoint was published. See [geography readiness](geography_readiness.md).
+Do not rerun until the snapshot-versus-specification decision is resolved. No
+geography CLI exists.
 
 ## Source-table profiling
 

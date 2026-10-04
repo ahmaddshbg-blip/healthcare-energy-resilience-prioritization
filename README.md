@@ -35,10 +35,12 @@ Parquet artifacts before and after exposing only contracted geography fields.
 The second readiness review passed, and one explicitly authorized production
 attempt was made. Input verification passed, but reconciliation failed closed
 on the contracted `DIRECT_REFERENCE` count for
-`stg_hhs_empower_history_county`; no geography checkpoint was published. No
-county-level criterion, portfolio, or final status has been calculated or
-published. Do not rerun until the contract-versus-snapshot authority question
-is resolved.
+`stg_hhs_empower_history_county`. A read-only audit found all 3,228 FIPS
+representations in that historical table carry trailing whitespace, while the
+strict specification forbids trimming or repair; no geography checkpoint was
+published. No county-level criterion, portfolio, or final status has been
+calculated or published. Do not rerun until the snapshot-versus-specification
+decision is resolved.
 
 ## Decision output
 
