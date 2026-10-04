@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ahmaddshbg-blip/healthcare-energy-resilience-prioritization/blob/main/configs/geography.schema.json",
+  "title": "County geography reconciliation contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "contract_type", "specification", "source_snapshot_id",
+    "input_staging_build_identity", "staging_table_contract_sha256", "reference",
+    "mapping_statuses", "exact_replacements", "unresolved_legacy_groups",
+    "source_rules", "failure_conditions"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "contract_type": {"const": "COUNTY_GEOGRAPHY_RECONCILIATION"},
+    "specification": {
+      "type": "object", "additionalProperties": false,
+      "required": ["document", "accepted_review_sha256"],
+      "properties": {
+        "document": {"const": "docs/geography_reconciliation.md"},
+        "accepted_review_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "source_snapshot_id": {"$ref": "#/$defs/sha256"},
+    "input_staging_build_identity": {"$ref": "#/$defs/sha256"},
+    "staging_table_contract_sha256": {"$ref": "#/$defs/sha256"},
+    "reference": {"$ref": "#/$defs/reference"},
+    "mapping_statuses": {
+      "type": "array", "minItems": 7, "maxItems": 7, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/status"}
+    },
+    "exact_replacements": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": {"$ref": "#/$defs/replacement"}
+    },
+    "unresolved_legacy_groups": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": {"$ref": "#/$defs/legacy_group"}
+    },
+    "source_rules": {
+      "type": "array", "minItems": 6, "maxItems": 6,
+      "items": {"$ref": "#/$defs/source_rule"}
+    },
+    "failure_conditions": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Z0-9_]+$"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "identifier": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+    "fips": {"type": "string", "pattern": "^[0-9]{5}$"},
+    "status": {
+      "enum": [
+        "DIRECT_REFERENCE", "EXACT_REPLACEMENT", "UNRESOLVED_LEGACY_GEOGRAPHY",
+        "OUTSIDE_REFERENCE_UNIVERSE", "MISSING_SOURCE_FIPS", "INVALID_SOURCE_FIPS",
+        "STATE_SUMMARY_NOT_COUNTY"
+      ]
+    },
+    "reference": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "source_table_id", "summary_level_field", "county_summary_level",
+        "state_summary_level", "state_field", "county_field", "state_name_field",
+        "county_name_field", "population_field", "expected_county_count",
+        "expected_state_summary_count", "eligible_count", "out_of_scope_fips"
+      ],
+      "properties": {
+        "source_table_id": {"$ref": "#/$defs/identifier"},
+        "summary_level_field": {"type": "string", "minLength": 1},
+        "county_summary_level": {"type": "string", "minLength": 1},
+        "state_summary_level": {"type": "string", "minLength": 1},
+        "state_field": {"type": "string", "minLength": 1},
+        "county_field": {"type": "string", "minLength": 1},
+        "state_name_field": {"type": "string", "minLength": 1},
+        "county_name_field": {"type": "string", "minLength": 1},
+        "population_field": {"type": "string", "minLength": 1},
+        "expected_county_count": {"type": "integer", "minimum": 1},
+        "expected_state_summary_count": {"type": "integer", "minimum": 1},
+        "eligible_count": {"type": "integer", "minimum": 1},
+        "out_of_scope_fips": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/fips"}
+        }
+      }
+    },
+    "replacement": {
+      "type": "object", "additionalProperties": false,
+      "required": ["rule_id", "allowed_source_table_ids", "source_fips", "canonical_fips"],
+      "properties": {
+        "rule_id": {"type": "string", "pattern": "^[A-Z0-9_]+$"},
+        "allowed_source_table_ids": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "source_fips": {"$ref": "#/$defs/fips"},
+        "canonical_fips": {"$ref": "#/$defs/fips"}
+      }
+    },
+    "legacy_group": {
+      "type": "object", "additionalProperties": false,
+      "required": ["rule_id", "allowed_source_table_ids", "source_fips", "blocked_reference_fips"],
+      "properties": {
+        "rule_id": {"type": "string", "pattern": "^[A-Z0-9_]+$"},
+        "allowed_source_table_ids": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "source_fips": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/fips"}
+        },
+        "blocked_reference_fips": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/fips"}
+        }
+      }
+    },
+    "mapping_count": {
+      "type": "object", "additionalProperties": false,
+      "required": ["count_id", "statuses", "expected_count"],
+      "properties": {
+        "count_id": {"type": "string", "pattern": "^[A-Z0-9_]+$"},
+        "statuses": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/status"}
+        },
+        "expected_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "source_rule": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "staging_table_id", "rule_kind", "geography_fields", "expected_total_count",
+        "expected_mapping_counts", "required_reference_coverage",
+        "expected_valid_field_conflicts"
+      ],
+      "properties": {
+        "staging_table_id": {"$ref": "#/$defs/identifier"},
+        "rule_kind": {
+          "enum": ["CENSUS_REFERENCE", "HHS_SINGLE_FIPS", "DIRECT_SINGLE_FIPS", "DIRECT_DUAL_FIPS"]
+        },
+        "geography_fields": {
+          "type": "array", "minItems": 1, "maxItems": 2, "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "expected_total_count": {"type": "integer", "minimum": 0},
+        "expected_mapping_counts": {
+          "type": "array", "minItems": 1,
+          "items": {"$ref": "#/$defs/mapping_count"}
+        },
+        "required_reference_coverage": {
+          "enum": ["NONE", "ALL_REFERENCE_EXACTLY_ONCE", "ELIGIBLE_REFERENCE_EXACTLY_ONCE"]
+        },
+        "expected_valid_field_conflicts": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

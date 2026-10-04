@@ -715,6 +715,8 @@ def validate_configuration_manifest(
 def validate_repository_contracts(root: Path) -> dict[str, Any]:
     """Validate all public contracts and return their reproducible identities."""
 
+    from .geography import validate_geography_contract
+
     config_dir = root / "configs"
     Draft202012Validator.check_schema(
         load_json(config_dir / "source_verification.schema.json")
@@ -728,11 +730,18 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
     Draft202012Validator.check_schema(
         load_json(config_dir / "staging_build.schema.json")
     )
+    Draft202012Validator.check_schema(
+        load_json(config_dir / "geography.schema.json")
+    )
+    Draft202012Validator.check_schema(
+        load_json(config_dir / "geography_checkpoint.schema.json")
+    )
     sources = load_json(config_dir / "sources.json")
     source_tables = load_json(config_dir / "source_tables.json")
     staging_tables = load_json(config_dir / "staging_tables.json")
     method = load_json(config_dir / "method.json")
     configurations = load_json(config_dir / "configurations.json")
+    geography = load_json(config_dir / "geography.json")
     validate_source_contract(sources, load_json(config_dir / "sources.schema.json"))
     validate_source_table_contract(
         source_tables,
@@ -753,6 +762,10 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
         load_json(config_dir / "configurations.schema.json"),
         method,
         method_hash,
+    )
+    validate_geography_contract(
+        geography,
+        load_json(config_dir / "geography.schema.json"),
     )
     return {
         "source_snapshot_id": sources["snapshot_id"],
@@ -775,4 +788,9 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
         ),
         "configuration_count": configurations["configuration_count"],
         "primary_configuration_count": configurations["primary_configuration_count"],
+        "geography_contract_sha256": sha256_file(config_dir / "geography.json"),
+        "geography_checkpoint_schema_sha256": sha256_file(
+            config_dir / "geography_checkpoint.schema.json"
+        ),
+        "geography_source_table_count": len(geography["source_rules"]),
     }

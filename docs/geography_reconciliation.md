@@ -1,6 +1,6 @@
 # Geography Reconciliation Specification
 
-Status: **PROPOSED FOR REVIEW - NOT IMPLEMENTED**
+Status: **SYNTHETIC IMPLEMENTATION VERIFIED - REAL EXECUTION NOT AUTHORIZED**
 
 This specification defines how the accepted source-preserving staging tables
 may later be assigned to the frozen U.S. county-equivalent reference universe.
@@ -360,15 +360,22 @@ Before any real geography output can be accepted, one controlled run must show:
 - a second clean Linux or Colab reproduction before cross-platform equality is
   claimed.
 
-## Review decision required
+## Implementation and review result
 
-Acceptance of this document would authorize only:
+The specification was accepted for synthetic implementation on 2026-10-04.
+The machine-readable contract, schemas, deterministic reconciliation logic,
+checkpoint controls, and all 30 named acceptance tests are implemented. The
+full repository suite passes 108 tests. See the separate
+[geography readiness review](geography_readiness.md) for evidence and the
+remaining blocker.
+
+Acceptance authorized only:
 
 1. a machine-readable geography contract and JSON Schema;
 2. implementation using invented fixtures;
 3. the positive and negative tests above; and
 4. a readiness review after the complete synthetic suite passes.
 
-It would not authorize opening the private Parquet artifacts for geography
+It did not authorize opening the private Parquet artifacts for geography
 execution, creating real geography maps, constructing county evidence,
 aggregating HPSA or site records, or calculating analytical criteria.

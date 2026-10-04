@@ -27,10 +27,14 @@ reverified the 15-file snapshot, all eight source-table structures, exact build
 membership, schemas, lineage, canonical content, byte counts, and file hashes.
 The build identity is
 `238da712ad4a9d08b602e89ae8eaa2446871de1e6d84f2dc162ac8a69c5f3b0d`.
-A proposed FIPS-only geography-reconciliation specification and 30 acceptance
-tests are documented but have not been accepted or implemented. No source
-record has been normalized or joined, and no county-level criterion, portfolio,
-or final status has been calculated or published.
+The accepted FIPS-only geography contract, two schemas, deterministic
+row-preserving transformation, atomic checkpoint controls, and all 30 named
+synthetic acceptance tests are implemented. The synthetic implementation is
+accepted, but real geography execution is not ready because the trusted
+read-only adapter that must independently verify and load the accepted staging
+build is not yet implemented. No real source record has been geographically
+reconciled or joined, and no county-level criterion, portfolio, or final status
+has been calculated or published.
 
 ## Decision output
 
@@ -65,7 +69,8 @@ processing. Raw source files are not redistributed in this repository. See
 [source table contracts](docs/source_table_contracts.md),
 [staging table contracts](docs/staging_tables.md),
 [staging checkpoints](docs/staging_checkpoints.md),
-[geography reconciliation](docs/geography_reconciliation.md), and
+[geography reconciliation](docs/geography_reconciliation.md),
+[geography readiness](docs/geography_readiness.md), and
 [data attribution](DATA_ATTRIBUTION.md).
 
 ## Method summary
@@ -92,8 +97,9 @@ execution contexts:
 
 A refresh will never silently replace or impersonate the frozen analytical
 snapshot. The current executable surface validates file, source-table,
-staging, checkpoint, and build contracts; tests invented CSV, XLSX, staging
-rows, private checkpoint behavior, repository state, and source mutation;
+staging, checkpoint, build, and geography contracts; tests invented CSV, XLSX,
+staging and geography rows, private checkpoint behavior, repository state, and
+source mutation;
 verifies the frozen snapshot; and produces a value-free structural profile
 without calculating county results. The frozen staging command completed once
 against the accepted private snapshot; its manifests and artifacts remain

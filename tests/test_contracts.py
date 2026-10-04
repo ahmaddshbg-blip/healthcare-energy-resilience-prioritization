@@ -23,6 +23,8 @@ def test_repository_contracts_are_valid() -> None:
     assert summary["staging_table_count"] == 6
     assert summary["configuration_count"] == 480
     assert summary["primary_configuration_count"] == 20
+    assert summary["geography_source_table_count"] == 6
+    assert len(summary["geography_contract_sha256"]) == 64
 
 
 def test_synthetic_source_contract_has_no_private_dependency() -> None:

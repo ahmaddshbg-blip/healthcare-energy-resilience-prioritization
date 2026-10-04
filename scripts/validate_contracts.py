@@ -24,6 +24,7 @@ from healthcare_resilience.contracts import (  # noqa: E402
     validate_staging_contract,
 )
 from healthcare_resilience.hashing import sha256_file  # noqa: E402
+from healthcare_resilience.geography import validate_geography_contract  # noqa: E402
 
 
 def parse_args() -> argparse.Namespace:
@@ -50,6 +51,8 @@ def main() -> int:
     method = load_json(config_dir / "method.json")
     method_schema = load_json(config_dir / "method.schema.json")
     configuration_schema = load_json(config_dir / "configurations.schema.json")
+    geography = load_json(config_dir / "geography.json")
+    geography_schema = load_json(config_dir / "geography.schema.json")
 
     validate_source_contract(sources, source_schema)
     validate_source_table_contract(
@@ -62,6 +65,7 @@ def main() -> int:
         sha256_file(config_dir / "source_tables.json"),
     )
     validate_method_contract(method, method_schema)
+    validate_geography_contract(geography, geography_schema)
     method_hash = sha256_file(config_dir / "method.json")
     generated = build_configuration_manifest(method, method_hash)
     validate_configuration_manifest(

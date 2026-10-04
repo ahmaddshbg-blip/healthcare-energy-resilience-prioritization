@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ahmaddshbg-blip/healthcare-energy-resilience-prioritization/blob/main/configs/geography_checkpoint.schema.json",
+  "title": "County geography reconciliation checkpoint manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "manifest_type", "status", "checkpoint_identity_algorithm",
+    "checkpoint_identity", "checkpoint_identity_inputs", "content_hash_algorithm",
+    "schema_hash_algorithm", "artifact_hash_algorithm", "parquet_hash_portability",
+    "table_count", "total_row_count", "tables"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "manifest_type": {"const": "COUNTY_GEOGRAPHY_RECONCILIATION_CHECKPOINT"},
+    "status": {"const": "VALID"},
+    "checkpoint_identity_algorithm": {"const": "SHA256_CANONICAL_GEOGRAPHY_INPUTS_V1"},
+    "checkpoint_identity": {"$ref": "#/$defs/sha256"},
+    "checkpoint_identity_inputs": {"$ref": "#/$defs/identity_inputs"},
+    "content_hash_algorithm": {"const": "SHA256_CANONICAL_TYPED_ROWS_V1"},
+    "schema_hash_algorithm": {"const": "SHA256_CANONICAL_LOGICAL_AND_PHYSICAL_SCHEMA_V1"},
+    "artifact_hash_algorithm": {"const": "SHA256_FILE_BYTES"},
+    "parquet_hash_portability": {"const": "LOCAL_BINARY_EXACT_NOT_CROSS_PLATFORM_GUARANTEED"},
+    "table_count": {"const": 7},
+    "total_row_count": {"type": "integer", "minimum": 1},
+    "tables": {
+      "type": "array", "minItems": 7, "maxItems": 7,
+      "items": {"$ref": "#/$defs/table"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "identity_inputs": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "geography_contract_sha256", "input_staging_build_identity",
+        "input_staging_manifest_sha256", "code_commit", "repository_clean",
+        "requirements_lock_sha256", "environment"
+      ],
+      "properties": {
+        "geography_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "input_staging_build_identity": {"$ref": "#/$defs/sha256"},
+        "input_staging_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "code_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "repository_clean": {"const": true},
+        "requirements_lock_sha256": {"$ref": "#/$defs/sha256"},
+        "environment": {"type": "object"}
+      }
+    },
+    "column": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "output_type", "null_allowed"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "output_type": {"enum": ["STRING", "INTEGER"]},
+        "null_allowed": {"type": "boolean"}
+      }
+    },
+    "physical_column": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "duckdb_type"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "duckdb_type": {"enum": ["VARCHAR", "BIGINT"]}
+      }
+    },
+    "mapping_counts": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": [
+        "DIRECT_REFERENCE", "EXACT_REPLACEMENT", "UNRESOLVED_LEGACY_GEOGRAPHY",
+        "OUTSIDE_REFERENCE_UNIVERSE", "MISSING_SOURCE_FIPS", "INVALID_SOURCE_FIPS",
+        "STATE_SUMMARY_NOT_COUNTY"
+      ],
+      "properties": {
+        "DIRECT_REFERENCE": {"type": "integer", "minimum": 0},
+        "EXACT_REPLACEMENT": {"type": "integer", "minimum": 0},
+        "UNRESOLVED_LEGACY_GEOGRAPHY": {"type": "integer", "minimum": 0},
+        "OUTSIDE_REFERENCE_UNIVERSE": {"type": "integer", "minimum": 0},
+        "MISSING_SOURCE_FIPS": {"type": "integer", "minimum": 0},
+        "INVALID_SOURCE_FIPS": {"type": "integer", "minimum": 0},
+        "STATE_SUMMARY_NOT_COUNTY": {"type": "integer", "minimum": 0}
+      }
+    },
+    "table": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "artifact_id", "artifact_kind", "source_table_id", "relative_path",
+        "row_count", "column_count", "columns", "logical_schema_sha256",
+        "physical_columns", "physical_schema_sha256", "schema_sha256",
+        "canonical_content_sha256", "artifact_sha256", "artifact_bytes",
+        "mapping_counts"
+      ],
+      "properties": {
+        "artifact_id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+        "artifact_kind": {"enum": ["COUNTY_REFERENCE", "SOURCE_GEOGRAPHY_MAP"]},
+        "source_table_id": {"type": ["string", "null"]},
+        "relative_path": {"type": "string", "pattern": "^tables/[a-z0-9_]+\\.parquet$"},
+        "row_count": {"type": "integer", "minimum": 0},
+        "column_count": {"type": "integer", "minimum": 1},
+        "columns": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/column"}},
+        "logical_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "physical_columns": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/physical_column"}},
+        "physical_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "schema_sha256": {"$ref": "#/$defs/sha256"},
+        "canonical_content_sha256": {"$ref": "#/$defs/sha256"},
+        "artifact_sha256": {"$ref": "#/$defs/sha256"},
+        "artifact_bytes": {"type": "integer", "minimum": 1},
+        "mapping_counts": {"$ref": "#/$defs/mapping_counts"}
+      }
+    }
+  }
+}

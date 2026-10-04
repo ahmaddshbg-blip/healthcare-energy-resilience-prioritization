@@ -8,11 +8,13 @@ contains executable validation for the frozen source manifest, eight
 source-table declarations, accepted method invariants, deterministic
 480-configuration expansion, synthetic structural profiles, source adapters,
 staging extraction and checkpoints, independent Parquet verification,
-fail-closed frozen-build orchestration, and hash-only private snapshot
-verification. This is an engineering milestone, not a completed analytical
-pipeline. One authorized frozen build staged the accepted rows after hash and
-structural verification. No real record has been normalized, geographically
-reconciled, joined into county evidence, or scored.
+fail-closed frozen-build orchestration, hash-only private snapshot verification,
+and synthetic county-geography reconciliation with an independently verified
+content-addressed checkpoint. This is an engineering milestone, not a completed
+analytical pipeline. One authorized frozen build staged the accepted rows after
+hash and structural verification. Geography tests use invented rows only. No
+real record has been normalized, geographically reconciled, joined into county
+evidence, or scored.
 
 ## Contract validation
 
@@ -108,6 +110,32 @@ failures, all eight source-table structures, six Parquet artifacts containing
 manifests remain private outside Git. This verifies source-preserving staging in
 the recorded Windows environment only; it does not verify geography or any
 analytical result.
+
+## Synthetic geography reconciliation
+
+`configs/geography.json` binds the accepted staging build and freezes the
+Census reference, 11 out-of-scope units, two HHS replacements, unresolved
+Alaska and Connecticut legacies, six source-specific rules, exact mapping
+counts, and core coverage requirements. The paired contract and checkpoint
+schemas are validated by `scripts/validate_contracts.py`.
+
+`src/healthcare_resilience/geography.py` accepts already-staged rows in memory
+and returns one sorted county reference plus six row-preserving maps. It has no
+file reader, network behavior, name matching, ZIP fallback, spatial matching,
+aggregation, or scoring path. `src/healthcare_resilience/geography_checkpoint.py`
+writes seven Parquet artifacts atomically under a content-addressed directory
+and independently verifies schemas, counts, lineage, canonical content, byte
+counts, and file hashes.
+
+Exactly 15 positive and 15 negative acceptance cases use invented fixture
+rows. They also prove stable outputs under input shuffling, two-fresh-output
+manifest equality, dirty-tree and overwrite refusal, input-identity mutation
+detection, and artifact tamper detection.
+
+This layer is not ready for real execution. Its input identity is supplied by
+a callback, and a caller assertion is not an independent staging verification.
+The required read-only staging adapter and second readiness review are defined
+in [geography readiness](geography_readiness.md). No geography CLI exists.
 
 ## Source-table profiling
 
