@@ -6,12 +6,15 @@
   "additionalProperties": false,
   "required": [
     "schema_version", "contract_type", "specification", "source_snapshot_id",
-    "input_staging_build_identity", "staging_table_contract_sha256", "reference",
+    "input_staging_build_identity", "input_staging_build_manifest_file_sha256",
+    "input_staging_checkpoint_manifest_canonical_sha256",
+    "input_staging_checkpoint_manifest_file_sha256",
+    "staging_table_contract_sha256", "reference",
     "mapping_statuses", "exact_replacements", "unresolved_legacy_groups",
     "source_rules", "failure_conditions"
   ],
   "properties": {
-    "schema_version": {"const": "1.0.0"},
+    "schema_version": {"const": "1.1.0"},
     "contract_type": {"const": "COUNTY_GEOGRAPHY_RECONCILIATION"},
     "specification": {
       "type": "object", "additionalProperties": false,
@@ -23,6 +26,9 @@
     },
     "source_snapshot_id": {"$ref": "#/$defs/sha256"},
     "input_staging_build_identity": {"$ref": "#/$defs/sha256"},
+    "input_staging_build_manifest_file_sha256": {"$ref": "#/$defs/sha256"},
+    "input_staging_checkpoint_manifest_canonical_sha256": {"$ref": "#/$defs/sha256"},
+    "input_staging_checkpoint_manifest_file_sha256": {"$ref": "#/$defs/sha256"},
     "staging_table_contract_sha256": {"$ref": "#/$defs/sha256"},
     "reference": {"$ref": "#/$defs/reference"},
     "mapping_statuses": {

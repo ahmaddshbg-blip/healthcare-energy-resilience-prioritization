@@ -132,10 +132,14 @@ rows. They also prove stable outputs under input shuffling, two-fresh-output
 manifest equality, dirty-tree and overwrite refusal, input-identity mutation
 detection, and artifact tamper detection.
 
-This layer is not ready for real execution. Its input identity is supplied by
-a callback, and a caller assertion is not an independent staging verification.
-The required read-only staging adapter and second readiness review are defined
-in [geography readiness](geography_readiness.md). No geography CLI exists.
+`src/healthcare_resilience/geography_input.py` closes the staging-input boundary.
+It validates exact build membership and accepted manifest hashes, independently
+reopens all six staging artifacts, reads only lineage and contracted geography
+fields, and repeats verification after reading and after output creation. Its
+production entrypoint constructs the verifier internally and has no bypass
+parameter. The second readiness review passes, but real execution still
+requires explicit user authorization. See
+[geography readiness](geography_readiness.md). No geography CLI exists.
 
 ## Source-table profiling
 

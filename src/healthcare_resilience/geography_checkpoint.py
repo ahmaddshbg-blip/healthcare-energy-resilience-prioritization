@@ -8,7 +8,7 @@ import shutil
 from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 from uuid import uuid4
 
 import duckdb
@@ -48,6 +48,15 @@ MAP_SCHEMA = [
 
 class GeographyCheckpointError(ValueError):
     """Raised when a geography checkpoint fails an integrity control."""
+
+
+class StagingInputIdentity(NamedTuple):
+    """Exact accepted staging evidence bound into a geography checkpoint."""
+
+    build_identity: str
+    build_manifest_file_sha256: str
+    checkpoint_manifest_canonical_sha256: str
+    checkpoint_manifest_file_sha256: str
 
 
 def _require(condition: bool, message: str) -> None:
@@ -313,6 +322,18 @@ def validate_geography_checkpoint_manifest(
         == contract["input_staging_build_identity"],
         "geography checkpoint references a different staging build",
     )
+    _require(
+        identity["input_staging_build_manifest_file_sha256"]
+        == contract["input_staging_build_manifest_file_sha256"],
+        "geography checkpoint references a different staging build manifest",
+    )
+    _require(
+        identity["input_staging_checkpoint_manifest_canonical_sha256"]
+        == contract["input_staging_checkpoint_manifest_canonical_sha256"]
+        and identity["input_staging_checkpoint_manifest_file_sha256"]
+        == contract["input_staging_checkpoint_manifest_file_sha256"],
+        "geography checkpoint references a different staging checkpoint manifest",
+    )
     expected_ids = ["county_reference"] + [
         f"map_{item['staging_table_id']}" for item in contract["source_rules"]
     ]
@@ -464,14 +485,14 @@ def verify_geography_checkpoint_artifacts(
     _validate_checkpoint_semantics(reference_rows, source_maps, contract)
 
 
-def write_geography_checkpoint(
+def _write_geography_checkpoint(
     output_root: Path,
     outputs: Mapping[str, Any],
     contract: Mapping[str, Any],
     geography_contract_sha256: str,
     manifest_schema: dict[str, Any],
     repository_root: Path,
-    input_identity_probe: Callable[[], tuple[str, str]],
+    input_identity_probe: Callable[[], StagingInputIdentity],
 ) -> tuple[Path, dict[str, Any]]:
     """Publish a verified checkpoint atomically from already-reconciled rows."""
 
@@ -488,20 +509,30 @@ def write_geography_checkpoint(
         raise GeographyCheckpointError(str(error)) from error
     input_identity = input_identity_probe()
     _require(
-        input_identity[0] == contract["input_staging_build_identity"],
+        input_identity.build_identity == contract["input_staging_build_identity"],
         "input staging build identity differs from geography contract",
     )
-    _require(
-        len(input_identity[1]) == 64
-        and all(character in "0123456789abcdef" for character in input_identity[1]),
-        "input staging manifest identity is invalid",
+    expected_evidence = StagingInputIdentity(
+        contract["input_staging_build_identity"],
+        contract["input_staging_build_manifest_file_sha256"],
+        contract["input_staging_checkpoint_manifest_canonical_sha256"],
+        contract["input_staging_checkpoint_manifest_file_sha256"],
     )
+    _require(input_identity == expected_evidence, "input staging evidence differs from geography contract")
     definitions = _table_definitions(outputs, contract)
     _require(len(definitions) == 7, "geography outputs do not contain seven tables")
     identity_inputs = {
         "geography_contract_sha256": geography_contract_sha256,
-        "input_staging_build_identity": input_identity[0],
-        "input_staging_manifest_sha256": input_identity[1],
+        "input_staging_build_identity": input_identity.build_identity,
+        "input_staging_build_manifest_file_sha256": (
+            input_identity.build_manifest_file_sha256
+        ),
+        "input_staging_checkpoint_manifest_canonical_sha256": (
+            input_identity.checkpoint_manifest_canonical_sha256
+        ),
+        "input_staging_checkpoint_manifest_file_sha256": (
+            input_identity.checkpoint_manifest_file_sha256
+        ),
         "code_commit": code_commit,
         "repository_clean": True,
         "requirements_lock_sha256": requirements_lock_sha256,
@@ -545,7 +576,7 @@ def write_geography_checkpoint(
             )
         _require(input_identity_probe() == input_identity, "input staging evidence changed during checkpoint build")
         manifest = {
-            "schema_version": "1.0.0",
+            "schema_version": "1.1.0",
             "manifest_type": "COUNTY_GEOGRAPHY_RECONCILIATION_CHECKPOINT",
             "status": "VALID",
             "checkpoint_identity_algorithm": "SHA256_CANONICAL_GEOGRAPHY_INPUTS_V1",
@@ -566,6 +597,10 @@ def write_geography_checkpoint(
             encoding="utf-8", newline="\n",
         )
         verify_geography_checkpoint_artifacts(temporary, manifest, manifest_schema, contract, geography_contract_sha256)
+        _require(
+            input_identity_probe() == input_identity,
+            "input staging evidence changed after checkpoint verification",
+        )
         try:
             final_commit = capture_repository_identity(repository_root)
         except StagingBuildError as error:

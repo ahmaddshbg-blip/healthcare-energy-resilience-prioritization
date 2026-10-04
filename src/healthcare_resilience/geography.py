@@ -153,6 +153,18 @@ def validate_geography_contract(
         "input staging build identity differs from accepted evidence",
     )
     _require(
+        contract["input_staging_build_manifest_file_sha256"]
+        == "88a9f1ccdfed0cc56993afa7e054c7d81fbe49261dc5a49655a1fc74d3c1b6d6",
+        "input staging build-manifest identity differs from accepted evidence",
+    )
+    _require(
+        contract["input_staging_checkpoint_manifest_canonical_sha256"]
+        == "676727dfa8a91e5ab1225a8a01eb7b2f1df04465fd57ac714dd6ac54efc3b203"
+        and contract["input_staging_checkpoint_manifest_file_sha256"]
+        == "e2f7818b159120eb0a81cf16f6db66ec574f9a6a7d1f914efcf91688ce89c43f",
+        "input staging checkpoint-manifest identity differs from accepted evidence",
+    )
+    _require(
         contract["staging_table_contract_sha256"]
         == "40c861170f96f1156c58a6ce95ae4262051364097a4c102eb2c97300758eabe1",
         "staging-table contract identity differs from accepted evidence",

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -16,17 +15,20 @@ from healthcare_resilience.geography import (
 )
 from healthcare_resilience.geography_checkpoint import (
     GeographyCheckpointError,
+    StagingInputIdentity,
+    _write_geography_checkpoint,
     verify_geography_checkpoint_artifacts,
-    write_geography_checkpoint,
 )
 from healthcare_resilience.staging_build import StagingBuildError
+from tests.geography_support import (
+    synthetic_geography_contract,
+    synthetic_geography_rows,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_DIR = ROOT / "configs"
-FIXTURE_DIR = ROOT / "tests" / "fixtures"
 SYNTHETIC_COMMIT = "a" * 40
 SYNTHETIC_LOCK = "b" * 64
-SYNTHETIC_INPUT_MANIFEST = "c" * 64
 SYNTHETIC_ENVIRONMENT = {
     "python_version": "3.13.0",
     "python_implementation": "CPython",
@@ -37,67 +39,11 @@ SYNTHETIC_ENVIRONMENT = {
 
 
 def _synthetic_contract() -> dict:
-    contract = deepcopy(load_json(CONFIG_DIR / "geography.json"))
-    reference = contract["reference"]
-    reference["expected_county_count"] = 15
-    reference["expected_state_summary_count"] = 2
-    reference["eligible_count"] = 4
-    expected = {
-        "stg_census_county_population_2025": (
-            17,
-            [("DIRECT_REFERENCE", ["DIRECT_REFERENCE"], 15),
-             ("STATE_SUMMARY_NOT_COUNTY", ["STATE_SUMMARY_NOT_COUNTY"], 2)],
-        ),
-        "stg_hhs_empower_county": (
-            15,
-            [("DIRECT_REFERENCE", ["DIRECT_REFERENCE"], 2),
-             ("EXACT_REPLACEMENT", ["EXACT_REPLACEMENT"], 2),
-             ("UNRESOLVED_LEGACY_GEOGRAPHY", ["UNRESOLVED_LEGACY_GEOGRAPHY"], 9),
-             ("OUTSIDE_REFERENCE_UNIVERSE", ["OUTSIDE_REFERENCE_UNIVERSE"], 1),
-             ("MISSING_SOURCE_FIPS", ["MISSING_SOURCE_FIPS"], 1)],
-        ),
-        "stg_hhs_empower_history_county": (
-            14,
-            [("DIRECT_REFERENCE", ["DIRECT_REFERENCE"], 2),
-             ("EXACT_REPLACEMENT", ["EXACT_REPLACEMENT"], 2),
-             ("UNRESOLVED_LEGACY_GEOGRAPHY", ["UNRESOLVED_LEGACY_GEOGRAPHY"], 9),
-             ("OUTSIDE_REFERENCE_UNIVERSE", ["OUTSIDE_REFERENCE_UNIVERSE"], 1)],
-        ),
-        "stg_fema_nri_counties": (
-            16,
-            [("DIRECT_REFERENCE", ["DIRECT_REFERENCE"], 15),
-             ("OUTSIDE_REFERENCE_UNIVERSE", ["OUTSIDE_REFERENCE_UNIVERSE"], 1)],
-        ),
-        "stg_hrsa_primary_care_hpsa": (
-            4,
-            [("DIRECT_REFERENCE", ["DIRECT_REFERENCE"], 2),
-             ("OUTSIDE_REFERENCE_UNIVERSE", ["OUTSIDE_REFERENCE_UNIVERSE"], 1),
-             ("WITHOUT_VALID_SOURCE_FIPS", ["MISSING_SOURCE_FIPS", "INVALID_SOURCE_FIPS"], 1)],
-        ),
-        "stg_hrsa_health_center_sites": (
-            4,
-            [("DIRECT_REFERENCE", ["DIRECT_REFERENCE"], 1),
-             ("OUTSIDE_REFERENCE_UNIVERSE", ["OUTSIDE_REFERENCE_UNIVERSE"], 1),
-             ("WITHOUT_VALID_SOURCE_FIPS", ["MISSING_SOURCE_FIPS", "INVALID_SOURCE_FIPS"], 2)],
-        ),
-    }
-    for rule in contract["source_rules"]:
-        total, counts = expected[rule["staging_table_id"]]
-        rule["expected_total_count"] = total
-        rule["expected_mapping_counts"] = [
-            {"count_id": count_id, "statuses": statuses, "expected_count": count}
-            for count_id, statuses, count in counts
-        ]
-    validate_geography_contract(
-        contract,
-        load_json(CONFIG_DIR / "geography.schema.json"),
-        enforce_accepted_contract=False,
-    )
-    return contract
+    return synthetic_geography_contract()
 
 
 def _rows() -> dict:
-    return load_json(FIXTURE_DIR / "synthetic_geography_rows.json")
+    return synthetic_geography_rows()
 
 
 def _outputs() -> tuple[dict, dict, dict]:
@@ -126,11 +72,13 @@ def _write_checkpoint(
     outputs, _, contract = _outputs()
     _patch_release_identity(monkeypatch)
     if probe is None:
-        probe = lambda: (
+        probe = lambda: StagingInputIdentity(
             contract["input_staging_build_identity"],
-            SYNTHETIC_INPUT_MANIFEST,
+            contract["input_staging_build_manifest_file_sha256"],
+            contract["input_staging_checkpoint_manifest_canonical_sha256"],
+            contract["input_staging_checkpoint_manifest_file_sha256"],
         )
-    output, manifest = write_geography_checkpoint(
+    output, manifest = _write_geography_checkpoint(
         output_root,
         outputs,
         contract,
@@ -450,19 +398,34 @@ def test_geo_n15_overwrite_dirty_tree_input_mutation_and_tampering_are_rejected(
         lambda _: (_ for _ in ()).throw(StagingBuildError("repository working tree is not clean")),
     )
     with pytest.raises(GeographyCheckpointError, match="not clean"):
-        write_geography_checkpoint(
+        _write_geography_checkpoint(
             tmp_path / "dirty", _outputs()[0], contract, "d" * 64,
             load_json(CONFIG_DIR / "geography_checkpoint.schema.json"), ROOT,
-            lambda: (contract["input_staging_build_identity"], SYNTHETIC_INPUT_MANIFEST),
+            lambda: StagingInputIdentity(
+                contract["input_staging_build_identity"],
+                contract["input_staging_build_manifest_file_sha256"],
+                contract["input_staging_checkpoint_manifest_canonical_sha256"],
+                contract["input_staging_checkpoint_manifest_file_sha256"],
+            ),
         )
 
     _patch_release_identity(monkeypatch)
     identities = iter([
-        (contract["input_staging_build_identity"], SYNTHETIC_INPUT_MANIFEST),
-        (contract["input_staging_build_identity"], "e" * 64),
+        StagingInputIdentity(
+            contract["input_staging_build_identity"],
+            contract["input_staging_build_manifest_file_sha256"],
+            contract["input_staging_checkpoint_manifest_canonical_sha256"],
+            contract["input_staging_checkpoint_manifest_file_sha256"],
+        ),
+        StagingInputIdentity(
+            contract["input_staging_build_identity"],
+            contract["input_staging_build_manifest_file_sha256"],
+            "e" * 64,
+            contract["input_staging_checkpoint_manifest_file_sha256"],
+        ),
     ])
     with pytest.raises(GeographyCheckpointError, match="changed during"):
-        write_geography_checkpoint(
+        _write_geography_checkpoint(
             tmp_path / "mutated", _outputs()[0], contract, "d" * 64,
             load_json(CONFIG_DIR / "geography_checkpoint.schema.json"), ROOT,
             lambda: next(identities),

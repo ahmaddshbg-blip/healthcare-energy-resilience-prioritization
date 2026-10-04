@@ -11,7 +11,7 @@
     "table_count", "total_row_count", "tables"
   ],
   "properties": {
-    "schema_version": {"const": "1.0.0"},
+    "schema_version": {"const": "1.1.0"},
     "manifest_type": {"const": "COUNTY_GEOGRAPHY_RECONCILIATION_CHECKPOINT"},
     "status": {"const": "VALID"},
     "checkpoint_identity_algorithm": {"const": "SHA256_CANONICAL_GEOGRAPHY_INPUTS_V1"},
@@ -34,13 +34,18 @@
       "type": "object", "additionalProperties": false,
       "required": [
         "geography_contract_sha256", "input_staging_build_identity",
-        "input_staging_manifest_sha256", "code_commit", "repository_clean",
+        "input_staging_build_manifest_file_sha256",
+        "input_staging_checkpoint_manifest_canonical_sha256",
+        "input_staging_checkpoint_manifest_file_sha256",
+        "code_commit", "repository_clean",
         "requirements_lock_sha256", "environment"
       ],
       "properties": {
         "geography_contract_sha256": {"$ref": "#/$defs/sha256"},
         "input_staging_build_identity": {"$ref": "#/$defs/sha256"},
-        "input_staging_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "input_staging_build_manifest_file_sha256": {"$ref": "#/$defs/sha256"},
+        "input_staging_checkpoint_manifest_canonical_sha256": {"$ref": "#/$defs/sha256"},
+        "input_staging_checkpoint_manifest_file_sha256": {"$ref": "#/$defs/sha256"},
         "code_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
         "repository_clean": {"const": true},
         "requirements_lock_sha256": {"$ref": "#/$defs/sha256"},

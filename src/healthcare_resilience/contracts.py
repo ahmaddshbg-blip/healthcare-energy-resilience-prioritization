@@ -789,6 +789,9 @@ def validate_repository_contracts(root: Path) -> dict[str, Any]:
         "configuration_count": configurations["configuration_count"],
         "primary_configuration_count": configurations["primary_configuration_count"],
         "geography_contract_sha256": sha256_file(config_dir / "geography.json"),
+        "geography_schema_sha256": sha256_file(
+            config_dir / "geography.schema.json"
+        ),
         "geography_checkpoint_schema_sha256": sha256_file(
             config_dir / "geography_checkpoint.schema.json"
         ),

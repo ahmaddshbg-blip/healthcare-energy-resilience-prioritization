@@ -29,12 +29,13 @@ The build identity is
 `238da712ad4a9d08b602e89ae8eaa2446871de1e6d84f2dc162ac8a69c5f3b0d`.
 The accepted FIPS-only geography contract, two schemas, deterministic
 row-preserving transformation, atomic checkpoint controls, and all 30 named
-synthetic acceptance tests are implemented. The synthetic implementation is
-accepted, but real geography execution is not ready because the trusted
-read-only adapter that must independently verify and load the accepted staging
-build is not yet implemented. No real source record has been geographically
-reconciled or joined, and no county-level criterion, portfolio, or final status
-has been calculated or published.
+synthetic acceptance tests are implemented. A trusted read-only input boundary
+also verifies the exact staging build, manifests, membership, and all six input
+Parquet artifacts before and after exposing only contracted geography fields.
+The second readiness review passes for one controlled real geography build,
+but no execution is authorized without a separate explicit user decision. No
+real source record has been geographically reconciled or joined, and no county-
+level criterion, portfolio, or final status has been calculated or published.
 
 ## Decision output
 
@@ -98,8 +99,8 @@ execution contexts:
 A refresh will never silently replace or impersonate the frozen analytical
 snapshot. The current executable surface validates file, source-table,
 staging, checkpoint, build, and geography contracts; tests invented CSV, XLSX,
-staging and geography rows, private checkpoint behavior, repository state, and
-source mutation;
+staging and geography rows, a complete invented six-table staging build,
+private checkpoint behavior, repository state, and source mutation;
 verifies the frozen snapshot; and produces a value-free structural profile
 without calculating county results. The frozen staging command completed once
 against the accepted private snapshot; its manifests and artifacts remain

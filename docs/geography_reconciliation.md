@@ -1,6 +1,6 @@
 # Geography Reconciliation Specification
 
-Status: **SYNTHETIC IMPLEMENTATION VERIFIED - REAL EXECUTION NOT AUTHORIZED**
+Status: **READY FOR ONE CONTROLLED REAL BUILD - EXPLICIT AUTHORIZATION REQUIRED**
 
 This specification defines how the accepted source-preserving staging tables
 may later be assigned to the frozen U.S. county-equivalent reference universe.
@@ -364,10 +364,11 @@ Before any real geography output can be accepted, one controlled run must show:
 
 The specification was accepted for synthetic implementation on 2026-10-04.
 The machine-readable contract, schemas, deterministic reconciliation logic,
-checkpoint controls, and all 30 named acceptance tests are implemented. The
-full repository suite passes 108 tests. See the separate
+checkpoint controls, trusted staging-input boundary, and all 30 named
+acceptance tests are implemented. The full repository suite passes 117 tests.
+See the separate
 [geography readiness review](geography_readiness.md) for evidence and the
-remaining blocker.
+remaining authorization boundary.
 
 Acceptance authorized only:
 
