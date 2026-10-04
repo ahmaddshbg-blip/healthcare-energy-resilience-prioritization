@@ -1,6 +1,6 @@
 # Geography Reconciliation Specification
 
-Status: **CONTROLLED BUILD BLOCKED - CONTRACT-TO-SNAPSHOT COUNT MISMATCH**
+Status: **AMENDED FOR SYNTHETIC IMPLEMENTATION - REAL EXECUTION NOT AUTHORIZED**
 
 This specification defines how the accepted source-preserving staging tables
 may later be assigned to the frozen U.S. county-equivalent reference universe.
@@ -28,9 +28,12 @@ separate controlled transformation.
 ## Decision
 
 Use the Census Vintage 2025 county rows as the only reference geography.
-Reconcile records only by exact five-character county FIPS. Do not use county
-names, state names, abbreviations, ZIP Codes, coordinates, fuzzy matching,
-spatial overlays, or population-weighted allocation.
+Reconcile only the five mapped staging tables by exact five-character county
+FIPS. Retain `stg_hhs_empower_history_county` in source-preserving staging as
+context-only evidence; it is not a geography-map input and cannot affect
+current eligibility. Do not use county names, state names, abbreviations, ZIP
+Codes, coordinates, fuzzy matching, spatial overlays, or population-weighted
+allocation.
 
 Two HHS historical-name changes are the only allowed one-to-one replacements.
 No Alaska or Connecticut predecessor value may be divided among successor
@@ -115,7 +118,7 @@ Territories are not reference units and therefore do not receive
 
 ## Allowed replacements and unresolved legacies
 
-Only these HHS current and HHS county-history replacements are permitted:
+Only these HHS current-county replacements are permitted:
 
 | Source FIPS | Canonical FIPS | Rule |
 |---|---|---|
@@ -123,8 +126,8 @@ Only these HHS current and HHS county-history replacements are permitted:
 | `46113` | `46102` | exact historical-name replacement |
 
 The replacements are one-to-one identifier changes and do not allocate or
-transform a value. The same codes appearing in another source must stop for
-review rather than silently invoking an HHS-specific rule.
+transform a value. The same codes appearing in another mapped source must stop
+for review rather than silently invoking an HHS-specific rule.
 
 These HHS legacy codes remain unresolved and receive no canonical FIPS:
 
@@ -139,7 +142,7 @@ must remain traceable but cannot enter county evidence.
 
 ## Mapping statuses
 
-Every staging row must receive exactly one mapping status:
+Every row in a mapped staging table must receive exactly one mapping status:
 
 - `DIRECT_REFERENCE`: valid source FIPS equals one reference FIPS;
 - `EXACT_REPLACEMENT`: one of the two permitted HHS replacements;
@@ -155,7 +158,7 @@ Every staging row must receive exactly one mapping status:
 
 Only `DIRECT_REFERENCE` and `EXACT_REPLACEMENT` may have non-null
 `canonical_fips`. No row may be dropped, duplicated, or assigned multiple
-statuses.
+statuses. Context-only staging rows receive no geography status or map output.
 
 ## Source-specific rules
 
@@ -188,16 +191,17 @@ Frozen-snapshot reconciliation must produce:
 | `MISSING_SOURCE_FIPS` | 5 |
 | **Total** | **3,233** |
 
-### HHS emPOWER county history
+### HHS emPOWER county history context
 
 - Input: `stg_hhs_empower_history_county`.
-- Geography field: `FIPS_Code`.
-- Apply the same direct, replacement, unresolved, and outside-universe rules.
-- Use this source for traceable historical context only; it cannot create or
-  repair current eligibility.
-
-Frozen-snapshot reconciliation must produce 3,131 direct, 2 replacement, 9
-unresolved legacy, and 86 outside-universe rows, totaling 3,228.
+- Preserve all source rows and fields in the accepted source-preserving staging
+  checkpoint.
+- Do not parse, trim, repair, replace, map, or emit a geography artifact for
+  this table.
+- The historical table is context-only and cannot create or repair current
+  eligibility. Its source FIPS representation remains outside geography
+  reconciliation until a separately accepted amendment gives it a mapping
+  role.
 
 ### FEMA National Risk Index
 
@@ -247,7 +251,8 @@ If this specification is accepted and later implemented, geography processing
 may create only:
 
 1. one 3,144-row `county_reference` table;
-2. one row-preserving geography-map table for each of the six staging tables;
+2. one row-preserving geography-map table for each of the five mapped staging
+   tables; the context-only historical table produces no geography map;
    and
 3. one geography manifest containing input identities, rule identity, counts,
    schema fingerprints, canonical hashes, code commit, and environment.
@@ -355,28 +360,24 @@ Before any real geography output can be accepted, one controlled run must show:
 - a 3,144-row reference with 3,133 eligible and 11 `OUT_OF_SCOPE` rows;
 - one current HHS and one FEMA core record for every eligible county;
 - no allocation of unresolved legacy geography;
-- row preservation across all six source maps;
+- row preservation across all five mapped source maps;
 - deterministic canonical hashes across two fresh local outputs; and
 - a second clean Linux or Colab reproduction before cross-platform equality is
   claimed.
 
 ## Implementation and review result
 
-The specification was accepted for synthetic implementation on 2026-10-04.
-The machine-readable contract, schemas, deterministic reconciliation logic,
-checkpoint controls, trusted staging-input boundary, and all 30 named
-acceptance tests are implemented. The full repository suite passes 117 tests.
-One explicitly authorized production attempt accepted the staging evidence but
-failed closed on the contracted `DIRECT_REFERENCE` count for
-`stg_hhs_empower_history_county`. A read-only representation audit found all
-3,228 `FIPS_Code` values in that table carry trailing whitespace, while this
-specification requires exact five-digit text and forbids trimming or repair.
-The raw HHS workbook itself has the same representation, so rebuilding from
-that identical source would not solve the mismatch. No geography checkpoint
-was published. See the separate
-[geography readiness review](geography_readiness.md). Do not rerun until the
-specification amendment versus corrected-upstream-source decision is resolved
-and a new explicit authorization is given.
+The original specification was accepted for synthetic implementation on
+2026-10-04. After the controlled run exposed the raw historical FIPS
+representation issue, the amendment was accepted for synthetic implementation:
+the historical HHS table remains in six-table staging but is context-only and
+the geography checkpoint contains six artifacts, consisting of one reference
+and five mapped-source outputs. The machine-readable contract, schemas,
+deterministic reconciliation logic, checkpoint controls, trusted staging-input
+boundary, and all 30 named acceptance tests remain implemented. The full
+repository suite passes 117 tests. No real geography checkpoint has been
+accepted. See the separate [geography readiness review](geography_readiness.md)
+for the amendment review and remaining authorization boundary.
 
 Acceptance authorized only:
 
@@ -385,6 +386,7 @@ Acceptance authorized only:
 3. the positive and negative tests above; and
 4. a readiness review after the complete synthetic suite passes.
 
-It did not authorize opening the private Parquet artifacts for geography
-execution, creating real geography maps, constructing county evidence,
-aggregating HPSA or site records, or calculating analytical criteria.
+It did not authorize a second real geography execution, creating accepted real
+geography maps, constructing county evidence, aggregating HPSA or site records,
+or calculating analytical criteria. The prior single authorized attempt
+failed closed before publication.

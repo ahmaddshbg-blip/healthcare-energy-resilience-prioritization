@@ -32,16 +32,14 @@ row-preserving transformation, atomic checkpoint controls, and all 30 named
 synthetic acceptance tests are implemented. A trusted read-only input boundary
 also verifies the exact staging build, manifests, membership, and all six input
 Parquet artifacts before and after exposing only contracted geography fields.
-The second readiness review passed, and one explicitly authorized production
-attempt was made. Input verification passed, but reconciliation failed closed
-on the contracted `DIRECT_REFERENCE` count for
-`stg_hhs_empower_history_county`. A read-only audit found all 3,228 FIPS
-representations in that historical table carry trailing whitespace; the raw
-workbook has the same representation, and the strict specification forbids
-trimming or repair. No geography checkpoint was published. No county-level
-criterion, portfolio, or final status has been calculated or published. Do not
-rerun until the specification amendment versus corrected-upstream-source
-decision is resolved.
+The second readiness review supported one explicitly authorized production
+attempt. Input verification passed, but reconciliation failed closed because
+all 3,228 historical HHS FIPS representations carry trailing whitespace in
+the raw workbook and the strict specification forbids trimming or repair. The
+accepted amendment keeps that table source-preserved as context-only and maps
+the other five geography inputs. The amended contract has passed synthetic
+tests, but no real geography checkpoint has been accepted and no county-level
+criterion, portfolio, or final status has been calculated or published.
 
 ## Decision output
 

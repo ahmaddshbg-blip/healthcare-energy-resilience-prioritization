@@ -181,10 +181,13 @@ def verify_staging_geography_input(
     geography_ids = [
         item["staging_table_id"] for item in geography_contract["source_rules"]
     ]
+    context_ids = list(geography_contract["context_only_staging_table_ids"])
     _require(
-        len(expected_ids) == len(geography_ids)
-        and set(expected_ids) == set(geography_ids),
-        "staging table set differs from geography source rules",
+        len(expected_ids) == 6
+        and len(geography_ids) == 5
+        and len(context_ids) == 1
+        and set(expected_ids) == set(geography_ids).union(context_ids),
+        "staging table set differs from mapped and context-only geography scope",
     )
     _require(
         checkpoint_manifest["table_count"] == len(expected_ids) == 6,

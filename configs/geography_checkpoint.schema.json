@@ -11,7 +11,7 @@
     "table_count", "total_row_count", "tables"
   ],
   "properties": {
-    "schema_version": {"const": "1.1.0"},
+    "schema_version": {"const": "1.2.0"},
     "manifest_type": {"const": "COUNTY_GEOGRAPHY_RECONCILIATION_CHECKPOINT"},
     "status": {"const": "VALID"},
     "checkpoint_identity_algorithm": {"const": "SHA256_CANONICAL_GEOGRAPHY_INPUTS_V1"},
@@ -21,10 +21,10 @@
     "schema_hash_algorithm": {"const": "SHA256_CANONICAL_LOGICAL_AND_PHYSICAL_SCHEMA_V1"},
     "artifact_hash_algorithm": {"const": "SHA256_FILE_BYTES"},
     "parquet_hash_portability": {"const": "LOCAL_BINARY_EXACT_NOT_CROSS_PLATFORM_GUARANTEED"},
-    "table_count": {"const": 7},
+    "table_count": {"const": 6},
     "total_row_count": {"type": "integer", "minimum": 1},
     "tables": {
-      "type": "array", "minItems": 7, "maxItems": 7,
+      "type": "array", "minItems": 6, "maxItems": 6,
       "items": {"$ref": "#/$defs/table"}
     }
   },

@@ -38,7 +38,6 @@ CONNECTICUT_LEGACY = (
 SOURCE_TABLE_IDS = (
     "stg_census_county_population_2025",
     "stg_hhs_empower_county",
-    "stg_hhs_empower_history_county",
     "stg_fema_nri_counties",
     "stg_hrsa_primary_care_hpsa",
     "stg_hrsa_health_center_sites",
@@ -122,7 +121,16 @@ def validate_geography_contract(
     _require(len(source_ids) == len(set(source_ids)), "source rule ids are not unique")
     _require(
         set(source_ids) == set(SOURCE_TABLE_IDS),
-        "geography contract does not cover the exact six staging tables",
+        "geography contract does not cover the exact five mapped staging tables",
+    )
+    context_ids = contract["context_only_staging_table_ids"]
+    _require(
+        len(context_ids) == len(set(context_ids)),
+        "context-only staging table ids are not unique",
+    )
+    _require(
+        not set(source_ids).intersection(context_ids),
+        "a staging table cannot be both mapped and context-only",
     )
     for rule in source_rules:
         statuses: list[str] = []
@@ -171,7 +179,7 @@ def validate_geography_contract(
     )
     _require(
         contract["specification"]["accepted_review_sha256"]
-        == "a9ce98e10ca596dfd7ec4f62cdd706e682bf1d42aa4ecb9c6a75328d514f1adb",
+        == "8cb0c28375a71304316844c86298ad5dda5621cd5dce4272fcd9c4e35d667a62",
         "geography specification review identity differs from acceptance",
     )
     _require(
@@ -182,6 +190,11 @@ def validate_geography_contract(
             tuple(reference["out_of_scope_fips"]),
         ) == (3144, 51, 3133, OUT_OF_SCOPE_FIPS),
         "accepted reference universe or out-of-scope set changed",
+    )
+    _require(
+        tuple(contract["context_only_staging_table_ids"])
+        == ("stg_hhs_empower_history_county",),
+        "accepted context-only staging table scope changed",
     )
     _require(
         {
@@ -212,7 +225,6 @@ def validate_geography_contract(
     _require(observed_replacements == REPLACEMENTS, "accepted replacements changed")
     accepted_hhs_tables = (
         "stg_hhs_empower_county",
-        "stg_hhs_empower_history_county",
     )
     _require(
         all(
@@ -242,7 +254,6 @@ def validate_geography_contract(
     expected_totals = {
         "stg_census_county_population_2025": 3195,
         "stg_hhs_empower_county": 3233,
-        "stg_hhs_empower_history_county": 3228,
         "stg_fema_nri_counties": 3232,
         "stg_hrsa_primary_care_hpsa": 80199,
         "stg_hrsa_health_center_sites": 19283,
@@ -267,14 +278,6 @@ def validate_geography_contract(
              ("OUTSIDE_REFERENCE_UNIVERSE", ("OUTSIDE_REFERENCE_UNIVERSE",), 86),
              ("MISSING_SOURCE_FIPS", ("MISSING_SOURCE_FIPS",), 5)),
             "ELIGIBLE_REFERENCE_EXACTLY_ONCE",
-        ),
-        "stg_hhs_empower_history_county": (
-            "HHS_SINGLE_FIPS", ("FIPS_Code",),
-            (("DIRECT_REFERENCE", ("DIRECT_REFERENCE",), 3131),
-             ("EXACT_REPLACEMENT", ("EXACT_REPLACEMENT",), 2),
-             ("UNRESOLVED_LEGACY_GEOGRAPHY", ("UNRESOLVED_LEGACY_GEOGRAPHY",), 9),
-             ("OUTSIDE_REFERENCE_UNIVERSE", ("OUTSIDE_REFERENCE_UNIVERSE",), 86)),
-            "NONE",
         ),
         "stg_fema_nri_counties": (
             "DIRECT_SINGLE_FIPS", ("STCOFIPS",),

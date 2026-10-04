@@ -1,9 +1,9 @@
 {
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
   "contract_type": "COUNTY_GEOGRAPHY_RECONCILIATION",
   "specification": {
     "document": "docs/geography_reconciliation.md",
-    "accepted_review_sha256": "a9ce98e10ca596dfd7ec4f62cdd706e682bf1d42aa4ecb9c6a75328d514f1adb"
+    "accepted_review_sha256": "8cb0c28375a71304316844c86298ad5dda5621cd5dce4272fcd9c4e35d667a62"
   },
   "source_snapshot_id": "cc1489ab008db4d5d1b2eddf798b51218e2324e97e88ab9c7d3853927bb54dbb",
   "input_staging_build_identity": "238da712ad4a9d08b602e89ae8eaa2446871de1e6d84f2dc162ac8a69c5f3b0d",
@@ -11,6 +11,7 @@
   "input_staging_checkpoint_manifest_canonical_sha256": "676727dfa8a91e5ab1225a8a01eb7b2f1df04465fd57ac714dd6ac54efc3b203",
   "input_staging_checkpoint_manifest_file_sha256": "e2f7818b159120eb0a81cf16f6db66ec574f9a6a7d1f914efcf91688ce89c43f",
   "staging_table_contract_sha256": "40c861170f96f1156c58a6ce95ae4262051364097a4c102eb2c97300758eabe1",
+  "context_only_staging_table_ids": ["stg_hhs_empower_history_county"],
   "reference": {
     "source_table_id": "stg_census_county_population_2025",
     "summary_level_field": "SUMLEV",
@@ -50,19 +51,13 @@
   "exact_replacements": [
     {
       "rule_id": "HHS_WADE_HAMPTON_TO_KUSILVAK",
-      "allowed_source_table_ids": [
-        "stg_hhs_empower_county",
-        "stg_hhs_empower_history_county"
-      ],
+      "allowed_source_table_ids": ["stg_hhs_empower_county"],
       "source_fips": "02270",
       "canonical_fips": "02158"
     },
     {
       "rule_id": "HHS_SHANNON_TO_OGLALA_LAKOTA",
-      "allowed_source_table_ids": [
-        "stg_hhs_empower_county",
-        "stg_hhs_empower_history_county"
-      ],
+      "allowed_source_table_ids": ["stg_hhs_empower_county"],
       "source_fips": "46113",
       "canonical_fips": "46102"
     }
@@ -70,19 +65,13 @@
   "unresolved_legacy_groups": [
     {
       "rule_id": "HHS_ALASKA_LEGACY_UNALLOCATED",
-      "allowed_source_table_ids": [
-        "stg_hhs_empower_county",
-        "stg_hhs_empower_history_county"
-      ],
+      "allowed_source_table_ids": ["stg_hhs_empower_county"],
       "source_fips": ["02261"],
       "blocked_reference_fips": ["02063", "02066"]
     },
     {
       "rule_id": "HHS_CONNECTICUT_LEGACY_UNALLOCATED",
-      "allowed_source_table_ids": [
-        "stg_hhs_empower_county",
-        "stg_hhs_empower_history_county"
-      ],
+      "allowed_source_table_ids": ["stg_hhs_empower_county"],
       "source_fips": [
         "09001",
         "09003",
@@ -132,20 +121,6 @@
         {"count_id": "MISSING_SOURCE_FIPS", "statuses": ["MISSING_SOURCE_FIPS"], "expected_count": 5}
       ],
       "required_reference_coverage": "ELIGIBLE_REFERENCE_EXACTLY_ONCE",
-      "expected_valid_field_conflicts": 0
-    },
-    {
-      "staging_table_id": "stg_hhs_empower_history_county",
-      "rule_kind": "HHS_SINGLE_FIPS",
-      "geography_fields": ["FIPS_Code"],
-      "expected_total_count": 3228,
-      "expected_mapping_counts": [
-        {"count_id": "DIRECT_REFERENCE", "statuses": ["DIRECT_REFERENCE"], "expected_count": 3131},
-        {"count_id": "EXACT_REPLACEMENT", "statuses": ["EXACT_REPLACEMENT"], "expected_count": 2},
-        {"count_id": "UNRESOLVED_LEGACY_GEOGRAPHY", "statuses": ["UNRESOLVED_LEGACY_GEOGRAPHY"], "expected_count": 9},
-        {"count_id": "OUTSIDE_REFERENCE_UNIVERSE", "statuses": ["OUTSIDE_REFERENCE_UNIVERSE"], "expected_count": 86}
-      ],
-      "required_reference_coverage": "NONE",
       "expected_valid_field_conflicts": 0
     },
     {

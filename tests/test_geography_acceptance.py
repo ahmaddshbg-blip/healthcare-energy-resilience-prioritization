@@ -43,7 +43,12 @@ def _synthetic_contract() -> dict:
 
 
 def _rows() -> dict:
-    return synthetic_geography_rows()
+    rows = synthetic_geography_rows()
+    mapped_ids = {
+        rule["staging_table_id"]
+        for rule in load_json(CONFIG_DIR / "geography.json")["source_rules"]
+    }
+    return {table_id: rows[table_id] for table_id in mapped_ids}
 
 
 def _outputs() -> tuple[dict, dict, dict]:
@@ -226,8 +231,8 @@ def test_geo_p15_independent_verification_reproduces_manifest_claims(
         contract,
         "d" * 64,
     )
-    assert manifest["table_count"] == 7
-    assert manifest["total_row_count"] == 85
+    assert manifest["table_count"] == 6
+    assert manifest["total_row_count"] == 71
     assert second_manifest == manifest
 
 

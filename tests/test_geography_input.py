@@ -56,10 +56,8 @@ def _source_and_staging_contracts(
 ) -> tuple[dict, dict, str, str]:
     source_tables = []
     staging_tables = []
-    for rule in geography_contract["source_rules"]:
-        table_id = rule["staging_table_id"]
+    for table_id, rows in rows_by_table.items():
         source_id = table_id.removeprefix("stg_")
-        rows = rows_by_table[table_id]
         source_fields = [name for name in rows[0] if name != "source_row_number"]
         required_columns = []
         for field in source_fields:
@@ -265,6 +263,7 @@ def test_read_only_boundary_verifies_and_exposes_only_geography_fields(
         rule["staging_table_id"]
         for rule in case["geography_contract"]["source_rules"]
     }
+    assert "stg_hhs_empower_history_county" not in rows
     site_rows = rows["stg_hrsa_health_center_sites"]
     assert list(site_rows[0]) == [
         "source_row_number",
@@ -287,8 +286,11 @@ def test_public_staging_and_geography_contracts_cover_same_table_set() -> None:
     geography = load_json(CONFIG_DIR / "geography.json")
     staging_ids = [item["id"] for item in staging["staging_tables"]]
     geography_ids = [item["staging_table_id"] for item in geography["source_rules"]]
-    assert set(staging_ids) == set(geography_ids)
-    assert staging_ids != geography_ids
+    context_ids = geography["context_only_staging_table_ids"]
+    assert len(staging_ids) == 6
+    assert len(geography_ids) == 5
+    assert set(staging_ids) == set(geography_ids).union(context_ids)
+    assert context_ids == ["stg_hhs_empower_history_county"]
 
 
 def test_read_only_boundary_rejects_unexpected_build_membership(

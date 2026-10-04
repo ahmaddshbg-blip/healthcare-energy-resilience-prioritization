@@ -520,7 +520,7 @@ def _write_geography_checkpoint(
     )
     _require(input_identity == expected_evidence, "input staging evidence differs from geography contract")
     definitions = _table_definitions(outputs, contract)
-    _require(len(definitions) == 7, "geography outputs do not contain seven tables")
+    _require(len(definitions) == 6, "geography outputs do not contain six tables")
     identity_inputs = {
         "geography_contract_sha256": geography_contract_sha256,
         "input_staging_build_identity": input_identity.build_identity,
@@ -576,7 +576,7 @@ def _write_geography_checkpoint(
             )
         _require(input_identity_probe() == input_identity, "input staging evidence changed during checkpoint build")
         manifest = {
-            "schema_version": "1.1.0",
+            "schema_version": "1.2.0",
             "manifest_type": "COUNTY_GEOGRAPHY_RECONCILIATION_CHECKPOINT",
             "status": "VALID",
             "checkpoint_identity_algorithm": "SHA256_CANONICAL_GEOGRAPHY_INPUTS_V1",

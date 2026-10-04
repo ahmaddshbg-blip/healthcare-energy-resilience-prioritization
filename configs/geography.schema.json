@@ -9,12 +9,12 @@
     "input_staging_build_identity", "input_staging_build_manifest_file_sha256",
     "input_staging_checkpoint_manifest_canonical_sha256",
     "input_staging_checkpoint_manifest_file_sha256",
-    "staging_table_contract_sha256", "reference",
+    "staging_table_contract_sha256", "context_only_staging_table_ids", "reference",
     "mapping_statuses", "exact_replacements", "unresolved_legacy_groups",
     "source_rules", "failure_conditions"
   ],
   "properties": {
-    "schema_version": {"const": "1.1.0"},
+    "schema_version": {"const": "1.2.0"},
     "contract_type": {"const": "COUNTY_GEOGRAPHY_RECONCILIATION"},
     "specification": {
       "type": "object", "additionalProperties": false,
@@ -30,6 +30,10 @@
     "input_staging_checkpoint_manifest_canonical_sha256": {"$ref": "#/$defs/sha256"},
     "input_staging_checkpoint_manifest_file_sha256": {"$ref": "#/$defs/sha256"},
     "staging_table_contract_sha256": {"$ref": "#/$defs/sha256"},
+    "context_only_staging_table_ids": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/identifier"}
+    },
     "reference": {"$ref": "#/$defs/reference"},
     "mapping_statuses": {
       "type": "array", "minItems": 7, "maxItems": 7, "uniqueItems": true,
@@ -44,7 +48,7 @@
       "items": {"$ref": "#/$defs/legacy_group"}
     },
     "source_rules": {
-      "type": "array", "minItems": 6, "maxItems": 6,
+      "type": "array", "minItems": 5, "maxItems": 5,
       "items": {"$ref": "#/$defs/source_rule"}
     },
     "failure_conditions": {

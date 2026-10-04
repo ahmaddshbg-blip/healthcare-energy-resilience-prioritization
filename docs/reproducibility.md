@@ -123,7 +123,7 @@ schemas are validated by `scripts/validate_contracts.py`.
 and returns one sorted county reference plus six row-preserving maps. It has no
 file reader, network behavior, name matching, ZIP fallback, spatial matching,
 aggregation, or scoring path. `src/healthcare_resilience/geography_checkpoint.py`
-writes seven Parquet artifacts atomically under a content-addressed directory
+writes six Parquet artifacts atomically under a content-addressed directory
 and independently verifies schemas, counts, lineage, canonical content, byte
 counts, and file hashes.
 
@@ -137,17 +137,13 @@ It validates exact build membership and accepted manifest hashes, independently
 reopens all six staging artifacts, reads only lineage and contracted geography
 fields, and repeats verification after reading and after output creation. Its
 production entrypoint constructs the verifier internally and has no bypass
-parameter. The second readiness review passed and one explicitly authorized
-production attempt was made. Input verification passed, but reconciliation
-failed closed on the contracted `DIRECT_REFERENCE` count for
-`stg_hhs_empower_history_county`. A read-only audit found all 3,228 FIPS
-representations in that historical table carry trailing whitespace, which the
-strict geography specification forbids trimming or repairing; no geography
-checkpoint was published. The raw workbook has the same representation, so a
-new snapshot from that identical file would not solve it. See [geography
-readiness](geography_readiness.md). Do not rerun until the specification
-amendment versus corrected-upstream-source decision is resolved. No geography
-CLI exists.
+parameter. The second readiness review supported one explicitly authorized
+production attempt. Input verification passed, but reconciliation failed
+closed on the historical HHS FIPS representation. The accepted amendment now
+keeps that six-table staging input source-preserved while excluding the
+history table from geography maps; the amended contract and six-artifact
+checkpoint have only been exercised with invented fixtures. See [geography
+readiness](geography_readiness.md). No geography CLI exists.
 
 ## Source-table profiling
 
