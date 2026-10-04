@@ -2,8 +2,8 @@
 
 ## Decision
 
-**PASS FOR ONE CONTROLLED REAL GEOGRAPHY BUILD; EXPLICIT AUTHORIZATION
-REQUIRED.**
+**CONTROLLED BUILD ATTEMPTED; BLOCKED BY CONTRACT-TO-SNAPSHOT COUNT
+MISMATCH; NO GEOGRAPHY CHECKPOINT ACCEPTED.**
 
 The first review accepted the synthetic rules but rejected real execution
 because staging identity still depended on a caller assertion. That blocker is
@@ -12,8 +12,11 @@ binds the accepted staging build and manifest hashes, reopens all six staging
 Parquet artifacts, exposes only contracted geography fields, and repeats the
 complete verification after reading and after geography checkpoint creation.
 
-This is readiness to request authorization, not authorization itself. No
-private staging artifact was opened during implementation or review.
+Readiness was sufficient for the user's explicit authorization, and exactly one
+production attempt was made. The input boundary accepted the staging build and
+all six Parquet artifacts, but geography reconciliation failed closed while
+checking the contracted `DIRECT_REFERENCE` count for
+`stg_hhs_empower_history_county`. No geography checkpoint was published.
 
 ## Evidence reviewed
 
@@ -43,7 +46,9 @@ private staging artifact was opened during implementation or review.
 The full repository suite passes 117 tests. Contract validation and bytecode
 compilation also pass. Two fresh synthetic checkpoint roots produce identical
 manifests, and independent verification reproduces their schema, content,
-count, lineage, and file claims. Nine additional input-boundary tests use a
+count, lineage, and file claims. The post-attempt input verification still
+matches all accepted staging identities, and the geography output root is
+absent. Nine additional input-boundary tests use a
 complete invented six-table staging build, including a production-signature
 check proving that no contract or probe override is exposed and a direct check
 that the public staging and geography contracts cover the same six-table set.
@@ -113,17 +118,18 @@ amendment was limited to the input boundary.
 
 ## Scope boundary
 
-No private Parquet artifact was opened for either readiness review. No
-real county reference or geography map was created. No source measure was
-joined, normalized, deduplicated, filtered, or aggregated. HPSA and site
-records remain unaggregated, and no criterion, score, portfolio, or county
+The private staging Parquet was opened only during the one explicitly
+authorized production attempt and its post-attempt verification. No geography
+checkpoint was published, no source measure was joined, normalized,
+deduplicated, filtered, or aggregated, and no county evidence exists. HPSA and
+site records remain unaggregated, and no criterion, score, portfolio, or county
 status exists.
 
 ## Exact next action
 
-Wait for explicit user authorization. If authorized, run exactly one frozen
-geography reconciliation through `run_frozen_geography_reconciliation`,
-independently verify its manifest and seven artifacts, record the evidence,
-and stop for acceptance review. Do not construct joined county evidence,
-aggregate HPSA or site records, calculate criteria, scores, portfolios, or
-county statuses, or claim cross-platform equality.
+Do not rerun. First resolve whether the frozen geography contract or the
+accepted staging snapshot is authoritative for the failed mapping-count
+invariant, document the decision, and obtain a new explicit authorization
+before any subsequent controlled build. Do not construct joined county
+evidence, aggregate HPSA or site records, calculate criteria, scores,
+portfolios, or county statuses, or claim cross-platform equality.

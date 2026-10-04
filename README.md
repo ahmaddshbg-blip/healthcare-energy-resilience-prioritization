@@ -32,10 +32,13 @@ row-preserving transformation, atomic checkpoint controls, and all 30 named
 synthetic acceptance tests are implemented. A trusted read-only input boundary
 also verifies the exact staging build, manifests, membership, and all six input
 Parquet artifacts before and after exposing only contracted geography fields.
-The second readiness review passes for one controlled real geography build,
-but no execution is authorized without a separate explicit user decision. No
-real source record has been geographically reconciled or joined, and no county-
-level criterion, portfolio, or final status has been calculated or published.
+The second readiness review passed, and one explicitly authorized production
+attempt was made. Input verification passed, but reconciliation failed closed
+on the contracted `DIRECT_REFERENCE` count for
+`stg_hhs_empower_history_county`; no geography checkpoint was published. No
+county-level criterion, portfolio, or final status has been calculated or
+published. Do not rerun until the contract-versus-snapshot authority question
+is resolved.
 
 ## Decision output
 

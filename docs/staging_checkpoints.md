@@ -124,5 +124,8 @@ artifacts under the private data root. Their public evidence fingerprints are:
 - checkpoint-manifest file SHA-256:
   `e2f7818b159120eb0a81cf16f6db66ec574f9a6a7d1f914efcf91688ce89c43f`.
 
-No private path or source value is published. Geography reconciliation and all
-analytical calculations remain unimplemented and unauthorized.
+No private path or source value is published. One separately authorized
+geography attempt later failed closed on the contracted
+`DIRECT_REFERENCE` count for `stg_hhs_empower_history_county`; no geography
+checkpoint was published. County evidence and all analytical calculations
+remain unimplemented.

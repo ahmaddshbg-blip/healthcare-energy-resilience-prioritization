@@ -137,9 +137,13 @@ It validates exact build membership and accepted manifest hashes, independently
 reopens all six staging artifacts, reads only lineage and contracted geography
 fields, and repeats verification after reading and after output creation. Its
 production entrypoint constructs the verifier internally and has no bypass
-parameter. The second readiness review passes, but real execution still
-requires explicit user authorization. See
-[geography readiness](geography_readiness.md). No geography CLI exists.
+parameter. The second readiness review passed and one explicitly authorized
+production attempt was made. Input verification passed, but reconciliation
+failed closed on the contracted `DIRECT_REFERENCE` count for
+`stg_hhs_empower_history_county`; no geography checkpoint was published. See
+[geography readiness](geography_readiness.md). Do not rerun until the
+contract-versus-snapshot authority question is resolved. No geography CLI
+exists.
 
 ## Source-table profiling
 

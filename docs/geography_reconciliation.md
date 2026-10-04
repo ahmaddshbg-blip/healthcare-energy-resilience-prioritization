@@ -1,6 +1,6 @@
 # Geography Reconciliation Specification
 
-Status: **READY FOR ONE CONTROLLED REAL BUILD - EXPLICIT AUTHORIZATION REQUIRED**
+Status: **CONTROLLED BUILD BLOCKED - CONTRACT-TO-SNAPSHOT COUNT MISMATCH**
 
 This specification defines how the accepted source-preserving staging tables
 may later be assigned to the frozen U.S. county-equivalent reference universe.
@@ -366,9 +366,12 @@ The specification was accepted for synthetic implementation on 2026-10-04.
 The machine-readable contract, schemas, deterministic reconciliation logic,
 checkpoint controls, trusted staging-input boundary, and all 30 named
 acceptance tests are implemented. The full repository suite passes 117 tests.
-See the separate
-[geography readiness review](geography_readiness.md) for evidence and the
-remaining authorization boundary.
+One explicitly authorized production attempt accepted the staging evidence but
+failed closed on the contracted `DIRECT_REFERENCE` count for
+`stg_hhs_empower_history_county`; no geography checkpoint was published. See
+the separate [geography readiness review](geography_readiness.md). Do not
+rerun until the contract-versus-snapshot authority question is resolved and a
+new explicit authorization is given.
 
 Acceptance authorized only:
 
