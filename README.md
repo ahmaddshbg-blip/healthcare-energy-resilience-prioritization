@@ -78,7 +78,7 @@ processing. Raw source files are not redistributed in this repository. See
 [staging table contracts](docs/staging_tables.md),
 [staging checkpoints](docs/staging_checkpoints.md),
 [geography reconciliation](docs/geography_reconciliation.md),
-[geography readiness](docs/geography_readiness.md), and
+[geography readiness](docs/geography_readiness.md),
 [county evidence contract](docs/county_evidence.md), and
 [data attribution](DATA_ATTRIBUTION.md).
 
