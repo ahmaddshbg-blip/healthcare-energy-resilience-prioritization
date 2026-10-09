@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from copy import deepcopy
 from inspect import signature
@@ -15,6 +16,7 @@ from healthcare_resilience.county_evidence_input import (
     _build_county_evidence_from_verified_inputs,
     CountyEvidenceInputError,
     load_verified_county_evidence_inputs,
+    reconstruct_geography_checkpoint_contract,
     run_frozen_county_evidence_build,
     verify_county_evidence_inputs,
 )
@@ -116,12 +118,63 @@ def _verification_arguments(contract: dict, geography: Path) -> tuple:
         geography,
         ROOT,
         contract,
-        {}, {}, {}, {}, {}, {},
+        load_json(CONFIG_DIR / "geography.json"), {}, {}, {}, {}, {},
         contract["source_contract_sha256"],
         contract["source_table_contract_sha256"],
         contract["staging_table_contract_sha256"],
         contract["geography_contract_sha256"],
     )
+
+
+def test_checkpoint_geography_contract_is_reconstructed_from_one_metadata_field() -> None:
+    contract = synthetic_county_evidence_contract()
+    current = load_json(CONFIG_DIR / "geography.json")
+    observed = reconstruct_geography_checkpoint_contract(ROOT, contract, current)
+    assert observed["specification"]["accepted_review_sha256"] == contract[
+        "input_geography_specification_sha256"
+    ]
+    expected_bytes = (CONFIG_DIR / "geography.json").read_bytes().replace(
+        current["specification"]["accepted_review_sha256"].encode("ascii"),
+        contract["input_geography_specification_sha256"].encode("ascii"),
+    )
+    assert hashlib.sha256(expected_bytes).hexdigest() == contract[
+        "input_geography_contract_sha256"
+    ]
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["input_geography_specification_sha256", "input_geography_contract_sha256"],
+)
+def test_checkpoint_geography_contract_rejects_wrong_historical_identity(
+    field: str,
+) -> None:
+    contract = synthetic_county_evidence_contract()
+    contract[field] = "f" * 64
+    with pytest.raises(CountyEvidenceInputError, match="reconstructed input geography"):
+        reconstruct_geography_checkpoint_contract(
+            ROOT, contract, load_json(CONFIG_DIR / "geography.json")
+        )
+
+
+def test_checkpoint_geography_contract_rejects_any_other_contract_change(
+    tmp_path: Path,
+) -> None:
+    config = tmp_path / "configs"
+    config.mkdir()
+    raw = (CONFIG_DIR / "geography.json").read_bytes().replace(
+        b'"expected_county_count": 3144', b'"expected_county_count": 3145'
+    )
+    (config / "geography.json").write_bytes(raw)
+    (config / "geography.schema.json").write_bytes(
+        (CONFIG_DIR / "geography.schema.json").read_bytes()
+    )
+    contract = synthetic_county_evidence_contract()
+    contract["geography_contract_sha256"] = hashlib.sha256(raw).hexdigest()
+    with pytest.raises(CountyEvidenceInputError, match="reconstructed input geography"):
+        reconstruct_geography_checkpoint_contract(
+            tmp_path, contract, json.loads(raw)
+        )
 
 
 def test_combined_input_identity_is_bound_to_both_manifests(

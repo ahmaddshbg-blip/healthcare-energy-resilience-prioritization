@@ -35,6 +35,13 @@ Only the following private artifacts may be read:
 The historical HHS county table remains staging context-only. It must not be
 joined, mapped, or used to create current county eligibility or evidence.
 
+The accepted geography checkpoint retains the exact geography-contract hash
+used when it was built. A later documentation-only update changed the current
+geography contract's specification-review hash without changing any mapping
+rule. The evidence contract must bind both identities and may reconstruct the
+build-time contract only by replacing that single declared review hash in the
+current contract bytes. Any other byte or semantic difference fails closed.
+
 For mapped source tables, source measures are recovered only by joining a
 geography-map row to its own source-preserving staging row on the pair
 `(staging_table_id, source_row_number)`. A map row must never be joined to a

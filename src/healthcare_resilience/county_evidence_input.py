@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 from collections.abc import Mapping
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +21,7 @@ from .geography_checkpoint import (
     MANIFEST_FILENAME as GEOGRAPHY_MANIFEST_FILENAME,
     verify_geography_checkpoint_artifacts,
 )
+from .geography import GeographyError, validate_geography_contract
 from .geography_input import verify_staging_geography_input
 from .hashing import sha256_file, sha256_json
 from .staging_build import StagingBuildError, capture_repository_identity
@@ -31,6 +35,71 @@ class CountyEvidenceInputError(ValueError):
 def _require(condition: bool, message: str) -> None:
     if not condition:
         raise CountyEvidenceInputError(message)
+
+
+def reconstruct_geography_checkpoint_contract(
+    repository_root: Path,
+    evidence_contract: Mapping[str, Any],
+    current_geography_contract: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Reconstruct the checkpoint's contract from one declared metadata change."""
+
+    contract_path = repository_root.resolve() / "configs" / "geography.json"
+    try:
+        current_bytes = contract_path.read_bytes()
+        stored_current = json.loads(current_bytes)
+    except (OSError, json.JSONDecodeError) as error:
+        raise CountyEvidenceInputError("current geography contract cannot be read") from error
+    _require(
+        hashlib.sha256(current_bytes).hexdigest()
+        == evidence_contract["geography_contract_sha256"],
+        "current geography contract identity differs",
+    )
+    _require(
+        stored_current == current_geography_contract,
+        "loaded geography contract differs from its public bytes",
+    )
+    current_review = current_geography_contract["specification"][
+        "accepted_review_sha256"
+    ].encode("ascii")
+    input_review = evidence_contract[
+        "input_geography_specification_sha256"
+    ].encode("ascii")
+    _require(
+        current_bytes.count(current_review) == 1,
+        "current geography specification identity is not uniquely replaceable",
+    )
+    input_bytes = current_bytes.replace(current_review, input_review)
+    _require(
+        hashlib.sha256(input_bytes).hexdigest()
+        == evidence_contract["input_geography_contract_sha256"],
+        "reconstructed input geography contract identity differs",
+    )
+    try:
+        input_contract = json.loads(input_bytes)
+    except json.JSONDecodeError as error:
+        raise CountyEvidenceInputError(
+            "reconstructed input geography contract is invalid JSON"
+        ) from error
+    expected = deepcopy(dict(current_geography_contract))
+    expected["specification"]["accepted_review_sha256"] = input_review.decode(
+        "ascii"
+    )
+    _require(
+        input_contract == expected,
+        "input geography contract differs beyond the declared specification identity",
+    )
+    try:
+        validate_geography_contract(
+            input_contract,
+            load_json(repository_root / "configs" / "geography.schema.json"),
+            enforce_accepted_contract=False,
+        )
+    except GeographyError as error:
+        raise CountyEvidenceInputError(
+            "reconstructed input geography contract is invalid"
+        ) from error
+    return input_contract
 
 
 def verify_county_evidence_inputs(
@@ -58,6 +127,13 @@ def verify_county_evidence_inputs(
         not geography_checkpoint_directory.is_relative_to(repository_root),
         "geography checkpoint must remain outside public repository",
     )
+    _require(
+        geography_contract_sha256 == evidence_contract["geography_contract_sha256"],
+        "current geography contract argument differs",
+    )
+    input_geography_contract = reconstruct_geography_checkpoint_contract(
+        repository_root, evidence_contract, geography_contract
+    )
     staging_identity = verify_staging_geography_input(
         staging_build_directory,
         repository_root,
@@ -79,8 +155,8 @@ def verify_county_evidence_inputs(
         geography_checkpoint_directory,
         manifest,
         geography_checkpoint_schema,
-        geography_contract,
-        geography_contract_sha256,
+        input_geography_contract,
+        evidence_contract["input_geography_contract_sha256"],
     )
     _require(
         geography_checkpoint_directory.name == manifest["checkpoint_identity"],

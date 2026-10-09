@@ -35,7 +35,10 @@ geography map.
 - Geography manifest file SHA-256:
   `8724266f2bbc8010cdabdec3bd8ef7bd6b52721d9c031b20b3e0927da84eabf5`
 - Status: `VALID`
-- Geography contract SHA-256:
+- Build-time geography contract SHA-256 recorded by the checkpoint:
+  `6f815c44fc4f74351d78dfc69a7b42d2fae397776efe5864f9d7fac8ec562e1e`
+- Current public geography contract SHA-256 after a documentation-only
+  specification-review update:
   `5f61e313523aec2a0d13848f1e01c97a64b1cf048d403d32592a8cfce69a287c`
 - Artifact count: `6`
 - Total row count: `112286`

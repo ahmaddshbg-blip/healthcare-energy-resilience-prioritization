@@ -41,6 +41,8 @@ EXPECTED_FAILURE_CONDITIONS = (
 )
 EXPECTED_INPUT_IDENTITIES = {
     "source_snapshot_id": "cc1489ab008db4d5d1b2eddf798b51218e2324e97e88ab9c7d3853927bb54dbb",
+    "input_geography_contract_sha256": "6f815c44fc4f74351d78dfc69a7b42d2fae397776efe5864f9d7fac8ec562e1e",
+    "input_geography_specification_sha256": "8cb0c28375a71304316844c86298ad5dda5621cd5dce4272fcd9c4e35d667a62",
     "input_staging_build_identity": "238da712ad4a9d08b602e89ae8eaa2446871de1e6d84f2dc162ac8a69c5f3b0d",
     "input_staging_build_manifest_file_sha256": "88a9f1ccdfed0cc56993afa7e054c7d81fbe49261dc5a49655a1fc74d3c1b6d6",
     "input_staging_checkpoint_manifest_canonical_sha256": "676727dfa8a91e5ab1225a8a01eb7b2f1df04465fd57ac714dd6ac54efc3b203",

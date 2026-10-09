@@ -240,7 +240,8 @@ def validate_county_evidence_manifest(
     for field in (
         "source_contract_sha256", "source_table_contract_sha256",
         "staging_table_contract_sha256", "method_contract_sha256",
-        "geography_contract_sha256", "input_staging_build_identity",
+        "geography_contract_sha256", "input_geography_contract_sha256",
+        "input_geography_specification_sha256", "input_staging_build_identity",
         "input_staging_build_manifest_file_sha256",
         "input_staging_checkpoint_manifest_canonical_sha256",
         "input_staging_checkpoint_manifest_file_sha256",
@@ -333,6 +334,8 @@ def write_county_evidence_checkpoint(
         "staging_table_contract_sha256": contract["staging_table_contract_sha256"],
         "method_contract_sha256": contract["method_contract_sha256"],
         "geography_contract_sha256": contract["geography_contract_sha256"],
+        "input_geography_contract_sha256": contract["input_geography_contract_sha256"],
+        "input_geography_specification_sha256": contract["input_geography_specification_sha256"],
         "input_staging_build_identity": input_identity.staging_build_identity,
         "input_staging_build_manifest_file_sha256": input_identity.staging_build_manifest_file_sha256,
         "input_staging_checkpoint_manifest_canonical_sha256": input_identity.staging_checkpoint_manifest_canonical_sha256,

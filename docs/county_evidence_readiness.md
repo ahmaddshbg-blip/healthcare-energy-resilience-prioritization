@@ -2,8 +2,8 @@
 
 ## Decision
 
-**PASS AFTER REMEDIATION FOR EXACTLY ONE NEW CONTROLLED FROZEN COUNTY-EVIDENCE
-BUILD; NEW EXPLICIT AUTHORIZATION REQUIRED.**
+**PASS AFTER GIT AND CONTRACT-LINEAGE REMEDIATION FOR EXACTLY ONE NEW
+CONTROLLED FROZEN COUNTY-EVIDENCE BUILD; NEW EXPLICIT AUTHORIZATION REQUIRED.**
 
 This decision covers implementation readiness only. It is not authorization to
 open the accepted private staging or geography checkpoint. It does not approve
@@ -17,7 +17,10 @@ An authorized build may read only:
 1. the accepted six-table source-preserving staging checkpoint;
 2. the accepted six-artifact geography checkpoint; and
 3. the public source, source-table, staging, method, geography, and county-
-   evidence contracts whose hashes are bound in `configs/county_evidence.json`.
+   evidence contracts whose hashes are bound in `configs/county_evidence.json`;
+   and
+4. the build-time geography-contract identity reconstructed from the current
+   public contract by the one declared specification-review substitution.
 
 The build may publish only a new content-addressed private directory containing
 exactly:
@@ -53,8 +56,9 @@ tests use invented source values and prove:
   checkpoint publication.
 
 The repository contract validator is valid, all Python modules compile, and
-the full suite passes 145 tests. No private artifact was opened to obtain this
-decision.
+the full suite passes 149 tests. The four added cases prove the one-field
+reconstruction and reject a wrong historical review hash, wrong historical
+contract hash, or any additional contract change.
 
 ## First Controlled Attempt and Remediation
 
@@ -73,6 +77,26 @@ returned that exact commit on the Windows host.
 
 The failed attempt consumed its authorization. The remediation restores
 readiness but does not authorize a rerun.
+
+## Second Controlled Attempt and Lineage Remediation
+
+The user authorized one new controlled attempt after the Git remediation. At
+public commit `7dd7d0a28e2121a1feeebb74847be34fa92ce962`, the
+attempt failed closed while verifying the geography checkpoint manifest. The
+manifest retained build-time geography-contract SHA-256
+`6f815c44fc4f74351d78dfc69a7b42d2fae397776efe5864f9d7fac8ec562e1e`;
+the current public geography contract had SHA-256
+`5f61e313523aec2a0d13848f1e01c97a64b1cf048d403d32592a8cfce69a287c`.
+No output root, partial checkpoint, manifest, or Parquet artifact was created.
+The attempt consumed its authorization and was not rerun.
+
+Read-only diagnosis established that only the accepted geography
+specification-review hash had changed after the checkpoint build. The revised
+county-evidence contract binds both identities. Its verifier permits only an
+exact replacement of the current review hash with the historical review hash,
+requires the reconstructed bytes to reproduce the checkpoint's historical
+contract hash, validates the reconstructed contract, and rejects every other
+difference. Synthetic positive and negative tests cover this rule.
 
 ## Residual Risk
 
