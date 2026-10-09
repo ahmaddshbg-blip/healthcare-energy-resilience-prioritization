@@ -2,8 +2,8 @@
 
 ## Decision
 
-**PASS FOR EXACTLY ONE CONTROLLED FROZEN COUNTY-EVIDENCE BUILD; EXPLICIT
-AUTHORIZATION REQUIRED.**
+**PASS AFTER REMEDIATION FOR EXACTLY ONE NEW CONTROLLED FROZEN COUNTY-EVIDENCE
+BUILD; NEW EXPLICIT AUTHORIZATION REQUIRED.**
 
 This decision covers implementation readiness only. It is not authorization to
 open the accepted private staging or geography checkpoint. It does not approve
@@ -53,8 +53,26 @@ tests use invented source values and prove:
   checkpoint publication.
 
 The repository contract validator is valid, all Python modules compile, and
-the full suite passes 144 tests. No private artifact was opened to obtain this
+the full suite passes 145 tests. No private artifact was opened to obtain this
 decision.
+
+## First Controlled Attempt and Remediation
+
+The user authorized one controlled attempt after the original readiness
+decision. At code commit `31751f6d478a41373c5f601de6ffb6581bbd3abe`, the
+attempt failed closed before input verification or private artifact reading.
+Git rejected the repository ownership before the staging or geography path was
+opened. No county-evidence output root or partial artifact was created.
+
+The shared repository-identity helper now invokes Git with a command-scoped
+`safe.directory` equal to the resolved repository path. It does not alter the
+user's global Git configuration. The remediation is recorded at commit
+`85cdd0e4f3b7dbbc9f133133e3d98e82d302ecca`. A focused 22-test set and the
+full 145-test suite pass, and a live clean-worktree repository-identity capture
+returned that exact commit on the Windows host.
+
+The failed attempt consumed its authorization. The remediation restores
+readiness but does not authorize a rerun.
 
 ## Residual Risk
 
@@ -67,7 +85,8 @@ cross-platform Parquet byte equality or analytical validity.
 
 ## Required Execution Sequence
 
-If the user separately authorizes exactly one controlled build:
+If the user separately provides a new authorization for exactly one controlled
+build:
 
 1. verify the accepted staging and geography checkpoints without writes;
 2. run the no-override county-evidence entrypoint once;

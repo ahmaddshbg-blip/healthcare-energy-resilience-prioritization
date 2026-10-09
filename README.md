@@ -45,7 +45,10 @@ calculated or published. The accepted county-evidence contract now also has a
 machine-readable schema, deterministic source-evidence transformation,
 two-file atomic checkpoint writer/verifier, and trusted staging-plus-geography
 input boundary, all exercised only with invented fixtures. No private
-county-evidence build has been authorized. See
+county-evidence checkpoint exists. The first authorized attempt failed closed
+before private input access because its Git subprocess lacked a command-scoped
+repository safety setting; that defect is remediated and a new authorization
+is required before rerun. See
 [geography build evidence](docs/geography_build_evidence.md) for value-free
 geography evidence.
 
@@ -85,7 +88,8 @@ processing. Raw source files are not redistributed in this repository. See
 [geography reconciliation](docs/geography_reconciliation.md),
 [geography readiness](docs/geography_readiness.md),
 [county evidence contract](docs/county_evidence.md),
-[county evidence readiness](docs/county_evidence_readiness.md), and
+[county evidence readiness](docs/county_evidence_readiness.md),
+[county evidence build evidence](docs/county_evidence_build_evidence.md), and
 [data attribution](DATA_ATTRIBUTION.md).
 
 ## Method summary
