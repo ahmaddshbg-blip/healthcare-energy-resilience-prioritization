@@ -98,6 +98,12 @@ requires the reconstructed bytes to reproduce the checkpoint's historical
 contract hash, validates the reconstructed contract, and rejects every other
 difference. Synthetic positive and negative tests cover this rule.
 
+The remediation is recorded at commit
+`cd1b701dc9bf27bb6391ddb40a24f0529ed9ec73`. A live read-only verification
+against the accepted private staging and geography checkpoints then reproduced
+all accepted manifest identities and validated all six geography artifacts.
+The county-evidence output root remained absent. No build entrypoint was run.
+
 ## Residual Risk
 
 Synthetic readiness cannot prove that every real publisher category or null

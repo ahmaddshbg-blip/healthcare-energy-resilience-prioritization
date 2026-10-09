@@ -86,12 +86,18 @@ checkpoint provenance.
 
 Public validation after the remediation reports valid contracts, successful
 Python compilation, 35 focused contract and county-evidence tests, and all 149
-repository tests passing.
+repository tests passing. The implementation is recorded at commit
+`cd1b701dc9bf27bb6391ddb40a24f0529ed9ec73`.
+
+A subsequent live read-only verification against the accepted private staging
+and geography checkpoints reproduced all seven accepted input identities and
+validated the historical geography contract and all six geography artifacts.
+The county-evidence output root remained absent with zero items. This check did
+not invoke the build entrypoint or publish any artifact.
 
 ## Current Decision Boundary
 
 Both prior authorizations are consumed and neither produced county evidence.
-After the lineage remediation passes the full public test suite and a live
-read-only private-input verification, any new build still requires a new
-explicit authorization. No criterion, score, portfolio, or county status may
-be calculated.
+The lineage remediation and live read-only private-input verification pass,
+but any new build still requires a new explicit authorization. No criterion,
+score, portfolio, or county status may be calculated.
