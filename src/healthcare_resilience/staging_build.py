@@ -46,9 +46,10 @@ def _require(condition: bool, message: str) -> None:
 
 
 def _run_git(repository_root: Path, *arguments: str) -> str:
+    safe_directory = repository_root.resolve().as_posix()
     try:
         result = subprocess.run(
-            ["git", *arguments],
+            ["git", "-c", f"safe.directory={safe_directory}", *arguments],
             cwd=repository_root,
             check=True,
             capture_output=True,

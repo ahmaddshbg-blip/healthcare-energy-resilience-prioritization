@@ -241,6 +241,28 @@ def test_repository_identity_rejects_dirty_working_tree(
         capture_repository_identity(tmp_path)
 
 
+def test_git_identity_uses_command_scoped_safe_directory(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    observed = {}
+
+    def fake_run(command, **kwargs):
+        observed["command"] = command
+        observed["cwd"] = kwargs["cwd"]
+        return type("Result", (), {"stdout": "true\n"})()
+
+    monkeypatch.setattr(staging_build.subprocess, "run", fake_run)
+    assert staging_build._run_git(tmp_path, "rev-parse", "--is-inside-work-tree") == "true"
+    assert observed["command"] == [
+        "git",
+        "-c",
+        f"safe.directory={tmp_path.resolve().as_posix()}",
+        "rev-parse",
+        "--is-inside-work-tree",
+    ]
+    assert observed["cwd"] == tmp_path
+
+
 def test_environment_identity_rejects_direct_dependency_lock_drift(
     tmp_path: Path,
 ) -> None:
