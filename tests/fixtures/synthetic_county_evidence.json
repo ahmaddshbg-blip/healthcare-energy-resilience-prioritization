@@ -1,0 +1,66 @@
+{
+  "county_reference": [
+    {"canonical_fips": "88001", "state_fips": "88", "county_code": "001", "state_name": "Invented Alpha", "county_name": "Alpha One", "population": 101, "decision_scope_status": "ELIGIBLE", "scope_reason": null},
+    {"canonical_fips": "88003", "state_fips": "88", "county_code": "003", "state_name": "Invented Alpha", "county_name": "Alpha Three", "population": 103, "decision_scope_status": "ELIGIBLE", "scope_reason": null},
+    {"canonical_fips": "88005", "state_fips": "88", "county_code": "005", "state_name": "Invented Alpha", "county_name": "Alpha Five", "population": 105, "decision_scope_status": "ELIGIBLE", "scope_reason": null},
+    {"canonical_fips": "88007", "state_fips": "88", "county_code": "007", "state_name": "Invented Alpha", "county_name": "Alpha Seven", "population": 107, "decision_scope_status": "OUT_OF_SCOPE", "scope_reason": "INVENTED_SCOPE_EXCLUSION"}
+  ],
+  "staging_rows": {
+    "stg_hhs_empower_county": [
+      {"source_row_number": 1, "Medicare_Benes": 100, "Power_Dependent_Devices_DME": 11},
+      {"source_row_number": 2, "Medicare_Benes": 80, "Power_Dependent_Devices_DME": 8},
+      {"source_row_number": 3, "Medicare_Benes": 60, "Power_Dependent_Devices_DME": 6},
+      {"source_row_number": 4, "Medicare_Benes": 25, "Power_Dependent_Devices_DME": 2}
+    ],
+    "stg_fema_nri_counties": [
+      {"source_row_number": 1, "RISK_SCORE": 10.5, "RISK_RATNG": "Low", "hazard_seed": 1.0},
+      {"source_row_number": 2, "RISK_SCORE": 55.0, "RISK_RATNG": "Moderate", "hazard_seed": 2.0},
+      {"source_row_number": 3, "RISK_SCORE": 80.0, "RISK_RATNG": "High", "hazard_seed": 3.0},
+      {"source_row_number": 4, "RISK_SCORE": 25.0, "RISK_RATNG": "Relatively Low", "hazard_seed": 4.0, "not_applicable_hazard": "TSUN"},
+      {"source_row_number": 5, "RISK_SCORE": 5.0, "RISK_RATNG": "Very Low", "hazard_seed": 5.0}
+    ],
+    "stg_hrsa_primary_care_hpsa": [
+      {"source_row_number": 1, "HPSA ID": "INV-H1", "HPSA Score": 12, "HPSA Status": "Designated", "Designation Type": "Geographic HPSA", "HPSA Discipline Class": "Primary Care", "HPSA Designation Population": 1000.0, "HPSA Estimated Underserved Population": 200.0, "State and County Federal Information Processing Standard Code": "88001", "Common State County FIPS Code": "88001", "Data Warehouse Record Create Date": "2026-01-01T00:00:00"},
+      {"source_row_number": 2, "HPSA ID": "INV-H1", "HPSA Score": 12, "HPSA Status": "Designated", "Designation Type": "Geographic HPSA", "HPSA Discipline Class": "Primary Care", "HPSA Designation Population": 1000.0, "HPSA Estimated Underserved Population": 200.0, "State and County Federal Information Processing Standard Code": "88001", "Common State County FIPS Code": "88001", "Data Warehouse Record Create Date": "2026-01-01T00:00:00"},
+      {"source_row_number": 3, "HPSA ID": "INV-H2", "HPSA Score": 17, "HPSA Status": "Proposed For Withdrawal", "Designation Type": "HPSA Population", "HPSA Discipline Class": "Primary Care", "HPSA Designation Population": 500.0, "HPSA Estimated Underserved Population": 100.0, "State and County Federal Information Processing Standard Code": "88001", "Common State County FIPS Code": "88001", "Data Warehouse Record Create Date": "2026-01-02T00:00:00"},
+      {"source_row_number": 4, "HPSA ID": "INV-H3", "HPSA Score": 20, "HPSA Status": "Designated", "Designation Type": "Facility HPSA", "HPSA Discipline Class": "Primary Care", "HPSA Designation Population": 300.0, "HPSA Estimated Underserved Population": 50.0, "State and County Federal Information Processing Standard Code": "88003", "Common State County FIPS Code": "88003", "Data Warehouse Record Create Date": "2026-01-03T00:00:00"},
+      {"source_row_number": 5, "HPSA ID": "INV-H4", "HPSA Score": 15, "HPSA Status": "Withdrawn", "Designation Type": "Geographic HPSA", "HPSA Discipline Class": "Primary Care", "HPSA Designation Population": 400.0, "HPSA Estimated Underserved Population": 80.0, "State and County Federal Information Processing Standard Code": "88003", "Common State County FIPS Code": "88003", "Data Warehouse Record Create Date": "2026-01-04T00:00:00"},
+      {"source_row_number": 6, "HPSA ID": "INV-OUT", "HPSA Score": 9, "HPSA Status": "Designated", "Designation Type": "Geographic HPSA", "HPSA Discipline Class": "Primary Care", "HPSA Designation Population": 200.0, "HPSA Estimated Underserved Population": 40.0, "State and County Federal Information Processing Standard Code": "99001", "Common State County FIPS Code": "99001", "Data Warehouse Record Create Date": "2026-01-05T00:00:00"}
+    ],
+    "stg_hrsa_health_center_sites": [
+      {"source_row_number": 1, "BPHC Assigned Number": "INV-S1", "Site Name": "Alpha Fixed", "Health Center Type": "Health Center", "Operating Hours per Week": 40.0, "Site Status Description": "Active", "Health Center Location Type Description": "Permanent", "State and County Federal Information Processing Standard Code": "88001", "Data Warehouse Record Create Date": "2026-02-01T00:00:00"},
+      {"source_row_number": 2, "BPHC Assigned Number": "INV-S2", "Site Name": "Alpha Mobile", "Health Center Type": "Health Center", "Operating Hours per Week": 20.0, "Site Status Description": "Active", "Health Center Location Type Description": "Mobile", "State and County Federal Information Processing Standard Code": "88001", "Data Warehouse Record Create Date": "2026-02-02T00:00:00"},
+      {"source_row_number": 3, "BPHC Assigned Number": "INV-S3", "Site Name": "Alpha Seasonal", "Health Center Type": "Health Center", "Operating Hours per Week": null, "Site Status Description": "Inactive", "Health Center Location Type Description": "Seasonal", "State and County Federal Information Processing Standard Code": "88003", "Data Warehouse Record Create Date": "2026-02-03T00:00:00"},
+      {"source_row_number": 4, "BPHC Assigned Number": "INV-OUT", "Site Name": "Outside", "Health Center Type": "Health Center", "Operating Hours per Week": 10.0, "Site Status Description": "Active", "Health Center Location Type Description": "Permanent", "State and County Federal Information Processing Standard Code": "99001", "Data Warehouse Record Create Date": "2026-02-04T00:00:00"}
+    ]
+  },
+  "source_maps": {
+    "stg_hhs_empower_county": [
+      {"source_table_id": "stg_hhs_empower_county", "source_row_number": 1, "source_fips_primary": "88001", "source_fips_secondary": null, "canonical_fips": "88001", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_FIPS", "diagnostic_reason": null},
+      {"source_table_id": "stg_hhs_empower_county", "source_row_number": 2, "source_fips_primary": "88003", "source_fips_secondary": null, "canonical_fips": "88003", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_FIPS", "diagnostic_reason": null},
+      {"source_table_id": "stg_hhs_empower_county", "source_row_number": 3, "source_fips_primary": "77005", "source_fips_secondary": null, "canonical_fips": "88005", "mapping_status": "EXACT_REPLACEMENT", "mapping_rule_id": "INVENTED_EXACT_REPLACEMENT", "diagnostic_reason": null},
+      {"source_table_id": "stg_hhs_empower_county", "source_row_number": 4, "source_fips_primary": "99001", "source_fips_secondary": null, "canonical_fips": null, "mapping_status": "OUTSIDE_REFERENCE_UNIVERSE", "mapping_rule_id": "OUTSIDE_REFERENCE", "diagnostic_reason": "INVENTED_OUTSIDE"}
+    ],
+    "stg_fema_nri_counties": [
+      {"source_table_id": "stg_fema_nri_counties", "source_row_number": 1, "source_fips_primary": "88007", "source_fips_secondary": null, "canonical_fips": "88007", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_FIPS", "diagnostic_reason": null},
+      {"source_table_id": "stg_fema_nri_counties", "source_row_number": 2, "source_fips_primary": "88005", "source_fips_secondary": null, "canonical_fips": "88005", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_FIPS", "diagnostic_reason": null},
+      {"source_table_id": "stg_fema_nri_counties", "source_row_number": 3, "source_fips_primary": "88001", "source_fips_secondary": null, "canonical_fips": "88001", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_FIPS", "diagnostic_reason": null},
+      {"source_table_id": "stg_fema_nri_counties", "source_row_number": 4, "source_fips_primary": "88003", "source_fips_secondary": null, "canonical_fips": "88003", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_FIPS", "diagnostic_reason": null},
+      {"source_table_id": "stg_fema_nri_counties", "source_row_number": 5, "source_fips_primary": "99001", "source_fips_secondary": null, "canonical_fips": null, "mapping_status": "OUTSIDE_REFERENCE_UNIVERSE", "mapping_rule_id": "OUTSIDE_REFERENCE", "diagnostic_reason": "INVENTED_OUTSIDE"}
+    ],
+    "stg_hrsa_primary_care_hpsa": [
+      {"source_table_id": "stg_hrsa_primary_care_hpsa", "source_row_number": 1, "source_fips_primary": "88001", "source_fips_secondary": "88001", "canonical_fips": "88001", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_PRIMARY", "diagnostic_reason": null},
+      {"source_table_id": "stg_hrsa_primary_care_hpsa", "source_row_number": 2, "source_fips_primary": "88001", "source_fips_secondary": "88001", "canonical_fips": "88001", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_PRIMARY", "diagnostic_reason": null},
+      {"source_table_id": "stg_hrsa_primary_care_hpsa", "source_row_number": 3, "source_fips_primary": "88001", "source_fips_secondary": "88001", "canonical_fips": "88001", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_PRIMARY", "diagnostic_reason": null},
+      {"source_table_id": "stg_hrsa_primary_care_hpsa", "source_row_number": 4, "source_fips_primary": "88003", "source_fips_secondary": "88003", "canonical_fips": "88003", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_PRIMARY", "diagnostic_reason": null},
+      {"source_table_id": "stg_hrsa_primary_care_hpsa", "source_row_number": 5, "source_fips_primary": "88003", "source_fips_secondary": "88003", "canonical_fips": "88003", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_PRIMARY", "diagnostic_reason": null},
+      {"source_table_id": "stg_hrsa_primary_care_hpsa", "source_row_number": 6, "source_fips_primary": "99001", "source_fips_secondary": "99001", "canonical_fips": null, "mapping_status": "OUTSIDE_REFERENCE_UNIVERSE", "mapping_rule_id": "OUTSIDE_REFERENCE", "diagnostic_reason": "INVENTED_OUTSIDE"}
+    ],
+    "stg_hrsa_health_center_sites": [
+      {"source_table_id": "stg_hrsa_health_center_sites", "source_row_number": 1, "source_fips_primary": "88001", "source_fips_secondary": null, "canonical_fips": "88001", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_FIPS", "diagnostic_reason": null},
+      {"source_table_id": "stg_hrsa_health_center_sites", "source_row_number": 2, "source_fips_primary": "88001", "source_fips_secondary": null, "canonical_fips": "88001", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_FIPS", "diagnostic_reason": null},
+      {"source_table_id": "stg_hrsa_health_center_sites", "source_row_number": 3, "source_fips_primary": "88003", "source_fips_secondary": null, "canonical_fips": "88003", "mapping_status": "DIRECT_REFERENCE", "mapping_rule_id": "DIRECT_FIPS", "diagnostic_reason": null},
+      {"source_table_id": "stg_hrsa_health_center_sites", "source_row_number": 4, "source_fips_primary": "99001", "source_fips_secondary": null, "canonical_fips": null, "mapping_status": "OUTSIDE_REFERENCE_UNIVERSE", "mapping_rule_id": "OUTSIDE_REFERENCE", "diagnostic_reason": "INVENTED_OUTSIDE"}
+    ]
+  }
+}

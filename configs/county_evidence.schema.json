@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ahmaddshbg-blip/healthcare-energy-resilience-prioritization/blob/main/configs/county_evidence.schema.json",
+  "title": "County source evidence contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "contract_type", "specification", "source_snapshot_id",
+    "source_contract_sha256", "source_table_contract_sha256",
+    "staging_table_contract_sha256", "method_contract_sha256",
+    "geography_contract_sha256", "input_staging_build_identity",
+    "input_staging_build_manifest_file_sha256",
+    "input_staging_checkpoint_manifest_canonical_sha256",
+    "input_staging_checkpoint_manifest_file_sha256",
+    "input_geography_checkpoint_identity",
+    "input_geography_manifest_canonical_sha256",
+    "input_geography_manifest_file_sha256", "reference", "source_roles",
+    "hazard_codes", "hpsa_summary", "site_summary", "output_columns",
+    "failure_conditions"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "contract_type": {"const": "COUNTY_SOURCE_EVIDENCE"},
+    "specification": {
+      "type": "object", "additionalProperties": false,
+      "required": ["document", "accepted_review_sha256"],
+      "properties": {
+        "document": {"const": "docs/county_evidence.md"},
+        "accepted_review_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "source_snapshot_id": {"$ref": "#/$defs/sha256"},
+    "source_contract_sha256": {"$ref": "#/$defs/sha256"},
+    "source_table_contract_sha256": {"$ref": "#/$defs/sha256"},
+    "staging_table_contract_sha256": {"$ref": "#/$defs/sha256"},
+    "method_contract_sha256": {"$ref": "#/$defs/sha256"},
+    "geography_contract_sha256": {"$ref": "#/$defs/sha256"},
+    "input_staging_build_identity": {"$ref": "#/$defs/sha256"},
+    "input_staging_build_manifest_file_sha256": {"$ref": "#/$defs/sha256"},
+    "input_staging_checkpoint_manifest_canonical_sha256": {"$ref": "#/$defs/sha256"},
+    "input_staging_checkpoint_manifest_file_sha256": {"$ref": "#/$defs/sha256"},
+    "input_geography_checkpoint_identity": {"$ref": "#/$defs/sha256"},
+    "input_geography_manifest_canonical_sha256": {"$ref": "#/$defs/sha256"},
+    "input_geography_manifest_file_sha256": {"$ref": "#/$defs/sha256"},
+    "reference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["artifact_id", "expected_county_count", "eligible_count", "out_of_scope_count"],
+      "properties": {
+        "artifact_id": {"const": "county_reference"},
+        "expected_county_count": {"type": "integer", "minimum": 1},
+        "eligible_count": {"type": "integer", "minimum": 1},
+        "out_of_scope_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "source_roles": {
+      "type": "array", "minItems": 4, "maxItems": 4,
+      "items": {"$ref": "#/$defs/source_role"}
+    },
+    "hazard_codes": {
+      "type": "array", "minItems": 18, "maxItems": 18, "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Z]{4}$"}
+    },
+    "hpsa_summary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["primary_statuses", "sensitivity_statuses", "designation_types", "deduplication", "retained_duplicate"],
+      "properties": {
+        "primary_statuses": {"$ref": "#/$defs/nonempty_strings"},
+        "sensitivity_statuses": {"$ref": "#/$defs/nonempty_strings"},
+        "designation_types": {"$ref": "#/$defs/nonempty_strings"},
+        "deduplication": {"const": "ALL_RETAINED_TYPED_FIELDS_EXCEPT_SOURCE_ROW_NUMBER"},
+        "retained_duplicate": {"const": "LOWEST_SOURCE_ROW_NUMBER"}
+      }
+    },
+    "site_summary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status_field", "location_type_field", "category_encoding"],
+      "properties": {
+        "status_field": {"type": "string", "minLength": 1},
+        "location_type_field": {"type": "string", "minLength": 1},
+        "category_encoding": {"const": "CANONICAL_JSON_SORTED_KEYS"}
+      }
+    },
+    "output_columns": {
+      "type": "array", "minItems": 1,
+      "items": {"$ref": "#/$defs/column"}
+    },
+    "failure_conditions": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Z0-9_]+$"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "nonempty_strings": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "source_role": {
+      "type": "object", "additionalProperties": false,
+      "required": ["staging_table_id", "map_artifact_id", "role", "allowed_mapping_statuses", "expected_mapped_count", "required_fields"],
+      "properties": {
+        "staging_table_id": {"type": "string", "pattern": "^stg_[a-z0-9_]+$"},
+        "map_artifact_id": {"type": "string", "pattern": "^map_stg_[a-z0-9_]+$"},
+        "role": {"enum": ["HHS_CURRENT", "FEMA_RISK", "HPSA_COMPONENT", "SITE_CONTEXT"]},
+        "allowed_mapping_statuses": {"$ref": "#/$defs/nonempty_strings"},
+        "expected_mapped_count": {"type": "integer", "minimum": 0},
+        "required_fields": {"$ref": "#/$defs/nonempty_strings"}
+      }
+    },
+    "column": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "output_type", "null_allowed"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+        "output_type": {"enum": ["STRING", "INTEGER", "NUMBER", "BOOLEAN"]},
+        "null_allowed": {"type": "boolean"}
+      }
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ahmaddshbg-blip/healthcare-energy-resilience-prioritization/blob/main/configs/county_evidence_checkpoint.schema.json",
+  "title": "County source evidence checkpoint manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "manifest_type", "status", "checkpoint_identity_algorithm",
+    "checkpoint_identity", "checkpoint_identity_inputs", "content_hash_algorithm",
+    "schema_hash_algorithm", "artifact_hash_algorithm", "parquet_hash_portability",
+    "artifact_count", "artifact"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "manifest_type": {"const": "COUNTY_SOURCE_EVIDENCE_CHECKPOINT"},
+    "status": {"const": "VALID"},
+    "checkpoint_identity_algorithm": {"const": "SHA256_CANONICAL_COUNTY_EVIDENCE_INPUTS_V1"},
+    "checkpoint_identity": {"$ref": "#/$defs/sha256"},
+    "checkpoint_identity_inputs": {"$ref": "#/$defs/identity_inputs"},
+    "content_hash_algorithm": {"const": "SHA256_CANONICAL_TYPED_ROWS_V1"},
+    "schema_hash_algorithm": {"const": "SHA256_CANONICAL_LOGICAL_AND_PHYSICAL_SCHEMA_V1"},
+    "artifact_hash_algorithm": {"const": "SHA256_FILE_BYTES"},
+    "parquet_hash_portability": {"const": "LOCAL_BINARY_EXACT_NOT_CROSS_PLATFORM_GUARANTEED"},
+    "artifact_count": {"const": 1},
+    "artifact": {"$ref": "#/$defs/artifact"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "identity_inputs": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "county_evidence_contract_sha256", "source_contract_sha256",
+        "source_table_contract_sha256", "staging_table_contract_sha256",
+        "method_contract_sha256", "geography_contract_sha256",
+        "input_staging_build_identity",
+        "input_staging_build_manifest_file_sha256",
+        "input_staging_checkpoint_manifest_canonical_sha256",
+        "input_staging_checkpoint_manifest_file_sha256",
+        "input_geography_checkpoint_identity",
+        "input_geography_manifest_canonical_sha256",
+        "input_geography_manifest_file_sha256", "code_commit",
+        "repository_clean", "requirements_lock_sha256", "environment"
+      ],
+      "properties": {
+        "county_evidence_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "source_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "source_table_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "staging_table_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "method_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "geography_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "input_staging_build_identity": {"$ref": "#/$defs/sha256"},
+        "input_staging_build_manifest_file_sha256": {"$ref": "#/$defs/sha256"},
+        "input_staging_checkpoint_manifest_canonical_sha256": {"$ref": "#/$defs/sha256"},
+        "input_staging_checkpoint_manifest_file_sha256": {"$ref": "#/$defs/sha256"},
+        "input_geography_checkpoint_identity": {"$ref": "#/$defs/sha256"},
+        "input_geography_manifest_canonical_sha256": {"$ref": "#/$defs/sha256"},
+        "input_geography_manifest_file_sha256": {"$ref": "#/$defs/sha256"},
+        "code_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "repository_clean": {"const": true},
+        "requirements_lock_sha256": {"$ref": "#/$defs/sha256"},
+        "environment": {"type": "object"}
+      }
+    },
+    "column": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "output_type", "null_allowed"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "output_type": {"enum": ["STRING", "INTEGER", "NUMBER", "BOOLEAN"]},
+        "null_allowed": {"type": "boolean"}
+      }
+    },
+    "physical_column": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "duckdb_type"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "duckdb_type": {"enum": ["VARCHAR", "BIGINT", "DOUBLE", "BOOLEAN"]}
+      }
+    },
+    "artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "artifact_id", "relative_path", "row_count", "column_count", "columns",
+        "logical_schema_sha256", "physical_columns", "physical_schema_sha256",
+        "schema_sha256", "canonical_content_sha256", "artifact_sha256",
+        "artifact_bytes"
+      ],
+      "properties": {
+        "artifact_id": {"const": "county_evidence"},
+        "relative_path": {"const": "county_evidence.parquet"},
+        "row_count": {"type": "integer", "minimum": 1},
+        "column_count": {"type": "integer", "minimum": 1},
+        "columns": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/column"}},
+        "logical_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "physical_columns": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/physical_column"}},
+        "physical_schema_sha256": {"$ref": "#/$defs/sha256"},
+        "schema_sha256": {"$ref": "#/$defs/sha256"},
+        "canonical_content_sha256": {"$ref": "#/$defs/sha256"},
+        "artifact_sha256": {"$ref": "#/$defs/sha256"},
+        "artifact_bytes": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

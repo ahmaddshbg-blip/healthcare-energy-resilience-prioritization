@@ -2,7 +2,8 @@
 
 ## Status
 
-**REVISED DRAFT FOR ACCEPTANCE. NO REAL-DATA IMPLEMENTATION AUTHORIZED.**
+**ACCEPTED FOR SYNTHETIC IMPLEMENTATION. NO REAL-DATA IMPLEMENTATION
+AUTHORIZED.**
 
 This contract is the next boundary after the independently verified geography
 checkpoint. It defines how source-preserving geography maps could be combined
@@ -295,9 +296,10 @@ Before any real-data implementation, invented fixtures must prove:
 13. no criterion, normalized value, score, portfolio, or county-status field is
     emitted.
 
-## Acceptance Decision Required
+## Acceptance Decision
 
-The user must accept, amend, or reject this contract before implementation.
-Acceptance would authorize only synthetic contract tests and a readiness
-review. It would not authorize opening the private snapshot, building county
-evidence, calculating criteria, or producing a portfolio.
+The user accepted this revised contract on 2026-10-09 for machine-readable
+contract implementation, invented fixtures, synthetic tests, and a second
+readiness review only. Acceptance does not authorize opening the private
+snapshot, building real county evidence, calculating criteria, or producing a
+portfolio.

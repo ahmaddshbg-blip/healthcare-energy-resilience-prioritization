@@ -41,8 +41,13 @@ the other five geography inputs. The amended contract has passed synthetic
 tests, and exactly one newly authorized amended geography build completed with
 a `VALID` six-artifact checkpoint and passed independent manifest and artifact
 verification. No county-level criterion, portfolio, or final status has been
-calculated or published. See [geography build evidence](docs/geography_build_evidence.md)
-for value-free evidence.
+calculated or published. The accepted county-evidence contract now also has a
+machine-readable schema, deterministic source-evidence transformation,
+two-file atomic checkpoint writer/verifier, and trusted staging-plus-geography
+input boundary, all exercised only with invented fixtures. No private
+county-evidence build has been authorized. See
+[geography build evidence](docs/geography_build_evidence.md) for value-free
+geography evidence.
 
 ## Decision output
 
@@ -79,7 +84,8 @@ processing. Raw source files are not redistributed in this repository. See
 [staging checkpoints](docs/staging_checkpoints.md),
 [geography reconciliation](docs/geography_reconciliation.md),
 [geography readiness](docs/geography_readiness.md),
-[county evidence contract](docs/county_evidence.md), and
+[county evidence contract](docs/county_evidence.md),
+[county evidence readiness](docs/county_evidence_readiness.md), and
 [data attribution](DATA_ATTRIBUTION.md).
 
 ## Method summary
@@ -108,7 +114,8 @@ A refresh will never silently replace or impersonate the frozen analytical
 snapshot. The current executable surface validates file, source-table,
 staging, checkpoint, build, and geography contracts; tests invented CSV, XLSX,
 staging and geography rows, a complete invented six-table staging build,
-private checkpoint behavior, repository state, and source mutation;
+private checkpoint behavior, repository state, source mutation, and invented
+county-evidence joins and summaries;
 verifies the frozen snapshot; and produces a value-free structural profile
 without calculating county results. The frozen staging command completed once
 against the accepted private snapshot; its manifests and artifacts remain

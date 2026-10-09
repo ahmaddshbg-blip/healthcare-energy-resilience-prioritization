@@ -115,9 +115,10 @@ analytical result.
 
 `configs/geography.json` binds the accepted staging build and freezes the
 Census reference, 11 out-of-scope units, two HHS replacements, unresolved
-Alaska and Connecticut legacies, six source-specific rules, exact mapping
-counts, and core coverage requirements. The paired contract and checkpoint
-schemas are validated by `scripts/validate_contracts.py`.
+Alaska and Connecticut legacies, five mapped-source rules plus one context-only
+staging input, exact mapping counts, and core coverage requirements. The paired
+contract and checkpoint schemas are validated by
+`scripts/validate_contracts.py`.
 
 `src/healthcare_resilience/geography.py` accepts already-staged rows in memory
 and returns one sorted county reference plus six row-preserving maps. It has no
@@ -145,6 +146,36 @@ history table from geography maps. One explicitly authorized frozen build has
 now produced a six-artifact checkpoint that passed independent read-only
 verification. See [geography readiness](geography_readiness.md) and [geography
 build evidence](geography_build_evidence.md). No geography CLI exists.
+
+## Synthetic county evidence
+
+`configs/county_evidence.json` binds the accepted source, staging, method, and
+geography contracts plus the verified staging and geography checkpoint
+identities. Its schema freezes four permitted source-measure roles, 18 FEMA
+hazard pairs, HPSA duplicate and raw-maximum semantics, site category maps,
+72 output columns, and fail-closed conditions. The separate checkpoint schema
+allows exactly one `county_evidence.parquet` artifact and one manifest.
+
+`src/healthcare_resilience/county_evidence.py` performs the deterministic
+one-row-per-county transformation in memory. It emits source evidence and
+diagnostics only; it contains no criterion normalization, weighting, ranking,
+portfolio, or county-status calculation. Exact duplicate HPSA rows remain in
+mapped-row lineage but cannot independently affect the two declared raw-score
+maxima.
+
+`src/healthcare_resilience/county_evidence_input.py` independently verifies
+the accepted staging and geography checkpoints, reads only four contracted
+source-measure tables and their maps, excludes the historical HHS table, and
+reverifies both inputs after reading. The production entrypoint has no override
+parameter. `src/healthcare_resilience/county_evidence_checkpoint.py` publishes
+only into a new content-addressed directory outside the repository, verifies
+the Parquet artifact and manifest, and rejects dirty repositories, overwrite,
+input mutation, extra files, and tampering.
+
+All county-evidence execution so far uses invented files. No CLI is exposed and
+no private county-evidence build is authorized. A second readiness review must
+pass before the private staging or geography checkpoint may be opened for this
+stage.
 
 ## Source-table profiling
 
